@@ -8,6 +8,7 @@ The Runner provides:
 
 from typing import Any, Callable
 
+from jiuwen.core.rails import RailPipeline
 from jiuwen.core.session import Session
 from jiuwen.core.workflow import Workflow, generate_workflow_key
 
@@ -68,12 +69,13 @@ class Runner:
     """
 
     resource_mgr: ResourceManager = ResourceManager()
+    rails: RailPipeline = RailPipeline()
 
     @classmethod
     async def run_agent(
         cls, agent: Any, inputs: dict[str, Any], session: Session | None = None
     ) -> dict[str, Any]:
-        """Execute an agent with the given inputs.
+        """Execute an agent through the rail pipeline.
 
         Args:
             agent: An agent instance (WorkflowAgent or ReActAgent).
@@ -81,6 +83,6 @@ class Runner:
             session: Optional session for multi-turn conversations.
 
         Returns:
-            Dict with agent results.
+            Dict with agent results (possibly filtered by rails).
         """
-        return await agent.run(inputs, session=session) if session else await agent.run(inputs)
+        return await cls.rails.run(agent, inputs, session=session)

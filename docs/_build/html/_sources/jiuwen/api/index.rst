@@ -15,3 +15,4 @@ Reference documentation for jiuwen's public API.
    runner
    agent
    session
+   rails

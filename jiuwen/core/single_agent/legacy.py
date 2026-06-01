@@ -77,7 +77,7 @@ class WorkflowAgent:
         """
         self._workflows.extend(workflows)
 
-    async def run(self, inputs: dict[str, Any]) -> dict[str, Any]:
+    async def run(self, inputs: dict[str, Any], session: Any = None) -> dict[str, Any]:
         """Execute the agent's workflows with the given inputs.
 
         If multiple workflows are bound, runs them sequentially and
@@ -85,6 +85,7 @@ class WorkflowAgent:
 
         Args:
             inputs: Input data passed to each workflow's invoke().
+            session: Optional session (for compatibility with Runner).
 
         Returns:
             Dict with workflow results. For single workflow, returns

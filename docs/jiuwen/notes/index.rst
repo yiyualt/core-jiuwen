@@ -18,3 +18,4 @@ Design philosophy and rationale behind jiuwen's architecture.
    react-agent-philosophy
    session-philosophy
    condition-philosophy
+   rails-philosophy

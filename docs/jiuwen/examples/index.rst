@@ -17,3 +17,4 @@ Runnable code examples for jiuwen features.
    react-agent-example
    session-example
    condition-example
+   rails-example

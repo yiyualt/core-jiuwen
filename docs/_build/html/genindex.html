@@ -155,6 +155,7 @@
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/react-agent-philosophy.html">ReAct Agent: Reasoning + Acting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/session-philosophy.html">Session: Multi-Turn Memory</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/condition-philosophy.html">Condition &amp; Branch: Control Flow in Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/rails-philosophy.html">Rails: Composable Agent Middleware</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="jiuwen/examples/index.html">Examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -169,6 +170,7 @@
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/react-agent-example.html">ReAct Agent Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/session-example.html">Session Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/condition-example.html">Condition Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/rails-example.html">Rails Examples</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="jiuwen/api/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -181,6 +183,7 @@
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/api/runner.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.runner</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/api/agent.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.single_agent</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/api/session.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.session</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/api/rails.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.rails</span></code></a></li>
 </ul>
 </details></li>
 </ul>
@@ -332,6 +335,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.PregelGraph.add_node">add_node() (jiuwen.core.graph.PregelGraph method)</a>
 </li>
+      <li><a href="jiuwen/api/rails.html#jiuwen.core.rails.RailPipeline.add_rail">add_rail() (jiuwen.core.rails.RailPipeline method)</a>
+</li>
       <li><a href="jiuwen/api/runner.html#jiuwen.core.runner.ResourceManager.add_tool">add_tool() (jiuwen.core.runner.ResourceManager method)</a>
 </li>
       <li><a href="jiuwen/api/runner.html#jiuwen.core.runner.ResourceManager.add_workflow">add_workflow() (jiuwen.core.runner.ResourceManager method)</a>
@@ -353,6 +358,8 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="jiuwen/api/common.html#jiuwen.core.common.BaseCard">BaseCard (class in jiuwen.core.common)</a>
+</li>
+      <li><a href="jiuwen/api/rails.html#jiuwen.core.rails.BaseRail">BaseRail (class in jiuwen.core.rails)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -460,6 +467,13 @@
 </li>
       </ul></li>
       <li>
+    jiuwen.core.rails
+
+      <ul>
+        <li><a href="jiuwen/api/rails.html#module-jiuwen.core.rails">module</a>
+</li>
+      </ul></li>
+      <li>
     jiuwen.core.runner
 
       <ul>
@@ -530,6 +544,8 @@
 </li>
         <li><a href="jiuwen/api/graph.html#module-jiuwen.core.graph">jiuwen.core.graph</a>
 </li>
+        <li><a href="jiuwen/api/rails.html#module-jiuwen.core.rails">jiuwen.core.rails</a>
+</li>
         <li><a href="jiuwen/api/runner.html#module-jiuwen.core.runner">jiuwen.core.runner</a>
 </li>
         <li><a href="jiuwen/api/session.html#module-jiuwen.core.session">jiuwen.core.session</a>
@@ -567,6 +583,8 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jiuwen/api/rails.html#jiuwen.core.rails.RailPipeline">RailPipeline (class in jiuwen.core.rails)</a>
+</li>
       <li><a href="jiuwen/api/agent.html#jiuwen.core.single_agent.ReActAgent">ReActAgent (class in jiuwen.core.single_agent)</a>
 </li>
       <li><a href="jiuwen/api/runner.html#jiuwen.core.runner.ResourceManager">ResourceManager (class in jiuwen.core.runner)</a>
@@ -585,6 +603,8 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jiuwen/api/rails.html#jiuwen.core.rails.SecurityRail">SecurityRail (class in jiuwen.core.rails)</a>
+</li>
       <li><a href="jiuwen/api/session.html#jiuwen.core.session.Session">Session (class in jiuwen.core.session)</a>
 </li>
       <li><a href="jiuwen/api/workflow.html#jiuwen.core.workflow.Workflow.set_end_comp">set_end_comp() (jiuwen.core.workflow.Workflow method)</a>
