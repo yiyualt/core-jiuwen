@@ -8,3 +8,6 @@ Design philosophy and rationale behind jiuwen's architecture.
 
    basecard-philosophy
    graph-philosophy
+   workflow-philosophy
+   component-philosophy
+   llm-foundation-philosophy

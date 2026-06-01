@@ -145,16 +145,25 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="jiuwen/notes/index.html">Design Notes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/basecard-philosophy.html">BaseCard Philosophy: The Card/Config Split</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/graph-philosophy.html">Graph Philosophy: The Pregel Execution Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/workflow-philosophy.html">Workflow Philosophy: Composing Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/component-philosophy.html">Component Philosophy: Building Blocks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/llm-foundation-philosophy.html">LLM Foundation: Configuration and Client Abstraction</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="jiuwen/examples/index.html">Examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/basecard-example.html">BaseCard Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/graph-example.html">Graph Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/workflow-example.html">Workflow Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/component-example.html">Component Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/llm-example.html">LLM Examples</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="jiuwen/api/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/api/common.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.common</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/api/graph.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.graph</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/api/workflow.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.workflow</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/api/components.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.workflow.components</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/api/foundation.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.foundation</span></code></a></li>
 </ul>
 </details></li>
 </ul>
@@ -264,14 +273,17 @@
  | <a href="#B"><strong>B</strong></a>
  | <a href="#C"><strong>C</strong></a>
  | <a href="#E"><strong>E</strong></a>
+ | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
  | <a href="#I"><strong>I</strong></a>
  | <a href="#J"><strong>J</strong></a>
+ | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#P"><strong>P</strong></a>
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
+ | <a href="#W"><strong>W</strong></a>
  
 </div>
 <h2 id="A">A</h2>
@@ -279,13 +291,19 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.Channel.accept">accept() (jiuwen.core.graph.Channel method)</a>
 </li>
+      <li><a href="jiuwen/api/workflow.html#jiuwen.core.workflow.Workflow.add_conditional_connection">add_conditional_connection() (jiuwen.core.workflow.Workflow method)</a>
+</li>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.PregelGraph.add_conditional_edges">add_conditional_edges() (jiuwen.core.graph.PregelGraph method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jiuwen/api/workflow.html#jiuwen.core.workflow.Workflow.add_connection">add_connection() (jiuwen.core.workflow.Workflow method)</a>
+</li>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.PregelGraph.add_edge">add_edge() (jiuwen.core.graph.PregelGraph method)</a>
 </li>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.PregelGraph.add_node">add_node() (jiuwen.core.graph.PregelGraph method)</a>
+</li>
+      <li><a href="jiuwen/api/workflow.html#jiuwen.core.workflow.Workflow.add_workflow_comp">add_workflow_comp() (jiuwen.core.workflow.Workflow method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -313,6 +331,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.Executable.component_type">component_type() (jiuwen.core.graph.Executable method)</a>
 </li>
+      <li><a href="jiuwen/api/components.html#jiuwen.core.workflow.components.ComponentAbility">ComponentAbility (class in jiuwen.core.workflow.components)</a>
+</li>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.Channel.consume">consume() (jiuwen.core.graph.Channel method)</a>
 </li>
   </ul></td>
@@ -321,11 +341,23 @@
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jiuwen/api/components.html#jiuwen.core.workflow.components.End">End (class in jiuwen.core.workflow.components)</a>
+</li>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.PregelGraph.end_node">end_node() (jiuwen.core.graph.PregelGraph method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jiuwen/api/components.html#jiuwen.core.workflow.components.EndConfig">EndConfig (class in jiuwen.core.workflow.components)</a>
+</li>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.Executable">Executable (class in jiuwen.core.graph)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="F">F</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jiuwen/api/foundation.html#jiuwen.core.foundation.FakeLLMClient">FakeLLMClient (class in jiuwen.core.foundation)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -335,8 +367,14 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.GeneralExecutor">GeneralExecutor (in module jiuwen.core.graph)</a>
 </li>
+      <li><a href="jiuwen/api/workflow.html#jiuwen.core.workflow.generate_workflow_key">generate_workflow_key() (in module jiuwen.core.workflow)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jiuwen/api/workflow.html#jiuwen.core.workflow.Workflow.get_components">get_components() (jiuwen.core.workflow.Workflow method)</a>
+</li>
+      <li><a href="jiuwen/api/workflow.html#jiuwen.core.workflow.Workflow.get_graph">get_graph() (jiuwen.core.workflow.Workflow method)</a>
+</li>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.PregelGraph.get_nodes">get_nodes() (jiuwen.core.graph.PregelGraph method)</a>
 </li>
   </ul></td>
@@ -360,8 +398,13 @@
         <li><a href="jiuwen/api/common.html#module-jiuwen.core.common">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    jiuwen.core.foundation
+
+      <ul>
+        <li><a href="jiuwen/api/foundation.html#module-jiuwen.core.foundation">module</a>
+</li>
+      </ul></li>
       <li>
     jiuwen.core.graph
 
@@ -370,18 +413,52 @@
 </li>
       </ul></li>
   </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    jiuwen.core.workflow
+
+      <ul>
+        <li><a href="jiuwen/api/workflow.html#module-jiuwen.core.workflow">module</a>
+</li>
+      </ul></li>
+      <li>
+    jiuwen.core.workflow.components
+
+      <ul>
+        <li><a href="jiuwen/api/components.html#module-jiuwen.core.workflow.components">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="L">L</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jiuwen/api/foundation.html#jiuwen.core.foundation.LLMClient">LLMClient (class in jiuwen.core.foundation)</a>
+</li>
+  </ul></td>
 </tr></table>
 
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jiuwen/api/foundation.html#jiuwen.core.foundation.ModelClientConfig">ModelClientConfig (class in jiuwen.core.foundation)</a>
+</li>
+      <li><a href="jiuwen/api/foundation.html#jiuwen.core.foundation.ModelRequestConfig">ModelRequestConfig (class in jiuwen.core.foundation)</a>
+</li>
       <li>
     module
 
       <ul>
         <li><a href="jiuwen/api/common.html#module-jiuwen.core.common">jiuwen.core.common</a>
 </li>
+        <li><a href="jiuwen/api/foundation.html#module-jiuwen.core.foundation">jiuwen.core.foundation</a>
+</li>
         <li><a href="jiuwen/api/graph.html#module-jiuwen.core.graph">jiuwen.core.graph</a>
+</li>
+        <li><a href="jiuwen/api/workflow.html#module-jiuwen.core.workflow">jiuwen.core.workflow</a>
+</li>
+        <li><a href="jiuwen/api/components.html#module-jiuwen.core.workflow.components">jiuwen.core.workflow.components</a>
 </li>
       </ul></li>
   </ul></td>
@@ -414,11 +491,17 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jiuwen/api/workflow.html#jiuwen.core.workflow.Workflow.set_end_comp">set_end_comp() (jiuwen.core.workflow.Workflow method)</a>
+</li>
+      <li><a href="jiuwen/api/workflow.html#jiuwen.core.workflow.Workflow.set_start_comp">set_start_comp() (jiuwen.core.workflow.Workflow method)</a>
+</li>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.Executable.skip_trace">skip_trace() (jiuwen.core.graph.Executable method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.Channel.snapshot">snapshot() (jiuwen.core.graph.Channel method)</a>
+</li>
+      <li><a href="jiuwen/api/components.html#jiuwen.core.workflow.components.Start">Start (class in jiuwen.core.workflow.components)</a>
 </li>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.PregelGraph.start_node">start_node() (jiuwen.core.graph.PregelGraph method)</a>
 </li>
@@ -430,11 +513,33 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="jiuwen/api/common.html#jiuwen.core.common.BaseCard.to_str">to_str() (jiuwen.core.common.BaseCard method)</a>
 </li>
+      <li><a href="jiuwen/api/common.html#jiuwen.core.common.BaseCard.tool_info">tool_info() (jiuwen.core.common.BaseCard method)</a>
+
+      <ul>
+        <li><a href="jiuwen/api/workflow.html#jiuwen.core.workflow.WorkflowCard.tool_info">(jiuwen.core.workflow.WorkflowCard method)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="jiuwen/api/common.html#jiuwen.core.common.BaseCard.tool_info">tool_info() (jiuwen.core.common.BaseCard method)</a>
-</li>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.TriggerChannel">TriggerChannel (class in jiuwen.core.graph)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="W">W</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jiuwen/api/workflow.html#jiuwen.core.workflow.Workflow">Workflow (class in jiuwen.core.workflow)</a>
+</li>
+      <li><a href="jiuwen/api/workflow.html#jiuwen.core.workflow.WorkflowCard">WorkflowCard (class in jiuwen.core.workflow)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jiuwen/api/components.html#jiuwen.core.workflow.components.WorkflowComponent">WorkflowComponent (class in jiuwen.core.workflow.components)</a>
+</li>
+      <li><a href="jiuwen/api/workflow.html#jiuwen.core.workflow.WorkflowExecutionState">WorkflowExecutionState (class in jiuwen.core.workflow)</a>
+</li>
+      <li><a href="jiuwen/api/workflow.html#jiuwen.core.workflow.WorkflowOutput">WorkflowOutput (class in jiuwen.core.workflow)</a>
 </li>
   </ul></td>
 </tr></table>

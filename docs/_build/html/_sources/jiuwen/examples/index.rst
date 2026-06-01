@@ -8,3 +8,6 @@ Runnable code examples for jiuwen features.
 
    basecard-example
    graph-example
+   workflow-example
+   component-example
+   llm-example

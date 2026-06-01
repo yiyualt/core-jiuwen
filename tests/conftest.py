@@ -2,26 +2,7 @@
 """Shared test fixtures for jiuwen."""
 
 import pytest
-
-
-class FakeLLM:
-    """A fake LLM client that returns preprogrammed responses.
-
-    Used in tests to avoid real API calls. Configure with
-    a list of responses that will be returned in order.
-    """
-
-    def __init__(self, responses: list[str] | None = None):
-        self.responses = responses or ["default response"]
-        self.call_count = 0
-        self.last_messages: list[dict] = []
-
-    async def invoke(self, messages: list[dict]) -> str:
-        """Return the next preprogrammed response."""
-        self.last_messages = messages
-        response = self.responses[self.call_count % len(self.responses)]
-        self.call_count += 1
-        return response
+from jiuwen.core.foundation.llm import FakeLLMClient
 
 
 class RecordingHandler:
@@ -40,8 +21,8 @@ class RecordingHandler:
 
 @pytest.fixture
 def fake_llm():
-    """Fixture providing a FakeLLM instance."""
-    return FakeLLM()
+    """Fixture providing a FakeLLMClient instance."""
+    return FakeLLMClient()
 
 
 @pytest.fixture
