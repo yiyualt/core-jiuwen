@@ -14,3 +14,4 @@ Runnable code examples for jiuwen features.
    llm-component-example
    tool-example
    runner-example
+   react-agent-example

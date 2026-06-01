@@ -152,6 +152,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../notes/tool-system-philosophy.html">Tool System: Functions as Components</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notes/runner-philosophy.html">Runner: The Entry Point</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notes/agent-philosophy.html">Agent: The Intelligent Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/react-agent-philosophy.html">ReAct Agent: Reasoning + Acting</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../examples/index.html">Examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -163,6 +164,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../examples/llm-component-example.html">LLM Component Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/tool-example.html">Tool Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/runner-example.html">Runner + Agent Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/react-agent-example.html">ReAct Agent Examples</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">API Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -336,6 +338,10 @@
 </li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reactagent">ReActAgent</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.core.single_agent.ReActAgent"><code class="docutils literal notranslate"><span class="pre">ReActAgent</span></code></a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -415,6 +421,21 @@
 </dd></dl>
 
 </section>
+<section id="reactagent">
+<h2>ReActAgent<a class="headerlink" href="#reactagent" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.core.single_agent.ReActAgent">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.core.single_agent.</span></span><span class="sig-name descname"><span class="pre">ReActAgent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foundation.html#jiuwen.core.foundation.LLMClient" title="jiuwen.core.foundation.LLMClient"><span class="pre">LLMClient</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tools</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="tool.html#jiuwen.core.foundation.ToolCard" title="jiuwen.core.foundation.ToolCard"><span class="pre">ToolCard</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system_prompt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iterations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jiuwen.core.single_agent.ReActAgent" title="Link to this definition">#</a></dt>
+<dd><p>Agent using the Reasoning + Acting paradigm.</p>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">async</span> <span class="pre">run(inputs:</span> <span class="pre">dict)</span> <span class="pre">-&gt;</span> <span class="pre">dict</span></span></dt>
+<dd><p>Execute the ReAct loop. Inputs must contain <code class="docutils literal notranslate"><span class="pre">&quot;query&quot;</span></code> key.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
 </section>
 
 
@@ -468,6 +489,10 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.core.single_agent.WorkflowAgent.add_workflows"><code class="docutils literal notranslate"><span class="pre">WorkflowAgent.add_workflows()</span></code></a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reactagent">ReActAgent</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.core.single_agent.ReActAgent"><code class="docutils literal notranslate"><span class="pre">ReActAgent</span></code></a></li>
 </ul>
 </li>
 </ul>

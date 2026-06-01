@@ -15,3 +15,4 @@ Design philosophy and rationale behind jiuwen's architecture.
    tool-system-philosophy
    runner-philosophy
    agent-philosophy
+   react-agent-philosophy
