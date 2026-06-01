@@ -7,3 +7,4 @@ Runnable code examples for jiuwen features.
    :maxdepth: 1
 
    basecard-example
+   graph-example

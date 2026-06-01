@@ -7,3 +7,4 @@ Reference documentation for jiuwen's public API.
    :maxdepth: 1
 
    common
+   graph

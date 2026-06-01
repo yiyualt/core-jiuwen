@@ -7,3 +7,4 @@ Design philosophy and rationale behind jiuwen's architecture.
    :maxdepth: 1
 
    basecard-philosophy
+   graph-philosophy
