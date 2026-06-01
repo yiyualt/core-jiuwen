@@ -1,13 +1,11 @@
-LLM Foundation: Configuration and Client Abstraction
-=====================================================
+LLM Foundation: OpenAI Client and Configuration
+================================================
 
-The `jiuwen.core.foundation` module provides the **LLM abstraction layer**
-that the rest of the SDK builds upon.
+The ``jiuwen.core.foundation`` module provides the **LLM abstraction layer**
+that powers AI agents.
 
 Two Kinds of Configuration
 --------------------------
-
-jiuwen separates LLM configuration into two concerns:
 
 .. list-table::
    :header-rows: 1
@@ -23,50 +21,56 @@ jiuwen separates LLM configuration into two concerns:
      - model name, temperature, tokens
 
 This separation lets you share connection settings across multiple models
-while varying request parameters per call:
+while varying request parameters per call.
+
+OpenAIClient
+------------
+
+``OpenAIClient`` implements ``LLMClient`` using the OpenAI SDK.
+It works with any OpenAI-compatible API (Azure, local models via Ollama, etc.).
+
+**From environment variables (recommended):**
+
+Create a ``.env`` file:
+
+.. code-block:: bash
+
+    OPENAI_API_KEY=sk-your-key
+    OPENAI_API_BASE=https://api.openai.com/v1
+    OPENAI_MODEL=gpt-4o
+
+Then use it:
 
 .. code-block:: python
 
-    # Shared connection
-    client_config = ModelClientConfig(
-        provider="openai",
-        api_key=os.environ["OPENAI_API_KEY"],
+    from jiuwen.core.foundation import OpenAIClient, ModelRequestConfig
+
+    client = OpenAIClient.from_env()
+
+    response = await client.chat(
+        [{"role": "user", "content": "Hello!"}],
+        ModelRequestConfig(model="gpt-4o", temperature=0.7),
     )
+    print(response)
 
-    # Different requests
-    creative = ModelRequestConfig(model="gpt-4", temperature=1.0, max_tokens=2048)
-    precise  = ModelRequestConfig(model="gpt-4", temperature=0.1, max_tokens=512)
-
-LLMClient Interface
--------------------
-
-The ``LLMClient`` ABC defines two methods:
-
-- ``chat(messages, config) -> str`` — send messages, get complete response
-- ``chat_stream(messages, config) -> AsyncIterator[str]`` — stream tokens
-
-Provider implementations (e.g., OpenAI, Anthropic) extend this class.
-v0.0.4 provides only the interface and a fake for testing.
-
-FakeLLMClient for Testing
--------------------------
-
-Tests should never call real LLM APIs. ``FakeLLMClient`` returns
-preprogrammed responses:
+**Explicit configuration:**
 
 .. code-block:: python
 
-    from jiuwen.core.foundation import FakeLLMClient
+    from jiuwen.core.foundation import OpenAIClient, ModelClientConfig
 
-    client = FakeLLMClient(["Hello!", "How can I help?"])
+    client = OpenAIClient(ModelClientConfig(
+        provider="openai",
+        api_key="sk-...",
+        api_base="https://api.openai.com/v1",
+    ))
 
-    response = await client.chat([{"role": "user", "content": "Hi"}])
-    assert response == "Hello!"
-    assert client.call_count == 1
+Streaming
+---------
 
-    response = await client.chat([...])
-    assert response == "How can I help?"
+.. code-block:: python
 
-    # Wraps around after exhausting the list
-    response = await client.chat([...])
-    assert response == "Hello!"  # back to first
+    async for token in client.chat_stream(
+        [{"role": "user", "content": "Tell me a story"}],
+    ):
+        print(token, end="", flush=True)

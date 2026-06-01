@@ -5,7 +5,7 @@ from jiuwen.core.foundation.llm import (
     ModelClientConfig,
     ModelRequestConfig,
     LLMClient,
-    FakeLLMClient,
+    OpenAIClient,
 )
 from jiuwen.core.foundation.tool import ToolCard, ToolComponent
 
@@ -13,7 +13,7 @@ __all__ = [
     "ModelClientConfig",
     "ModelRequestConfig",
     "LLMClient",
-    "FakeLLMClient",
+    "OpenAIClient",
     "ToolCard",
     "ToolComponent",
 ]

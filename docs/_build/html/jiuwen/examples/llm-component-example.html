@@ -148,7 +148,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../notes/graph-philosophy.html">Graph Philosophy: The Pregel Execution Model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notes/workflow-philosophy.html">Workflow Philosophy: Composing Components</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notes/component-philosophy.html">Component Philosophy: Building Blocks</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notes/llm-foundation-philosophy.html">LLM Foundation: Configuration and Client Abstraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/llm-foundation-philosophy.html">LLM Foundation: OpenAI Client and Configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notes/llm-component-philosophy.html">LLM Component: AI in the Pipeline</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notes/tool-system-philosophy.html">Tool System: Functions as Components</a></li>
 </ul>
@@ -317,9 +317,9 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-llm-pipeline">Basic LLM Pipeline</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-output-schema">Custom Output Schema</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streaming-llm-output">Streaming LLM Output</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-llm-component">Basic LLM Component</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#llm-tool-pipeline">LLM + Tool Pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#full-workflow-with-real-llm">Full Workflow with Real LLM</a></li>
 </ul>
             </nav>
         </div>
@@ -333,82 +333,100 @@
                   
   <section id="llm-component-examples">
 <h1>LLM Component Examples<a class="headerlink" href="#llm-component-examples" title="Link to this heading">#</a></h1>
-<section id="basic-llm-pipeline">
-<h2>Basic LLM Pipeline<a class="headerlink" href="#basic-llm-pipeline" title="Link to this heading">#</a></h2>
+<p>Setup: copy <code class="docutils literal notranslate"><span class="pre">.env.example</span></code> to <code class="docutils literal notranslate"><span class="pre">.env</span></code> and fill in your API key.</p>
+<section id="basic-llm-component">
+<h2>Basic LLM Component<a class="headerlink" href="#basic-llm-component" title="Link to this heading">#</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.foundation</span><span class="w"> </span><span class="kn">import</span> <span class="n">FakeLLMClient</span><span class="p">,</span> <span class="n">ModelClientConfig</span><span class="p">,</span> <span class="n">ModelRequestConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.workflow.components</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLMComponent</span><span class="p">,</span> <span class="n">LLMCompConfig</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">LLMCompConfig</span><span class="p">(</span>
+        <span class="n">template_content</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;You are a helpful assistant.&quot;</span><span class="p">},</span>
+            <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;{{query}}&quot;</span><span class="p">},</span>
+        <span class="p">],</span>
+    <span class="p">)</span>
+    <span class="n">comp</span> <span class="o">=</span> <span class="n">LLMComponent</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>  <span class="c1"># auto-detects OpenAIClient from .env</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">comp</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="s2">&quot;What is Python?&quot;</span><span class="p">})</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;output&quot;</span><span class="p">])</span>
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+<section id="llm-tool-pipeline">
+<h2>LLM + Tool Pipeline<a class="headerlink" href="#llm-tool-pipeline" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.foundation</span><span class="w"> </span><span class="kn">import</span> <span class="n">ToolCard</span><span class="p">,</span> <span class="n">ToolComponent</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.workflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">Workflow</span><span class="p">,</span> <span class="n">Start</span><span class="p">,</span> <span class="n">End</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.workflow.components</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLMComponent</span><span class="p">,</span> <span class="n">LLMCompConfig</span>
 
-<span class="c1"># Configure LLM with a fake client for testing</span>
-<span class="n">config</span> <span class="o">=</span> <span class="n">LLMCompConfig</span><span class="p">(</span>
-    <span class="n">model_client_config</span><span class="o">=</span><span class="n">ModelClientConfig</span><span class="p">(</span><span class="n">provider</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="p">),</span>
-    <span class="n">model_config</span><span class="o">=</span><span class="n">ModelRequestConfig</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;test-model&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">0.7</span><span class="p">),</span>
-    <span class="n">template_content</span><span class="o">=</span><span class="p">[</span>
-        <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;You are a helpful assistant.&quot;</span><span class="p">},</span>
-        <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;{{query}}&quot;</span><span class="p">},</span>
-    <span class="p">],</span>
-<span class="p">)</span>
-<span class="n">client</span> <span class="o">=</span> <span class="n">FakeLLMClient</span><span class="p">([</span><span class="s2">&quot;The answer is 42.&quot;</span><span class="p">])</span>
 
-<span class="c1"># Build workflow</span>
-<span class="n">wf</span> <span class="o">=</span> <span class="n">Workflow</span><span class="p">()</span>
-<span class="n">wf</span><span class="o">.</span><span class="n">set_start_comp</span><span class="p">(</span><span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="n">Start</span><span class="p">())</span>
-<span class="n">wf</span><span class="o">.</span><span class="n">add_workflow_comp</span><span class="p">(</span><span class="s2">&quot;llm&quot;</span><span class="p">,</span> <span class="n">LLMComponent</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">client</span><span class="p">))</span>
-<span class="n">wf</span><span class="o">.</span><span class="n">set_end_comp</span><span class="p">(</span><span class="s2">&quot;end&quot;</span><span class="p">,</span> <span class="n">End</span><span class="p">({</span><span class="s2">&quot;responseTemplate&quot;</span><span class="p">:</span> <span class="s2">&quot;LLM says: {{output}}&quot;</span><span class="p">}))</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_weather</span><span class="p">(</span><span class="n">city</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Sunny, 25C in </span><span class="si">{</span><span class="n">city</span><span class="si">}</span><span class="s2">&quot;</span>
 
-<span class="n">wf</span><span class="o">.</span><span class="n">add_connection</span><span class="p">(</span><span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="s2">&quot;llm&quot;</span><span class="p">)</span>
-<span class="n">wf</span><span class="o">.</span><span class="n">add_connection</span><span class="p">(</span><span class="s2">&quot;llm&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">)</span>
-
-<span class="c1"># Run</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="s2">&quot;What is the meaning of life?&quot;</span><span class="p">}))</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">state</span><span class="p">)</span>  <span class="c1"># COMPLETED</span>
-</pre></div>
-</div>
-</section>
-<section id="custom-output-schema">
-<h2>Custom Output Schema<a class="headerlink" href="#custom-output-schema" title="Link to this heading">#</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.foundation</span><span class="w"> </span><span class="kn">import</span> <span class="n">FakeLLMClient</span><span class="p">,</span> <span class="n">ModelClientConfig</span><span class="p">,</span> <span class="n">ModelRequestConfig</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.workflow.components</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLMComponent</span><span class="p">,</span> <span class="n">LLMCompConfig</span>
-
-<span class="n">config</span> <span class="o">=</span> <span class="n">LLMCompConfig</span><span class="p">(</span>
-    <span class="n">model_client_config</span><span class="o">=</span><span class="n">ModelClientConfig</span><span class="p">(</span><span class="n">provider</span><span class="o">=</span><span class="s2">&quot;openai&quot;</span><span class="p">),</span>
-    <span class="n">model_config</span><span class="o">=</span><span class="n">ModelRequestConfig</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4&quot;</span><span class="p">),</span>
-    <span class="n">template_content</span><span class="o">=</span><span class="p">[</span>
-        <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Extract entities from the text.&quot;</span><span class="p">},</span>
-        <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;{{text}}&quot;</span><span class="p">},</span>
-    <span class="p">],</span>
-    <span class="n">output_config</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;entities&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;array&quot;</span><span class="p">,</span> <span class="s2">&quot;items&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">}},</span>
-        <span class="p">},</span>
-    <span class="p">},</span>
-<span class="p">)</span>
-
-<span class="n">client</span> <span class="o">=</span> <span class="n">FakeLLMClient</span><span class="p">([</span><span class="s1">&#39;{&quot;entities&quot;: [&quot;Apple&quot;, &quot;Google&quot;]}&#39;</span><span class="p">])</span>
-<span class="n">comp</span> <span class="o">=</span> <span class="n">LLMComponent</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">client</span><span class="p">)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">comp</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Apple and Google are tech companies.&quot;</span><span class="p">}))</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;output&quot;</span><span class="p">])</span>
-</pre></div>
-</div>
-</section>
-<section id="streaming-llm-output">
-<h2>Streaming LLM Output<a class="headerlink" href="#streaming-llm-output" title="Link to this heading">#</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.foundation</span><span class="w"> </span><span class="kn">import</span> <span class="n">FakeLLMClient</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.workflow.components</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLMComponent</span><span class="p">,</span> <span class="n">LLMCompConfig</span>
-
-<span class="n">config</span> <span class="o">=</span> <span class="n">LLMCompConfig</span><span class="p">(</span>
-    <span class="n">template_content</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;{{query}}&quot;</span><span class="p">}],</span>
-<span class="p">)</span>
-<span class="n">client</span> <span class="o">=</span> <span class="n">FakeLLMClient</span><span class="p">([</span><span class="s2">&quot;Streaming response&quot;</span><span class="p">])</span>
 
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
-    <span class="n">comp</span> <span class="o">=</span> <span class="n">LLMComponent</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">client</span><span class="p">)</span>
-    <span class="k">async</span> <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">comp</span><span class="o">.</span><span class="n">stream</span><span class="p">({</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="s2">&quot;Tell me a story&quot;</span><span class="p">}):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="p">[</span><span class="s2">&quot;output&quot;</span><span class="p">],</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">tool_card</span> <span class="o">=</span> <span class="n">ToolCard</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;get_weather&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Get current weather&quot;</span><span class="p">,</span>
+        <span class="n">parameters</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;city&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">}},</span>
+        <span class="n">func</span><span class="o">=</span><span class="n">get_weather</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">llm_config</span> <span class="o">=</span> <span class="n">LLMCompConfig</span><span class="p">(</span>
+        <span class="n">template_content</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Weather data: {{output}}. Summarize it.&quot;</span><span class="p">},</span>
+        <span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="n">wf</span> <span class="o">=</span> <span class="n">Workflow</span><span class="p">()</span>
+    <span class="n">wf</span><span class="o">.</span><span class="n">set_start_comp</span><span class="p">(</span><span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="n">Start</span><span class="p">())</span>
+    <span class="n">wf</span><span class="o">.</span><span class="n">add_workflow_comp</span><span class="p">(</span><span class="s2">&quot;weather&quot;</span><span class="p">,</span> <span class="n">ToolComponent</span><span class="p">(</span><span class="n">tool_card</span><span class="p">))</span>
+    <span class="n">wf</span><span class="o">.</span><span class="n">add_workflow_comp</span><span class="p">(</span><span class="s2">&quot;llm&quot;</span><span class="p">,</span> <span class="n">LLMComponent</span><span class="p">(</span><span class="n">llm_config</span><span class="p">))</span>
+    <span class="n">wf</span><span class="o">.</span><span class="n">set_end_comp</span><span class="p">(</span><span class="s2">&quot;end&quot;</span><span class="p">,</span> <span class="n">End</span><span class="p">({</span><span class="s2">&quot;responseTemplate&quot;</span><span class="p">:</span> <span class="s2">&quot;{{output}}&quot;</span><span class="p">}))</span>
+
+    <span class="n">wf</span><span class="o">.</span><span class="n">add_connection</span><span class="p">(</span><span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="s2">&quot;weather&quot;</span><span class="p">)</span>
+    <span class="n">wf</span><span class="o">.</span><span class="n">add_connection</span><span class="p">(</span><span class="s2">&quot;weather&quot;</span><span class="p">,</span> <span class="s2">&quot;llm&quot;</span><span class="p">)</span>
+    <span class="n">wf</span><span class="o">.</span><span class="n">add_connection</span><span class="p">(</span><span class="s2">&quot;llm&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">)</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">wf</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;city&quot;</span><span class="p">:</span> <span class="s2">&quot;Tokyo&quot;</span><span class="p">})</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">state</span><span class="p">)</span>  <span class="c1"># COMPLETED</span>
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+<section id="full-workflow-with-real-llm">
+<h2>Full Workflow with Real LLM<a class="headerlink" href="#full-workflow-with-real-llm" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.foundation</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAIClient</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.workflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">Workflow</span><span class="p">,</span> <span class="n">Start</span><span class="p">,</span> <span class="n">End</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.workflow.components</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLMComponent</span><span class="p">,</span> <span class="n">LLMCompConfig</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">OpenAIClient</span><span class="o">.</span><span class="n">from_env</span><span class="p">()</span>
+
+    <span class="n">config</span> <span class="o">=</span> <span class="n">LLMCompConfig</span><span class="p">(</span>
+        <span class="n">template_content</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;You are a poet.&quot;</span><span class="p">},</span>
+            <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Write a short poem about: {{topic}}&quot;</span><span class="p">},</span>
+        <span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="n">wf</span> <span class="o">=</span> <span class="n">Workflow</span><span class="p">()</span>
+    <span class="n">wf</span><span class="o">.</span><span class="n">set_start_comp</span><span class="p">(</span><span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="n">Start</span><span class="p">())</span>
+    <span class="n">wf</span><span class="o">.</span><span class="n">add_workflow_comp</span><span class="p">(</span><span class="s2">&quot;poet&quot;</span><span class="p">,</span> <span class="n">LLMComponent</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">client</span><span class="p">))</span>
+    <span class="n">wf</span><span class="o">.</span><span class="n">set_end_comp</span><span class="p">(</span><span class="s2">&quot;end&quot;</span><span class="p">,</span> <span class="n">End</span><span class="p">({</span><span class="s2">&quot;responseTemplate&quot;</span><span class="p">:</span> <span class="s2">&quot;{{output}}&quot;</span><span class="p">}))</span>
+
+    <span class="n">wf</span><span class="o">.</span><span class="n">add_connection</span><span class="p">(</span><span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="s2">&quot;poet&quot;</span><span class="p">)</span>
+    <span class="n">wf</span><span class="o">.</span><span class="n">add_connection</span><span class="p">(</span><span class="s2">&quot;poet&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">)</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">wf</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;topic&quot;</span><span class="p">:</span> <span class="s2">&quot;spring&quot;</span><span class="p">})</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>  <span class="c1"># a real poem from GPT!</span>
 
 <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
 </pre></div>
@@ -463,9 +481,9 @@
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-llm-pipeline">Basic LLM Pipeline</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-output-schema">Custom Output Schema</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streaming-llm-output">Streaming LLM Output</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-llm-component">Basic LLM Component</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#llm-tool-pipeline">LLM + Tool Pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#full-workflow-with-real-llm">Full Workflow with Real LLM</a></li>
 </ul>
   </nav></div>
 

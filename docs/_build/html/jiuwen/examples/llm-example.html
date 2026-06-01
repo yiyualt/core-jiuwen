@@ -148,7 +148,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../notes/graph-philosophy.html">Graph Philosophy: The Pregel Execution Model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notes/workflow-philosophy.html">Workflow Philosophy: Composing Components</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notes/component-philosophy.html">Component Philosophy: Building Blocks</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notes/llm-foundation-philosophy.html">LLM Foundation: Configuration and Client Abstraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/llm-foundation-philosophy.html">LLM Foundation: OpenAI Client and Configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notes/llm-component-philosophy.html">LLM Component: AI in the Pipeline</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notes/tool-system-philosophy.html">Tool System: Functions as Components</a></li>
 </ul>
@@ -317,9 +317,10 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuration">Configuration</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-fakellmclient">Using FakeLLMClient</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementing-a-real-provider">Implementing a Real Provider</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-chat">Basic Chat</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explicit-configuration">Explicit Configuration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streaming">Streaming</a></li>
 </ul>
             </nav>
         </div>
@@ -333,81 +334,75 @@
                   
   <section id="llm-examples">
 <h1>LLM Examples<a class="headerlink" href="#llm-examples" title="Link to this heading">#</a></h1>
-<section id="configuration">
-<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading">#</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.foundation.llm</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelClientConfig</span><span class="p">,</span> <span class="n">ModelRequestConfig</span>
-
-<span class="c1"># Connection settings</span>
-<span class="n">client</span> <span class="o">=</span> <span class="n">ModelClientConfig</span><span class="p">(</span>
-    <span class="n">provider</span><span class="o">=</span><span class="s2">&quot;openai&quot;</span><span class="p">,</span>
-    <span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;sk-...&quot;</span><span class="p">,</span>
-    <span class="n">api_base</span><span class="o">=</span><span class="s2">&quot;https://api.openai.com/v1&quot;</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="c1"># Request parameters</span>
-<span class="n">request</span> <span class="o">=</span> <span class="n">ModelRequestConfig</span><span class="p">(</span>
-    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4&quot;</span><span class="p">,</span>
-    <span class="n">temperature</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
-    <span class="n">max_tokens</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">model_dump</span><span class="p">())</span>
-<span class="c1"># {&#39;model&#39;: &#39;gpt-4&#39;, &#39;temperature&#39;: 0.7, &#39;max_tokens&#39;: 1024, ...}</span>
+<section id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Link to this heading">#</a></h2>
+<p>Create a <code class="docutils literal notranslate"><span class="pre">.env</span></code> file (copy from <code class="docutils literal notranslate"><span class="pre">.env.example</span></code>):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cp<span class="w"> </span>.env.example<span class="w"> </span>.env
+<span class="c1"># Edit .env with your API key</span>
 </pre></div>
 </div>
 </section>
-<section id="using-fakellmclient">
-<h2>Using FakeLLMClient<a class="headerlink" href="#using-fakellmclient" title="Link to this heading">#</a></h2>
+<section id="basic-chat">
+<h2>Basic Chat<a class="headerlink" href="#basic-chat" title="Link to this heading">#</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.foundation.llm</span><span class="w"> </span><span class="kn">import</span> <span class="n">FakeLLMClient</span><span class="p">,</span> <span class="n">ModelRequestConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.foundation</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAIClient</span><span class="p">,</span> <span class="n">ModelRequestConfig</span>
 
 
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
-    <span class="n">client</span> <span class="o">=</span> <span class="n">FakeLLMClient</span><span class="p">([</span>
-        <span class="s2">&quot;The sky is blue because of Rayleigh scattering.&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Python was created by Guido van Rossum.&quot;</span><span class="p">,</span>
-    <span class="p">])</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">OpenAIClient</span><span class="o">.</span><span class="n">from_env</span><span class="p">()</span>
 
-    <span class="n">config</span> <span class="o">=</span> <span class="n">ModelRequestConfig</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;fake-model&quot;</span><span class="p">)</span>
-
-    <span class="c1"># Chat</span>
-    <span class="n">answer</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="p">(</span>
-        <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Why is the sky blue?&quot;</span><span class="p">}],</span>
-        <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="p">(</span>
+        <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;What is the capital of France?&quot;</span><span class="p">}],</span>
     <span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">answer</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Calls made: </span><span class="si">{</span><span class="n">client</span><span class="o">.</span><span class="n">call_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># 1</span>
-
-    <span class="c1"># Chat stream</span>
-    <span class="k">async</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">client</span><span class="o">.</span><span class="n">chat_stream</span><span class="p">(</span>
-        <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Who created Python?&quot;</span><span class="p">}],</span>
-    <span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Token: </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 
 <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
 </pre></div>
 </div>
 </section>
-<section id="implementing-a-real-provider">
-<h2>Implementing a Real Provider<a class="headerlink" href="#implementing-a-real-provider" title="Link to this heading">#</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncIterator</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.foundation.llm</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLMClient</span><span class="p">,</span> <span class="n">ModelClientConfig</span><span class="p">,</span> <span class="n">ModelRequestConfig</span>
+<section id="explicit-configuration">
+<h2>Explicit Configuration<a class="headerlink" href="#explicit-configuration" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.foundation</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">OpenAIClient</span><span class="p">,</span> <span class="n">ModelClientConfig</span><span class="p">,</span> <span class="n">ModelRequestConfig</span><span class="p">,</span>
+<span class="p">)</span>
 
 
-<span class="k">class</span><span class="w"> </span><span class="nc">MyLLMClient</span><span class="p">(</span><span class="n">LLMClient</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Example: implement a real provider.&quot;&quot;&quot;</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">OpenAIClient</span><span class="p">(</span><span class="n">ModelClientConfig</span><span class="p">(</span>
+        <span class="n">provider</span><span class="o">=</span><span class="s2">&quot;openai&quot;</span><span class="p">,</span>
+        <span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;sk-your-key&quot;</span><span class="p">,</span>
+        <span class="n">api_base</span><span class="o">=</span><span class="s2">&quot;https://api.openai.com/v1&quot;</span><span class="p">,</span>
+    <span class="p">))</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">ModelClientConfig</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">ModelRequestConfig</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">max_tokens</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
 
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">chat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="n">config</span><span class="p">:</span> <span class="n">ModelRequestConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="c1"># TODO: call real API</span>
-        <span class="k">return</span> <span class="s2">&quot;real response&quot;</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="p">(</span>
+        <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;You are a helpful assistant.&quot;</span><span class="p">},</span>
+         <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Say hello in 3 languages.&quot;</span><span class="p">}],</span>
+        <span class="n">config</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">chat_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="n">config</span><span class="p">:</span> <span class="n">ModelRequestConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="n">text</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">chat</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>
-            <span class="k">yield</span> <span class="n">word</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span>
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+<section id="streaming">
+<h2>Streaming<a class="headerlink" href="#streaming" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.foundation</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAIClient</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">OpenAIClient</span><span class="o">.</span><span class="n">from_env</span><span class="p">()</span>
+
+    <span class="k">async</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">client</span><span class="o">.</span><span class="n">chat_stream</span><span class="p">(</span>
+        <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Write a haiku about coding.&quot;</span><span class="p">}],</span>
+    <span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
 </pre></div>
 </div>
 </section>
@@ -460,9 +455,10 @@
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuration">Configuration</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-fakellmclient">Using FakeLLMClient</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementing-a-real-provider">Implementing a Real Provider</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-chat">Basic Chat</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explicit-configuration">Explicit Configuration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streaming">Streaming</a></li>
 </ul>
   </nav></div>
 

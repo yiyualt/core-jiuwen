@@ -1,83 +1,79 @@
 LLM Examples
 ============
 
-Configuration
--------------
+Setup
+-----
 
-.. code-block:: python
+Create a ``.env`` file (copy from ``.env.example``):
 
-    from jiuwen.core.foundation.llm import ModelClientConfig, ModelRequestConfig
+.. code-block:: bash
 
-    # Connection settings
-    client = ModelClientConfig(
-        provider="openai",
-        api_key="sk-...",
-        api_base="https://api.openai.com/v1",
-    )
+    cp .env.example .env
+    # Edit .env with your API key
 
-    # Request parameters
-    request = ModelRequestConfig(
-        model="gpt-4",
-        temperature=0.7,
-        max_tokens=1024,
-    )
-
-    print(request.model_dump())
-    # {'model': 'gpt-4', 'temperature': 0.7, 'max_tokens': 1024, ...}
-
-Using FakeLLMClient
--------------------
+Basic Chat
+----------
 
 .. code-block:: python
 
     import asyncio
-    from jiuwen.core.foundation.llm import FakeLLMClient, ModelRequestConfig
+    from jiuwen.core.foundation import OpenAIClient, ModelRequestConfig
 
 
     async def main():
-        client = FakeLLMClient([
-            "The sky is blue because of Rayleigh scattering.",
-            "Python was created by Guido van Rossum.",
-        ])
+        client = OpenAIClient.from_env()
 
-        config = ModelRequestConfig(model="fake-model")
-
-        # Chat
-        answer = await client.chat(
-            [{"role": "user", "content": "Why is the sky blue?"}],
-            config=config,
+        response = await client.chat(
+            [{"role": "user", "content": "What is the capital of France?"}],
         )
-        print(answer)
-        print(f"Calls made: {client.call_count}")  # 1
-
-        # Chat stream
-        async for token in client.chat_stream(
-            [{"role": "user", "content": "Who created Python?"}],
-        ):
-            print(f"Token: {token}")
+        print(response)
 
     asyncio.run(main())
 
-Implementing a Real Provider
-----------------------------
+Explicit Configuration
+----------------------
 
 .. code-block:: python
 
-    from typing import AsyncIterator
-    from jiuwen.core.foundation.llm import LLMClient, ModelClientConfig, ModelRequestConfig
+    import asyncio
+    from jiuwen.core.foundation import (
+        OpenAIClient, ModelClientConfig, ModelRequestConfig,
+    )
 
 
-    class MyLLMClient(LLMClient):
-        """Example: implement a real provider."""
+    async def main():
+        client = OpenAIClient(ModelClientConfig(
+            provider="openai",
+            api_key="sk-your-key",
+            api_base="https://api.openai.com/v1",
+        ))
 
-        def __init__(self, config: ModelClientConfig):
-            self.config = config
+        config = ModelRequestConfig(model="gpt-4o", temperature=0.5, max_tokens=256)
 
-        async def chat(self, messages: list[dict], config: ModelRequestConfig | None = None) -> str:
-            # TODO: call real API
-            return "real response"
+        response = await client.chat(
+            [{"role": "system", "content": "You are a helpful assistant."},
+             {"role": "user", "content": "Say hello in 3 languages."}],
+            config,
+        )
+        print(response)
 
-        async def chat_stream(self, messages: list[dict], config: ModelRequestConfig | None = None) -> AsyncIterator[str]:
-            text = await self.chat(messages, config)
-            for word in text.split():
-                yield word + " "
+    asyncio.run(main())
+
+Streaming
+---------
+
+.. code-block:: python
+
+    import asyncio
+    from jiuwen.core.foundation import OpenAIClient
+
+
+    async def main():
+        client = OpenAIClient.from_env()
+
+        async for token in client.chat_stream(
+            [{"role": "user", "content": "Write a haiku about coding."}],
+        ):
+            print(token, end="", flush=True)
+
+    asyncio.run(main())

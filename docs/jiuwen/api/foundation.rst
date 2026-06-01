@@ -38,13 +38,14 @@ LLMClient
    .. method:: async chat(messages: list[dict], config: ModelRequestConfig | None = None) -> str
    .. method:: async chat_stream(messages: list[dict], config: ModelRequestConfig | None = None) -> AsyncIterator[str]
 
-FakeLLMClient
--------------
+OpenAIClient
+------------
 
-.. class:: FakeLLMClient(responses: list[str] | None = None)
+.. class:: OpenAIClient(client_config: ModelClientConfig)
 
-   Test double with preprogrammed responses.
+   Real LLM client using the OpenAI SDK.
 
-   .. attribute:: responses: list[str]
-   .. attribute:: call_count: int
-   .. attribute:: last_messages: list[dict]
+   .. classmethod:: from_env(env_file: str | None = None) -> OpenAIClient
+
+      Create client from .env / environment variables.
+      Reads ``OPENAI_API_KEY``, ``OPENAI_API_BASE``, ``OPENAI_MODEL``.

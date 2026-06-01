@@ -101,7 +101,8 @@ class TestToolComponentIntegration:
     async def test_llm_with_tool_pipeline(self):
         from jiuwen.core.workflow import Workflow, Start, End
         from jiuwen.core.workflow.components import LLMComponent, LLMCompConfig
-        from jiuwen.core.foundation import FakeLLMClient, ModelRequestConfig, ModelClientConfig
+        from tests.conftest import FakeLLMClient
+        from jiuwen.core.foundation import ModelRequestConfig, ModelClientConfig
 
         def get_weather(city: str) -> str:
             return f"Weather in {city}: sunny, 25C"

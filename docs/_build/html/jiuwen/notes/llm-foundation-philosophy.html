@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>LLM Foundation: Configuration and Client Abstraction &#8212; jiuwen Documentation</title>
+    <title>LLM Foundation: OpenAI Client and Configuration &#8212; jiuwen Documentation</title>
   
   
   
@@ -148,7 +148,7 @@
 <li class="toctree-l2"><a class="reference internal" href="graph-philosophy.html">Graph Philosophy: The Pregel Execution Model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="workflow-philosophy.html">Workflow Philosophy: Composing Components</a></li>
 <li class="toctree-l2"><a class="reference internal" href="component-philosophy.html">Component Philosophy: Building Blocks</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">LLM Foundation: Configuration and Client Abstraction</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">LLM Foundation: OpenAI Client and Configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="llm-component-philosophy.html">LLM Component: AI in the Pipeline</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tool-system-philosophy.html">Tool System: Functions as Components</a></li>
 </ul>
@@ -307,7 +307,7 @@
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>LLM Foundation: Configuration and Client Abstraction</h1>
+    <h1>LLM Foundation: OpenAI Client and Configuration</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -318,8 +318,8 @@
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#two-kinds-of-configuration">Two Kinds of Configuration</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#llmclient-interface">LLMClient Interface</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fakellmclient-for-testing">FakeLLMClient for Testing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#openaiclient">OpenAIClient</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streaming">Streaming</a></li>
 </ul>
             </nav>
         </div>
@@ -331,13 +331,12 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="llm-foundation-configuration-and-client-abstraction">
-<h1>LLM Foundation: Configuration and Client Abstraction<a class="headerlink" href="#llm-foundation-configuration-and-client-abstraction" title="Link to this heading">#</a></h1>
-<p>The <cite>jiuwen.core.foundation</cite> module provides the <strong>LLM abstraction layer</strong>
-that the rest of the SDK builds upon.</p>
+  <section id="llm-foundation-openai-client-and-configuration">
+<h1>LLM Foundation: OpenAI Client and Configuration<a class="headerlink" href="#llm-foundation-openai-client-and-configuration" title="Link to this heading">#</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">jiuwen.core.foundation</span></code> module provides the <strong>LLM abstraction layer</strong>
+that powers AI agents.</p>
 <section id="two-kinds-of-configuration">
 <h2>Two Kinds of Configuration<a class="headerlink" href="#two-kinds-of-configuration" title="Link to this heading">#</a></h2>
-<p>jiuwen separates LLM configuration into two concerns:</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Concern</p></th>
@@ -358,47 +357,48 @@ that the rest of the SDK builds upon.</p>
 </table>
 </div>
 <p>This separation lets you share connection settings across multiple models
-while varying request parameters per call:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Shared connection</span>
-<span class="n">client_config</span> <span class="o">=</span> <span class="n">ModelClientConfig</span><span class="p">(</span>
-    <span class="n">provider</span><span class="o">=</span><span class="s2">&quot;openai&quot;</span><span class="p">,</span>
-    <span class="n">api_key</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;OPENAI_API_KEY&quot;</span><span class="p">],</span>
-<span class="p">)</span>
+while varying request parameters per call.</p>
+</section>
+<section id="openaiclient">
+<h2>OpenAIClient<a class="headerlink" href="#openaiclient" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">OpenAIClient</span></code> implements <code class="docutils literal notranslate"><span class="pre">LLMClient</span></code> using the OpenAI SDK.
+It works with any OpenAI-compatible API (Azure, local models via Ollama, etc.).</p>
+<p><strong>From environment variables (recommended):</strong></p>
+<p>Create a <code class="docutils literal notranslate"><span class="pre">.env</span></code> file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">OPENAI_API_KEY</span><span class="o">=</span>sk-your-key
+<span class="nv">OPENAI_API_BASE</span><span class="o">=</span>https://api.openai.com/v1
+<span class="nv">OPENAI_MODEL</span><span class="o">=</span>gpt-4o
+</pre></div>
+</div>
+<p>Then use it:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.foundation</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAIClient</span><span class="p">,</span> <span class="n">ModelRequestConfig</span>
 
-<span class="c1"># Different requests</span>
-<span class="n">creative</span> <span class="o">=</span> <span class="n">ModelRequestConfig</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">max_tokens</span><span class="o">=</span><span class="mi">2048</span><span class="p">)</span>
-<span class="n">precise</span>  <span class="o">=</span> <span class="n">ModelRequestConfig</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">max_tokens</span><span class="o">=</span><span class="mi">512</span><span class="p">)</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">OpenAIClient</span><span class="o">.</span><span class="n">from_env</span><span class="p">()</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="p">(</span>
+    <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Hello!&quot;</span><span class="p">}],</span>
+    <span class="n">ModelRequestConfig</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">0.7</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Explicit configuration:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.foundation</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAIClient</span><span class="p">,</span> <span class="n">ModelClientConfig</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">OpenAIClient</span><span class="p">(</span><span class="n">ModelClientConfig</span><span class="p">(</span>
+    <span class="n">provider</span><span class="o">=</span><span class="s2">&quot;openai&quot;</span><span class="p">,</span>
+    <span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;sk-...&quot;</span><span class="p">,</span>
+    <span class="n">api_base</span><span class="o">=</span><span class="s2">&quot;https://api.openai.com/v1&quot;</span><span class="p">,</span>
+<span class="p">))</span>
 </pre></div>
 </div>
 </section>
-<section id="llmclient-interface">
-<h2>LLMClient Interface<a class="headerlink" href="#llmclient-interface" title="Link to this heading">#</a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">LLMClient</span></code> ABC defines two methods:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">chat(messages,</span> <span class="pre">config)</span> <span class="pre">-&gt;</span> <span class="pre">str</span></code> — send messages, get complete response</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">chat_stream(messages,</span> <span class="pre">config)</span> <span class="pre">-&gt;</span> <span class="pre">AsyncIterator[str]</span></code> — stream tokens</p></li>
-</ul>
-<p>Provider implementations (e.g., OpenAI, Anthropic) extend this class.
-v0.0.4 provides only the interface and a fake for testing.</p>
-</section>
-<section id="fakellmclient-for-testing">
-<h2>FakeLLMClient for Testing<a class="headerlink" href="#fakellmclient-for-testing" title="Link to this heading">#</a></h2>
-<p>Tests should never call real LLM APIs. <code class="docutils literal notranslate"><span class="pre">FakeLLMClient</span></code> returns
-preprogrammed responses:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.foundation</span><span class="w"> </span><span class="kn">import</span> <span class="n">FakeLLMClient</span>
-
-<span class="n">client</span> <span class="o">=</span> <span class="n">FakeLLMClient</span><span class="p">([</span><span class="s2">&quot;Hello!&quot;</span><span class="p">,</span> <span class="s2">&quot;How can I help?&quot;</span><span class="p">])</span>
-
-<span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="p">([{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Hi&quot;</span><span class="p">}])</span>
-<span class="k">assert</span> <span class="n">response</span> <span class="o">==</span> <span class="s2">&quot;Hello!&quot;</span>
-<span class="k">assert</span> <span class="n">client</span><span class="o">.</span><span class="n">call_count</span> <span class="o">==</span> <span class="mi">1</span>
-
-<span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="p">([</span><span class="o">...</span><span class="p">])</span>
-<span class="k">assert</span> <span class="n">response</span> <span class="o">==</span> <span class="s2">&quot;How can I help?&quot;</span>
-
-<span class="c1"># Wraps around after exhausting the list</span>
-<span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="p">([</span><span class="o">...</span><span class="p">])</span>
-<span class="k">assert</span> <span class="n">response</span> <span class="o">==</span> <span class="s2">&quot;Hello!&quot;</span>  <span class="c1"># back to first</span>
+<section id="streaming">
+<h2>Streaming<a class="headerlink" href="#streaming" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">client</span><span class="o">.</span><span class="n">chat_stream</span><span class="p">(</span>
+    <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Tell me a story&quot;</span><span class="p">}],</span>
+<span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -452,8 +452,8 @@ preprogrammed responses:</p>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#two-kinds-of-configuration">Two Kinds of Configuration</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#llmclient-interface">LLMClient Interface</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fakellmclient-for-testing">FakeLLMClient for Testing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#openaiclient">OpenAIClient</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streaming">Streaming</a></li>
 </ul>
   </nav></div>
 

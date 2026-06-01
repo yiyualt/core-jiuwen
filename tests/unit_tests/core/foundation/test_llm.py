@@ -6,8 +6,8 @@ from jiuwen.core.foundation.llm import (
     ModelClientConfig,
     ModelRequestConfig,
     LLMClient,
-    FakeLLMClient,
 )
+from tests.conftest import FakeLLMClient
 
 
 class TestModelClientConfig:

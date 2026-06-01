@@ -14,7 +14,7 @@ from jiuwen.core.foundation.llm import (
     ModelClientConfig,
     ModelRequestConfig,
     LLMClient,
-    FakeLLMClient,
+    OpenAIClient,
 )
 from jiuwen.core.workflow.components.component import WorkflowComponent
 
@@ -43,18 +43,20 @@ class LLMComponent(WorkflowComponent):
 
     Usage::
 
+        # Auto-configure from .env
         config = LLMCompConfig(
-            model_client_config=ModelClientConfig(provider="test"),
-            model_config=ModelRequestConfig(model="test-model"),
             template_content=[
                 {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": "{{query}}"},
             ],
         )
-        client = FakeLLMClient(["Hello! I'm here to help."])
-        comp = LLMComponent(config, client)
+        comp = LLMComponent(config)
         result = await comp.invoke({"query": "Say hello"})
-        # result = {"output": "Hello! I'm here to help."}
+
+        # Or with explicit client
+        from jiuwen.core.foundation import OpenAIClient
+        client = OpenAIClient.from_env()
+        comp = LLMComponent(config, client)
     """
 
     def __init__(self, config: LLMCompConfig, client: LLMClient | None = None):
@@ -62,11 +64,11 @@ class LLMComponent(WorkflowComponent):
 
         Args:
             config: Component configuration including templates and model settings.
-            client: LLM client to use. Defaults to FakeLLMClient if not provided.
+            client: LLM client to use. Defaults to OpenAIClient.from_env().
         """
         super().__init__()
         self._config = config
-        self._client = client or FakeLLMClient()
+        self._client = client or OpenAIClient.from_env()
 
     @property
     def client(self) -> LLMClient:
