@@ -11,3 +11,4 @@ Reference documentation for jiuwen's public API.
    workflow
    components
    foundation
+   tool

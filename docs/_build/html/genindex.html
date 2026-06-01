@@ -149,6 +149,7 @@
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/component-philosophy.html">Component Philosophy: Building Blocks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/llm-foundation-philosophy.html">LLM Foundation: Configuration and Client Abstraction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/llm-component-philosophy.html">LLM Component: AI in the Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/tool-system-philosophy.html">Tool System: Functions as Components</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="jiuwen/examples/index.html">Examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -158,6 +159,7 @@
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/component-example.html">Component Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/llm-example.html">LLM Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/llm-component-example.html">LLM Component Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/tool-example.html">Tool Examples</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="jiuwen/api/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -166,6 +168,7 @@
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/api/workflow.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.workflow</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/api/components.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.workflow.components</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/api/foundation.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.foundation</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/api/tool.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.foundation</span></code> — Tool System</a></li>
 </ul>
 </details></li>
 </ul>
@@ -524,11 +527,17 @@
       <li><a href="jiuwen/api/common.html#jiuwen.core.common.BaseCard.tool_info">tool_info() (jiuwen.core.common.BaseCard method)</a>
 
       <ul>
+        <li><a href="jiuwen/api/tool.html#jiuwen.core.foundation.ToolCard.tool_info">(jiuwen.core.foundation.ToolCard method)</a>
+</li>
         <li><a href="jiuwen/api/workflow.html#jiuwen.core.workflow.WorkflowCard.tool_info">(jiuwen.core.workflow.WorkflowCard method)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jiuwen/api/tool.html#jiuwen.core.foundation.ToolCard">ToolCard (class in jiuwen.core.foundation)</a>
+</li>
+      <li><a href="jiuwen/api/tool.html#jiuwen.core.foundation.ToolComponent">ToolComponent (class in jiuwen.core.foundation)</a>
+</li>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.TriggerChannel">TriggerChannel (class in jiuwen.core.graph)</a>
 </li>
   </ul></td>
