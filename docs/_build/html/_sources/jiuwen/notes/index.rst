@@ -13,3 +13,5 @@ Design philosophy and rationale behind jiuwen's architecture.
    llm-foundation-philosophy
    llm-component-philosophy
    tool-system-philosophy
+   runner-philosophy
+   agent-philosophy

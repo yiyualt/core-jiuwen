@@ -150,6 +150,8 @@
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/llm-foundation-philosophy.html">LLM Foundation: OpenAI Client and Configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/llm-component-philosophy.html">LLM Component: AI in the Pipeline</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/tool-system-philosophy.html">Tool System: Functions as Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/runner-philosophy.html">Runner: The Entry Point</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/agent-philosophy.html">Agent: The Intelligent Interface</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="jiuwen/examples/index.html">Examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -160,6 +162,7 @@
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/llm-example.html">LLM Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/llm-component-example.html">LLM Component Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/tool-example.html">Tool Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/runner-example.html">Runner + Agent Examples</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="jiuwen/api/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -169,6 +172,8 @@
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/api/components.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.workflow.components</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/api/foundation.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.foundation</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/api/tool.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.foundation</span></code> — Tool System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/api/runner.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.runner</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/api/agent.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.single_agent</span></code></a></li>
 </ul>
 </details></li>
 </ul>
@@ -301,15 +306,23 @@
 </li>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.PregelGraph.add_conditional_edges">add_conditional_edges() (jiuwen.core.graph.PregelGraph method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="jiuwen/api/workflow.html#jiuwen.core.workflow.Workflow.add_connection">add_connection() (jiuwen.core.workflow.Workflow method)</a>
 </li>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.PregelGraph.add_edge">add_edge() (jiuwen.core.graph.PregelGraph method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.PregelGraph.add_node">add_node() (jiuwen.core.graph.PregelGraph method)</a>
 </li>
+      <li><a href="jiuwen/api/runner.html#jiuwen.core.runner.ResourceManager.add_tool">add_tool() (jiuwen.core.runner.ResourceManager method)</a>
+</li>
+      <li><a href="jiuwen/api/runner.html#jiuwen.core.runner.ResourceManager.add_workflow">add_workflow() (jiuwen.core.runner.ResourceManager method)</a>
+</li>
       <li><a href="jiuwen/api/workflow.html#jiuwen.core.workflow.Workflow.add_workflow_comp">add_workflow_comp() (jiuwen.core.workflow.Workflow method)</a>
+</li>
+      <li><a href="jiuwen/api/agent.html#jiuwen.core.single_agent.WorkflowAgent.add_workflows">add_workflows() (jiuwen.core.single_agent.WorkflowAgent method)</a>
+</li>
+      <li><a href="jiuwen/api/agent.html#jiuwen.core.single_agent.AgentCard">AgentCard (class in jiuwen.core.single_agent)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -375,13 +388,17 @@
 </li>
       <li><a href="jiuwen/api/workflow.html#jiuwen.core.workflow.generate_workflow_key">generate_workflow_key() (in module jiuwen.core.workflow)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="jiuwen/api/workflow.html#jiuwen.core.workflow.Workflow.get_components">get_components() (jiuwen.core.workflow.Workflow method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="jiuwen/api/workflow.html#jiuwen.core.workflow.Workflow.get_graph">get_graph() (jiuwen.core.workflow.Workflow method)</a>
 </li>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.PregelGraph.get_nodes">get_nodes() (jiuwen.core.graph.PregelGraph method)</a>
+</li>
+      <li><a href="jiuwen/api/runner.html#jiuwen.core.runner.ResourceManager.get_tool">get_tool() (jiuwen.core.runner.ResourceManager method)</a>
+</li>
+      <li><a href="jiuwen/api/runner.html#jiuwen.core.runner.ResourceManager.get_workflow">get_workflow() (jiuwen.core.runner.ResourceManager method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -418,8 +435,22 @@
         <li><a href="jiuwen/api/graph.html#module-jiuwen.core.graph">module</a>
 </li>
       </ul></li>
+      <li>
+    jiuwen.core.runner
+
+      <ul>
+        <li><a href="jiuwen/api/runner.html#module-jiuwen.core.runner">module</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    jiuwen.core.single_agent
+
+      <ul>
+        <li><a href="jiuwen/api/agent.html#module-jiuwen.core.single_agent">module</a>
+</li>
+      </ul></li>
       <li>
     jiuwen.core.workflow
 
@@ -468,6 +499,10 @@
 </li>
         <li><a href="jiuwen/api/graph.html#module-jiuwen.core.graph">jiuwen.core.graph</a>
 </li>
+        <li><a href="jiuwen/api/runner.html#module-jiuwen.core.runner">jiuwen.core.runner</a>
+</li>
+        <li><a href="jiuwen/api/agent.html#module-jiuwen.core.single_agent">jiuwen.core.single_agent</a>
+</li>
         <li><a href="jiuwen/api/workflow.html#module-jiuwen.core.workflow">jiuwen.core.workflow</a>
 </li>
         <li><a href="jiuwen/api/components.html#module-jiuwen.core.workflow.components">jiuwen.core.workflow.components</a>
@@ -499,11 +534,15 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jiuwen/api/runner.html#jiuwen.core.runner.ResourceManager">ResourceManager (class in jiuwen.core.runner)</a>
+</li>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.Channel.restore">restore() (jiuwen.core.graph.Channel method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.Router">Router (in module jiuwen.core.graph)</a>
+</li>
+      <li><a href="jiuwen/api/runner.html#jiuwen.core.runner.Runner">Runner (class in jiuwen.core.runner)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -557,10 +596,14 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="jiuwen/api/workflow.html#jiuwen.core.workflow.Workflow">Workflow (class in jiuwen.core.workflow)</a>
 </li>
-      <li><a href="jiuwen/api/workflow.html#jiuwen.core.workflow.WorkflowCard">WorkflowCard (class in jiuwen.core.workflow)</a>
+      <li><a href="jiuwen/api/agent.html#jiuwen.core.single_agent.WorkflowAgent">WorkflowAgent (class in jiuwen.core.single_agent)</a>
+</li>
+      <li><a href="jiuwen/api/agent.html#jiuwen.core.single_agent.WorkflowAgentConfig">WorkflowAgentConfig (class in jiuwen.core.single_agent)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jiuwen/api/workflow.html#jiuwen.core.workflow.WorkflowCard">WorkflowCard (class in jiuwen.core.workflow)</a>
+</li>
       <li><a href="jiuwen/api/components.html#jiuwen.core.workflow.components.WorkflowComponent">WorkflowComponent (class in jiuwen.core.workflow.components)</a>
 </li>
       <li><a href="jiuwen/api/workflow.html#jiuwen.core.workflow.WorkflowExecutionState">WorkflowExecutionState (class in jiuwen.core.workflow)</a>
