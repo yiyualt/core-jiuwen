@@ -11,3 +11,4 @@ Runnable code examples for jiuwen features.
    workflow-example
    component-example
    llm-example
+   llm-component-example

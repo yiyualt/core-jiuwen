@@ -149,6 +149,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../notes/workflow-philosophy.html">Workflow Philosophy: Composing Components</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notes/component-philosophy.html">Component Philosophy: Building Blocks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notes/llm-foundation-philosophy.html">LLM Foundation: Configuration and Client Abstraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/llm-component-philosophy.html">LLM Component: AI in the Pipeline</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../examples/index.html">Examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -157,6 +158,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../examples/workflow-example.html">Workflow Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/component-example.html">Component Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/llm-example.html">LLM Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/llm-component-example.html">LLM Component Examples</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">API Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -332,6 +334,14 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.core.workflow.components.EndConfig"><code class="docutils literal notranslate"><span class="pre">EndConfig</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#llmcomponent">LLMComponent</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.core.workflow.components.LLMComponent"><code class="docutils literal notranslate"><span class="pre">LLMComponent</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#llmcompconfig">LLMCompConfig</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.core.workflow.components.LLMCompConfig"><code class="docutils literal notranslate"><span class="pre">LLMCompConfig</span></code></a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -432,6 +442,58 @@ and <code class="xref py py-class docutils literal notranslate"><span class="pre
 </dd></dl>
 
 </section>
+<section id="llmcomponent">
+<h2>LLMComponent<a class="headerlink" href="#llmcomponent" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.core.workflow.components.LLMComponent">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.core.workflow.components.</span></span><span class="sig-name descname"><span class="pre">LLMComponent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#jiuwen.core.workflow.components.LLMCompConfig" title="jiuwen.core.workflow.components.LLMCompConfig"><span class="pre">LLMCompConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">client</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foundation.html#jiuwen.core.foundation.LLMClient" title="jiuwen.core.foundation.LLMClient"><span class="pre">LLMClient</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jiuwen.core.workflow.components.LLMComponent" title="Link to this definition">#</a></dt>
+<dd><p>Workflow component that calls an LLM with template-based prompts.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">client:</span> <span class="pre">LLMClient</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">async</span> <span class="pre">invoke(inputs:</span> <span class="pre">dict,</span> <span class="pre">**kwargs)</span> <span class="pre">-&gt;</span> <span class="pre">dict</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">async</span> <span class="pre">stream(inputs:</span> <span class="pre">dict,</span> <span class="pre">**kwargs)</span> <span class="pre">-&gt;</span> <span class="pre">AsyncIterator[dict]</span></span></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="llmcompconfig">
+<h2>LLMCompConfig<a class="headerlink" href="#llmcompconfig" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.core.workflow.components.LLMCompConfig">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.core.workflow.components.</span></span><span class="sig-name descname"><span class="pre">LLMCompConfig</span></span><a class="headerlink" href="#jiuwen.core.workflow.components.LLMCompConfig" title="Link to this definition">#</a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">model_client_config:</span> <span class="pre">ModelClientConfig</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">model_config:</span> <span class="pre">ModelRequestConfig</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">template_content:</span> <span class="pre">list[dict]</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">output_config:</span> <span class="pre">dict</span> <span class="pre">|</span> <span class="pre">None</span></span></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
 </section>
 
 
@@ -499,6 +561,14 @@ and <code class="xref py py-class docutils literal notranslate"><span class="pre
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#endconfig">EndConfig</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.core.workflow.components.EndConfig"><code class="docutils literal notranslate"><span class="pre">EndConfig</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#llmcomponent">LLMComponent</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.core.workflow.components.LLMComponent"><code class="docutils literal notranslate"><span class="pre">LLMComponent</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#llmcompconfig">LLMCompConfig</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.core.workflow.components.LLMCompConfig"><code class="docutils literal notranslate"><span class="pre">LLMCompConfig</span></code></a></li>
 </ul>
 </li>
 </ul>

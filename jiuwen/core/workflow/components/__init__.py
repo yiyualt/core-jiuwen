@@ -13,6 +13,7 @@ from jiuwen.core.workflow.components.component import (
 )
 from jiuwen.core.workflow.components.flow.start_comp import Start
 from jiuwen.core.workflow.components.flow.end_comp import End, EndConfig
+from jiuwen.core.workflow.components.llm.llm_comp import LLMComponent, LLMCompConfig
 
 __all__ = [
     "ComponentAbility",
@@ -24,4 +25,6 @@ __all__ = [
     "Start",
     "End",
     "EndConfig",
+    "LLMComponent",
+    "LLMCompConfig",
 ]

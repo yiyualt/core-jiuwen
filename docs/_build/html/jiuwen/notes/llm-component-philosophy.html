@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Graph Philosophy: The Pregel Execution Model &#8212; jiuwen Documentation</title>
+    <title>LLM Component: AI in the Pipeline &#8212; jiuwen Documentation</title>
   
   
   
@@ -43,11 +43,11 @@
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'jiuwen/notes/graph-philosophy';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'jiuwen/notes/llm-component-philosophy';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Workflow Philosophy: Composing Components" href="workflow-philosophy.html" />
-    <link rel="prev" title="BaseCard Philosophy: The Card/Config Split" href="basecard-philosophy.html" />
+    <link rel="next" title="Examples" href="../examples/index.html" />
+    <link rel="prev" title="LLM Foundation: Configuration and Client Abstraction" href="llm-foundation-philosophy.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -145,11 +145,11 @@
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Design Notes</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="basecard-philosophy.html">BaseCard Philosophy: The Card/Config Split</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">Graph Philosophy: The Pregel Execution Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graph-philosophy.html">Graph Philosophy: The Pregel Execution Model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="workflow-philosophy.html">Workflow Philosophy: Composing Components</a></li>
 <li class="toctree-l2"><a class="reference internal" href="component-philosophy.html">Component Philosophy: Building Blocks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="llm-foundation-philosophy.html">LLM Foundation: Configuration and Client Abstraction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="llm-component-philosophy.html">LLM Component: AI in the Pipeline</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">LLM Component: AI in the Pipeline</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../examples/index.html">Examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -228,7 +228,7 @@
       
       
       
-      <li><a href="../../_sources/jiuwen/notes/graph-philosophy.rst" target="_blank"
+      <li><a href="../../_sources/jiuwen/notes/llm-component-philosophy.rst" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -304,7 +304,7 @@
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Graph Philosophy: The Pregel Execution Model</h1>
+    <h1>LLM Component: AI in the Pipeline</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -314,10 +314,10 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-a-graph-engine">Why a Graph Engine?</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-pregel-model">The Pregel Model</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#channel-types">Channel Types</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#executable-the-node-interface">Executable: The Node Interface</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture">Architecture</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#template-prompt-system">Template Prompt System</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-with-fakellmclient">Testing with FakeLLMClient</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streaming-support">Streaming Support</a></li>
 </ul>
             </nav>
         </div>
@@ -329,97 +329,66 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="graph-philosophy-the-pregel-execution-model">
-<h1>Graph Philosophy: The Pregel Execution Model<a class="headerlink" href="#graph-philosophy-the-pregel-execution-model" title="Link to this heading">#</a></h1>
-<section id="why-a-graph-engine">
-<h2>Why a Graph Engine?<a class="headerlink" href="#why-a-graph-engine" title="Link to this heading">#</a></h2>
-<p>Workflows are DAGs (directed acyclic graphs). Each node is a component
-that processes data. Edges define how data flows from one component to
-the next. The graph engine is responsible for:</p>
-<ol class="arabic simple">
-<li><p><strong>Building</strong> the DAG (adding nodes and edges)</p></li>
-<li><p><strong>Compiling</strong> it into an executable form</p></li>
-<li><p><strong>Running</strong> it with correct ordering and concurrency</p></li>
-</ol>
-</section>
-<section id="the-pregel-model">
-<h2>The Pregel Model<a class="headerlink" href="#the-pregel-model" title="Link to this heading">#</a></h2>
-<p>jiuwen adapts Google’s <a class="reference external" href="https://en.wikipedia.org/wiki/Pregel">Pregel</a>
-model for workflow execution. The key insight: nodes communicate through
-<strong>channels</strong>, not direct function calls.</p>
-<p>Execution proceeds in <strong>super-steps</strong>:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Super-step N:
-  1. Check channels → which nodes are ready?
-  2. Execute ready nodes concurrently (async)
-  3. Route outputs → downstream channels
-  4. Repeat until no ready nodes
-</pre></div>
-</div>
-<p>This model naturally handles:
-- <strong>Concurrency</strong>: independent nodes run in parallel
-- <strong>Fan-in</strong>: a node waits for ALL upstreams (BarrierChannel)
-- <strong>Fan-out</strong>: a node triggers multiple downstreams</p>
-</section>
-<section id="channel-types">
-<h2>Channel Types<a class="headerlink" href="#channel-types" title="Link to this heading">#</a></h2>
-<div class="pst-scrollable-table-container"><table class="table">
-<thead>
-<tr class="row-odd"><th class="head"><p>Channel</p></th>
-<th class="head"><p>Behavior</p></th>
-<th class="head"><p>Use Case</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>TriggerChannel</p></td>
-<td><p>Ready when <strong>any</strong> message arrives (OR gate)</p></td>
-<td><p>Simple A→B edge</p></td>
-</tr>
-<tr class="row-odd"><td><p>BarrierChannel</p></td>
-<td><p>Ready when <strong>all</strong> expected senders arrive (AND gate)</p></td>
-<td><p>N→1 fan-in, wait_for_all</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>TriggerChannel:            BarrierChannel:
-  A ──→ [T] ──→ B           A ──╮
-  (B ready when A fires)    B ──→ [B] ──→ C
-                            (C ready when A AND B fire)
+  <section id="llm-component-ai-in-the-pipeline">
+<h1>LLM Component: AI in the Pipeline<a class="headerlink" href="#llm-component-ai-in-the-pipeline" title="Link to this heading">#</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">LLMComponent</span></code> is the bridge between <code class="docutils literal notranslate"><span class="pre">LLMClient</span></code> (v0.0.4) and
+<code class="docutils literal notranslate"><span class="pre">Workflow</span></code> (v0.0.3). It wraps an LLM call into a standard workflow
+component that can be placed anywhere in a pipeline.</p>
+<section id="architecture">
+<h2>Architecture<a class="headerlink" href="#architecture" title="Link to this heading">#</a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>LLMComponent
+├── LLMCompConfig         ← what to do
+│   ├── model_client_config  (connection)
+│   ├── model_config         (request params)
+│   ├── template_content     (prompt template)
+│   └── output_config        (expected output schema)
+└── LLMClient             ← how to do it
+    (FakeLLMClient in tests)
 </pre></div>
 </div>
 </section>
-<section id="executable-the-node-interface">
-<h2>Executable: The Node Interface<a class="headerlink" href="#executable-the-node-interface" title="Link to this heading">#</a></h2>
-<p>Every node in the graph is an <code class="docutils literal notranslate"><span class="pre">Executable</span></code>. It defines four I/O modes:</p>
-<div class="pst-scrollable-table-container"><table class="table">
-<thead>
-<tr class="row-odd"><th class="head"><p>Mode</p></th>
-<th class="head"><p>Input</p></th>
-<th class="head"><p>Output</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">on_invoke</span></code></p></td>
-<td><p>batch (dict)</p></td>
-<td><p>batch (dict)</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">on_stream</span></code></p></td>
-<td><p>batch (dict)</p></td>
-<td><p>stream (async iterator)</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">on_collect</span></code></p></td>
-<td><p>stream</p></td>
-<td><p>batch (dict)</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">on_transform</span></code></p></td>
-<td><p>stream</p></td>
-<td><p>stream (async iterator)</p></td>
-</tr>
-</tbody>
-</table>
+<section id="template-prompt-system">
+<h2>Template Prompt System<a class="headerlink" href="#template-prompt-system" title="Link to this heading">#</a></h2>
+<p>LLMComponent uses <code class="docutils literal notranslate"><span class="pre">{{variable}}</span></code> template syntax. At invoke time,
+variables are replaced with values from the inputs dict:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">config</span> <span class="o">=</span> <span class="n">LLMCompConfig</span><span class="p">(</span>
+    <span class="n">template_content</span><span class="o">=</span><span class="p">[</span>
+        <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;你是一个{{role}}。&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;{{query}}&quot;</span><span class="p">},</span>
+    <span class="p">],</span>
+    <span class="o">...</span>
+<span class="p">)</span>
+
+<span class="c1"># inputs: {&quot;role&quot;: &quot;翻译官&quot;, &quot;query&quot;: &quot;翻译: hello&quot;}</span>
+<span class="c1"># → messages: [{&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: &quot;你是一个翻译官。&quot;},</span>
+<span class="c1">#              {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;翻译: hello&quot;}]</span>
+</pre></div>
 </div>
-<p>v0.0.2 implements only <code class="docutils literal notranslate"><span class="pre">on_invoke</span></code>. Other modes raise
-<code class="docutils literal notranslate"><span class="pre">NotImplementedError</span></code> — they’ll be filled in by future versions.</p>
+</section>
+<section id="testing-with-fakellmclient">
+<h2>Testing with FakeLLMClient<a class="headerlink" href="#testing-with-fakellmclient" title="Link to this heading">#</a></h2>
+<p>LLMComponent defaults to <code class="docutils literal notranslate"><span class="pre">FakeLLMClient</span></code> if no client is provided,
+making it testable out of the box:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.foundation</span><span class="w"> </span><span class="kn">import</span> <span class="n">FakeLLMClient</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.workflow.components</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLMComponent</span><span class="p">,</span> <span class="n">LLMCompConfig</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">FakeLLMClient</span><span class="p">([</span><span class="s2">&quot;Bonjour!&quot;</span><span class="p">])</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">LLMCompConfig</span><span class="p">(</span>
+    <span class="n">template_content</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;{{text}}&quot;</span><span class="p">}],</span>
+<span class="p">)</span>
+<span class="n">comp</span> <span class="o">=</span> <span class="n">LLMComponent</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">client</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">comp</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Translate: hello&quot;</span><span class="p">})</span>
+<span class="k">assert</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;output&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Bonjour!&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="streaming-support">
+<h2>Streaming Support<a class="headerlink" href="#streaming-support" title="Link to this heading">#</a></h2>
+<p>For real-time output, use <code class="docutils literal notranslate"><span class="pre">stream()</span></code> instead of <code class="docutils literal notranslate"><span class="pre">invoke()</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">comp</span><span class="o">.</span><span class="n">stream</span><span class="p">({</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="s2">&quot;Tell a story&quot;</span><span class="p">}):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="p">[</span><span class="s2">&quot;output&quot;</span><span class="p">],</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
 </section>
 </section>
 
@@ -435,20 +404,20 @@ model for workflow execution. The key insight: nodes communicate through
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="basecard-philosophy.html"
+       href="llm-foundation-philosophy.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">BaseCard Philosophy: The Card/Config Split</p>
+        <p class="prev-next-title">LLM Foundation: Configuration and Client Abstraction</p>
       </div>
     </a>
     <a class="right-next"
-       href="workflow-philosophy.html"
+       href="../examples/index.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Workflow Philosophy: Composing Components</p>
+        <p class="prev-next-title">Examples</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -470,10 +439,10 @@ model for workflow execution. The key insight: nodes communicate through
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-a-graph-engine">Why a Graph Engine?</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-pregel-model">The Pregel Model</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#channel-types">Channel Types</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#executable-the-node-interface">Executable: The Node Interface</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture">Architecture</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#template-prompt-system">Template Prompt System</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-with-fakellmclient">Testing with FakeLLMClient</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streaming-support">Streaming Support</a></li>
 </ul>
   </nav></div>
 

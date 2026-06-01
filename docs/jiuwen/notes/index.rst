@@ -11,3 +11,4 @@ Design philosophy and rationale behind jiuwen's architecture.
    workflow-philosophy
    component-philosophy
    llm-foundation-philosophy
+   llm-component-philosophy

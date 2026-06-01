@@ -51,3 +51,25 @@ EndConfig
    .. attribute:: response_template: str
 
        Template string using ``{{variable}}`` syntax.
+
+LLMComponent
+------------
+
+.. class:: LLMComponent(config: LLMCompConfig, client: LLMClient | None = None)
+
+   Workflow component that calls an LLM with template-based prompts.
+
+   .. attribute:: client: LLMClient
+
+   .. method:: async invoke(inputs: dict, **kwargs) -> dict
+   .. method:: async stream(inputs: dict, **kwargs) -> AsyncIterator[dict]
+
+LLMCompConfig
+-------------
+
+.. class:: LLMCompConfig
+
+   .. attribute:: model_client_config: ModelClientConfig
+   .. attribute:: model_config: ModelRequestConfig
+   .. attribute:: template_content: list[dict]
+   .. attribute:: output_config: dict | None

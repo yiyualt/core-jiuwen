@@ -18,6 +18,8 @@ from jiuwen.core.workflow.components import (
     Start,
     End,
     EndConfig,
+    LLMComponent,
+    LLMCompConfig,
 )
 
 __all__ = [
@@ -35,4 +37,6 @@ __all__ = [
     "Start",
     "End",
     "EndConfig",
+    "LLMComponent",
+    "LLMCompConfig",
 ]
