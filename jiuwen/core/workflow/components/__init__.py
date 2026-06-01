@@ -14,6 +14,8 @@ from jiuwen.core.workflow.components.component import (
 from jiuwen.core.workflow.components.flow.start_comp import Start
 from jiuwen.core.workflow.components.flow.end_comp import End, EndConfig
 from jiuwen.core.workflow.components.llm.llm_comp import LLMComponent, LLMCompConfig
+from jiuwen.core.workflow.components.condition import Condition, ExpressionCondition
+from jiuwen.core.workflow.components.flow.branch_comp import BranchComponent
 
 __all__ = [
     "ComponentAbility",
@@ -27,4 +29,7 @@ __all__ = [
     "EndConfig",
     "LLMComponent",
     "LLMCompConfig",
+    "Condition",
+    "ExpressionCondition",
+    "BranchComponent",
 ]

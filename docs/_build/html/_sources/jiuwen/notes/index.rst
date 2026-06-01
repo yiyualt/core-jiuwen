@@ -17,3 +17,4 @@ Design philosophy and rationale behind jiuwen's architecture.
    agent-philosophy
    react-agent-philosophy
    session-philosophy
+   condition-philosophy
