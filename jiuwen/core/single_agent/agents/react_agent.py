@@ -12,6 +12,7 @@ from typing import Any
 
 from jiuwen.core.foundation.llm import LLMClient, ModelRequestConfig
 from jiuwen.core.foundation.tool import ToolCard, ToolComponent
+from jiuwen.core.session import Session, StreamEmitter
 
 _REACT_SYSTEM_TEMPLATE = """You are {system_prompt}
 
@@ -83,23 +84,29 @@ class ReActAgent:
         self._system_prompt = system_prompt
         self._max_iterations = max_iterations
 
-    async def run(self, inputs: dict[str, Any]) -> dict[str, Any]:
+    async def run(self, inputs: dict[str, Any], session: Session | None = None) -> dict[str, Any]:
         """Execute the ReAct loop with the given inputs.
 
         Args:
             inputs: Must contain a "query" key with the user's question.
+            session: Optional session for multi-turn conversation.
 
         Returns:
             Dict with "result" key containing the final answer.
         """
         query = inputs.get("query", "")
-        messages = self._build_initial_messages(query)
+        if session is not None:
+            session.add_message("user", query)
+
+        messages = self._build_initial_messages(query, session)
 
         for _ in range(self._max_iterations):
             response = await self._client.chat(messages)
             parsed = self._parse_output(response)
 
             if parsed["type"] == "final":
+                if session is not None:
+                    session.add_message("assistant", parsed["answer"])
                 return {"result": parsed["answer"]}
 
             if parsed["type"] == "action":
@@ -107,13 +114,53 @@ class ReActAgent:
                 messages.append({"role": "assistant", "content": response})
                 messages.append({"role": "user", "content": f"Observation: {observation}"})
             else:
-                # Unknown format — push the response and hope LLM self-corrects
                 messages.append({"role": "assistant", "content": response})
                 messages.append({"role": "user", "content": "Continue. Use the required format."})
 
         return {"result": "Max iterations reached without final answer."}
 
-    def _build_initial_messages(self, query: str) -> list[dict]:
+    async def stream(self, inputs: dict[str, Any], session: Session | None = None):
+        """Execute the ReAct loop in streaming mode.
+
+        Yields intermediate steps (actions, observations) and the final answer
+        as they happen, for real-time display.
+
+        Args:
+            inputs: Must contain a "query" key.
+            session: Optional session.
+
+        Yields:
+            Dicts with "type": "action"|"observation"|"final" and "data".
+        """
+        query = inputs.get("query", "")
+        if session is not None:
+            session.add_message("user", query)
+
+        messages = self._build_initial_messages(query, session)
+
+        for _ in range(self._max_iterations):
+            response = await self._client.chat(messages)
+            parsed = self._parse_output(response)
+
+            if parsed["type"] == "final":
+                if session:
+                    session.add_message("assistant", parsed["answer"])
+                yield {"type": "final", "data": parsed["answer"]}
+                return
+
+            if parsed["type"] == "action":
+                yield {"type": "action", "data": parsed["action"]}
+                observation = await self._execute_action(parsed["action"])
+                yield {"type": "observation", "data": observation}
+                messages.append({"role": "assistant", "content": response})
+                messages.append({"role": "user", "content": f"Observation: {observation}"})
+            else:
+                messages.append({"role": "assistant", "content": response})
+                messages.append({"role": "user", "content": "Continue. Use the required format."})
+
+        yield {"type": "final", "data": "Max iterations reached."}
+
+    def _build_initial_messages(self, query: str, session: Session | None = None) -> list[dict]:
         tool_descs = "\n".join(
             f"- {name}: {card.description}"
             + (f" (params: {', '.join(f'{k}: {v}' for k, v in card.parameters.get('properties', {}).items())})"
@@ -127,10 +174,11 @@ class ReActAgent:
             user_query=f"User's question: {query}",
         )
 
-        return [
-            {"role": "system", "content": system_msg},
-            {"role": "user", "content": query},
-        ]
+        messages = [{"role": "system", "content": system_msg}]
+        if session:
+            messages.extend(session.get_messages())
+        messages.append({"role": "user", "content": query})
+        return messages
 
     def _parse_output(self, text: str) -> dict:
         """Parse LLM output into a structured dict."""

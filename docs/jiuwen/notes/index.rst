@@ -16,3 +16,4 @@ Design philosophy and rationale behind jiuwen's architecture.
    runner-philosophy
    agent-philosophy
    react-agent-philosophy
+   session-philosophy

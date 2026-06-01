@@ -15,3 +15,4 @@ Runnable code examples for jiuwen features.
    tool-example
    runner-example
    react-agent-example
+   session-example
