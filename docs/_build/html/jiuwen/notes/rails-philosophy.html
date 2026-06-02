@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Rails: Composable Agent Middleware &#8212; jiuwen Documentation</title>
+    <title>Rails: Agent 中间件系统 &#8212; jiuwen Documentation</title>
   
   
   
@@ -156,10 +156,12 @@
 <li class="toctree-l2"><a class="reference internal" href="react-agent-philosophy.html">ReAct Agent: Reasoning + Acting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="session-philosophy.html">Session: Multi-Turn Memory</a></li>
 <li class="toctree-l2"><a class="reference internal" href="condition-philosophy.html">Condition &amp; Branch: Control Flow in Workflows</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">Rails: Composable Agent Middleware</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Rails: Agent 中间件系统</a></li>
 <li class="toctree-l2"><a class="reference internal" href="teams-philosophy.html">Agent Teams: Multi-Agent Collaboration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="evolving-philosophy.html">Agent Evolving: Automatic Prompt Optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="harness-philosophy.html">Harness: Coding Agent Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="task-loop-philosophy.html">Task Loop: 事件驱动的 Agent 执行</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workspace-philosophy.html">Workspace: Agent 的安全工位</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../examples/index.html">Examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -174,10 +176,12 @@
 <li class="toctree-l2"><a class="reference internal" href="../examples/react-agent-example.html">ReAct Agent Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/session-example.html">Session Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/condition-example.html">Condition Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/rails-example.html">Rails Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/rails-example.html">Rails 示例</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/teams-example.html">Agent Teams Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/evolving-example.html">Agent Evolving Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/harness-example.html">Harness Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/task-loop-example.html">Task Loop Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/workspace-example.html">Workspace 示例</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -331,7 +335,7 @@
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Rails: Composable Agent Middleware</h1>
+    <h1>Rails: Agent 中间件系统</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -341,10 +345,12 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pipeline-architecture">Pipeline Architecture</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#built-in-rails">Built-in Rails</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-rails">Custom Rails</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-with-runner">Integration with Runner</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">架构位置</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">执行顺序</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">三种能力</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#short-circuit">阻断（Short-Circuit）机制</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rail">自定义 Rail 示例</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#runner">集成到 Runner</a></li>
 </ul>
             </nav>
         </div>
@@ -356,58 +362,155 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="rails-composable-agent-middleware">
-<h1>Rails: Composable Agent Middleware<a class="headerlink" href="#rails-composable-agent-middleware" title="Link to this heading">#</a></h1>
-<p>Rails are composable before/after hooks that wrap agent execution.
-Think of them as middleware for AI agents.</p>
-<section id="pipeline-architecture">
-<h2>Pipeline Architecture<a class="headerlink" href="#pipeline-architecture" title="Link to this heading">#</a></h2>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Request → [Rail A.before] → [Rail B.before] → Agent.run
-                                                ↓
-Response ← [Rail A.after] ← [Rail B.after] ← ───┘
-</pre></div>
-</div>
-<p>Each rail can:
-- <strong>Inspect</strong> inputs/outputs
-- <strong>Modify</strong> data flowing through
-- <strong>Block</strong> execution (short-circuit with a response)</p>
-</section>
-<section id="built-in-rails">
-<h2>Built-in Rails<a class="headerlink" href="#built-in-rails" title="Link to this heading">#</a></h2>
-<p><strong>SecurityRail</strong> — blocks dangerous patterns:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.rails</span><span class="w"> </span><span class="kn">import</span> <span class="n">SecurityRail</span>
-
-<span class="n">rail</span> <span class="o">=</span> <span class="n">SecurityRail</span><span class="p">()</span>
-<span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">rail</span><span class="o">.</span><span class="n">before</span><span class="p">({</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="s2">&quot;DROP TABLE users&quot;</span><span class="p">})</span>
-<span class="c1"># {&quot;result&quot;: &quot;Blocked: dangerous content detected (matched: &#39;drop table&#39;)&quot;}</span>
+  <section id="rails-agent">
+<h1>Rails: Agent 中间件系统<a class="headerlink" href="#rails-agent" title="Link to this heading">#</a></h1>
+<p>Rails 是 <strong>可组合的 before/after 钩子</strong>，在 agent 执行前后拦截请求和响应。
+类似于 Web 框架的 middleware（Express.js / Django middleware），但针对 AI agent。</p>
+<section id="id1">
+<h2>架构位置<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>Rails 位于 <strong>core 层</strong> (通用 SDK)，harness 和所有 agent 都可以用它：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>jiuwen/
+├── core/rails/          ← 通用中间件框架
+│   ├── BaseRail          (before/after 钩子)
+│   ├── RailPipeline      (编排多个 rail)
+│   └── SecurityRail      (拦截危险输入)
+│
+├── core/runner/          ← Runner 持有 RailPipeline
+│   └── Runner.rails       (对 Runner.run_agent 的所有调用都经过 rails)
+│
+└── harness/              ← coding agent 也用 rails
+    └── DeepAgent          (通过 Runner 自动受保护)
 </pre></div>
 </div>
 </section>
-<section id="custom-rails">
-<h2>Custom Rails<a class="headerlink" href="#custom-rails" title="Link to this heading">#</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.rails</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseRail</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">LoggingRail</span><span class="p">(</span><span class="n">BaseRail</span><span class="p">):</span>
+<section id="id2">
+<h2>执行顺序<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>用户调用 Runner.run_agent(agent, inputs)
+│
+├─→ Rail A.before(inputs)   ← 可以修改/拦截输入
+│   └─→ Rail B.before(inputs)
+│       └─→ agent.run(inputs)   ← 核心执行
+│           └─→ Rail B.after(result)  ← 逆序
+│               └─→ Rail A.after(result)
+│
+└─→ 返回最终结果
+</pre></div>
+</div>
+<p>关键：after 钩子是**逆序**执行的（洋葱模型）。</p>
+</section>
+<section id="id3">
+<h2>三种能力<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>能力</p></th>
+<th class="head"><p>说明</p></th>
+<th class="head"><p>示例</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>检查</strong></p></td>
+<td><p>读取输入/输出，不做修改</p></td>
+<td><p>日志记录、审计追踪</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>修改</strong></p></td>
+<td><p>改变数据再传递</p></td>
+<td><p>脱敏、追加上下文</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>阻断</strong></p></td>
+<td><p>直接返回结果，不调用 agent</p></td>
+<td><p>安全检查、内容过滤</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="short-circuit">
+<h2>阻断（Short-Circuit）机制<a class="headerlink" href="#short-circuit" title="Link to this heading">#</a></h2>
+<p>如果 before() 返回 <code class="docutils literal notranslate"><span class="pre">{&quot;result&quot;:</span> <span class="pre">&quot;...&quot;}</span></code>，pipeline 会**跳过 agent** 直接返回：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">SecurityRail</span><span class="p">(</span><span class="n">BaseRail</span><span class="p">):</span>
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">before</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[LOG] Agent called: </span><span class="si">{</span><span class="n">inputs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;query&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">term</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;drop table&quot;</span><span class="p">,</span> <span class="s2">&quot;rm -rf&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">term</span> <span class="ow">in</span> <span class="n">query</span><span class="p">:</span>
+                <span class="c1"># 返回带 &quot;result&quot; 键的 dict = 阻断</span>
+                <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Blocked: dangerous content&quot;</span><span class="p">}</span>
+        <span class="c1"># 返回原始 inputs = 放行</span>
+        <span class="k">return</span> <span class="n">inputs</span>
+
+<span class="c1"># 使用：</span>
+<span class="n">rail</span> <span class="o">=</span> <span class="n">SecurityRail</span><span class="p">()</span>
+<span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">rail</span><span class="o">.</span><span class="n">before</span><span class="p">({</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="s2">&quot;Please DROP TABLE users&quot;</span><span class="p">})</span>
+<span class="c1"># → {&quot;result&quot;: &quot;Blocked: dangerous content&quot;}    ← agent 不会被调用</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">rail</span><span class="o">.</span><span class="n">before</span><span class="p">({</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="s2">&quot;What is Python?&quot;</span><span class="p">})</span>
+<span class="c1"># → {&quot;query&quot;: &quot;What is Python?&quot;}                ← 正常放行</span>
+</pre></div>
+</div>
+</section>
+<section id="rail">
+<h2>自定义 Rail 示例<a class="headerlink" href="#rail" title="Link to this heading">#</a></h2>
+<p><strong>日志 Rail：</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">LoggingRail</span><span class="p">(</span><span class="n">BaseRail</span><span class="p">):</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">before</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[进入] </span><span class="si">{</span><span class="n">inputs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;query&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)[:</span><span class="mi">100</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">inputs</span>
 
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">after</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[LOG] Agent returned: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[返回] </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;result&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">))[:</span><span class="mi">100</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+</pre></div>
+</div>
+<p><strong>内容过滤 Rail：</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">ContentFilterRail</span><span class="p">(</span><span class="n">BaseRail</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blocked_words</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_blocked</span> <span class="o">=</span> <span class="n">blocked_words</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">before</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;query&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_blocked</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">text</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="s2">&quot;请文明交流。&quot;</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">inputs</span>
+</pre></div>
+</div>
+<p><strong>文件保护 Rail：</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">ReadOnlyRail</span><span class="p">(</span><span class="n">BaseRail</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;禁止 agent 写入任何文件（只读模式）。&quot;&quot;&quot;</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">before</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;_readonly&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="n">inputs</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">after</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># 审计：记录 agent 做了什么</span>
         <span class="k">return</span> <span class="n">result</span>
 </pre></div>
 </div>
 </section>
-<section id="integration-with-runner">
-<h2>Integration with Runner<a class="headerlink" href="#integration-with-runner" title="Link to this heading">#</a></h2>
-<p>Add rails to Runner for automatic filtering:</p>
+<section id="runner">
+<h2>集成到 Runner<a class="headerlink" href="#runner" title="Link to this heading">#</a></h2>
+<p>Runner 持有全局 RailPipeline，所有 agent 调用自动经过 rails：</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.runner</span><span class="w"> </span><span class="kn">import</span> <span class="n">Runner</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.rails</span><span class="w"> </span><span class="kn">import</span> <span class="n">SecurityRail</span>
 
+<span class="c1"># 全局生效 — 所有 agent 都受保护</span>
 <span class="n">Runner</span><span class="o">.</span><span class="n">rails</span><span class="o">.</span><span class="n">add_rail</span><span class="p">(</span><span class="n">SecurityRail</span><span class="p">())</span>
 
-<span class="c1"># All agent calls through Runner are now filtered</span>
-<span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Runner</span><span class="o">.</span><span class="n">run_agent</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">})</span>
+<span class="c1"># DeepAgent（harness）、ReActAgent、WorkflowAgent 都经过这里</span>
+<span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Runner</span><span class="o">.</span><span class="n">run_agent</span><span class="p">(</span><span class="n">any_agent</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>Pipeline 可以组合多个 rail：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.rails</span><span class="w"> </span><span class="kn">import</span> <span class="n">RailPipeline</span><span class="p">,</span> <span class="n">SecurityRail</span>
+
+<span class="n">Runner</span><span class="o">.</span><span class="n">rails</span> <span class="o">=</span> <span class="n">RailPipeline</span><span class="p">([</span>
+    <span class="n">SecurityRail</span><span class="p">(),</span>       <span class="c1"># 先检查安全</span>
+    <span class="n">LoggingRail</span><span class="p">(),</span>        <span class="c1"># 再记录日志</span>
+    <span class="n">ContentFilterRail</span><span class="p">(),</span>  <span class="c1"># 最后过滤内容</span>
+<span class="p">])</span>
+<span class="c1"># 执行顺序：Security.before → Logging.before → Content.before → agent</span>
+<span class="c1">#                                                        → Content.after</span>
+<span class="c1">#                                                   → Logging.after</span>
+<span class="c1">#                                              → Security.after</span>
 </pre></div>
 </div>
 </section>
@@ -460,10 +563,12 @@ Response ← [Rail A.after] ← [Rail B.after] ← ───┘
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pipeline-architecture">Pipeline Architecture</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#built-in-rails">Built-in Rails</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-rails">Custom Rails</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-with-runner">Integration with Runner</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">架构位置</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">执行顺序</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">三种能力</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#short-circuit">阻断（Short-Circuit）机制</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rail">自定义 Rail 示例</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#runner">集成到 Runner</a></li>
 </ul>
   </nav></div>
 

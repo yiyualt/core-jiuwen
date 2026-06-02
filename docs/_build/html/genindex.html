@@ -155,10 +155,12 @@
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/react-agent-philosophy.html">ReAct Agent: Reasoning + Acting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/session-philosophy.html">Session: Multi-Turn Memory</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/condition-philosophy.html">Condition &amp; Branch: Control Flow in Workflows</a></li>
-<li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/rails-philosophy.html">Rails: Composable Agent Middleware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/rails-philosophy.html">Rails: Agent 中间件系统</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/teams-philosophy.html">Agent Teams: Multi-Agent Collaboration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/evolving-philosophy.html">Agent Evolving: Automatic Prompt Optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/harness-philosophy.html">Harness: Coding Agent Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/task-loop-philosophy.html">Task Loop: 事件驱动的 Agent 执行</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/workspace-philosophy.html">Workspace: Agent 的安全工位</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="jiuwen/examples/index.html">Examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -173,10 +175,12 @@
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/react-agent-example.html">ReAct Agent Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/session-example.html">Session Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/condition-example.html">Condition Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/rails-example.html">Rails Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/rails-example.html">Rails 示例</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/teams-example.html">Agent Teams Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/evolving-example.html">Agent Evolving Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/harness-example.html">Harness Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/task-loop-example.html">Task Loop Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/workspace-example.html">Workspace 示例</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="jiuwen/api/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -435,6 +439,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="jiuwen/api/evolving.html#jiuwen.core.agent_evolving.Evaluator">Evaluator (class in jiuwen.core.agent_evolving)</a>
 </li>
+      <li><a href="jiuwen/api/harness.html#jiuwen.harness.EventHandler">EventHandler (class in jiuwen.harness)</a>
+</li>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.Executable">Executable (class in jiuwen.core.graph)</a>
 </li>
       <li><a href="jiuwen/api/harness.html#jiuwen.harness.Workspace.exists">exists() (jiuwen.harness.Workspace method)</a>
@@ -587,11 +593,15 @@
 </li>
       <li><a href="jiuwen/api/foundation.html#jiuwen.core.foundation.LLMClient">LLMClient (class in jiuwen.core.foundation)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="jiuwen/api/components.html#jiuwen.core.workflow.components.LLMCompConfig">LLMCompConfig (class in jiuwen.core.workflow.components)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="jiuwen/api/components.html#jiuwen.core.workflow.components.LLMComponent">LLMComponent (class in jiuwen.core.workflow.components)</a>
+</li>
+      <li><a href="jiuwen/api/harness.html#jiuwen.harness.LoggingHandler">LoggingHandler (class in jiuwen.harness)</a>
+</li>
+      <li><a href="jiuwen/api/harness.html#jiuwen.harness.LoopCoordinator">LoopCoordinator (class in jiuwen.harness)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -716,6 +726,10 @@
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jiuwen/api/harness.html#jiuwen.harness.TaskEvent">TaskEvent (class in jiuwen.harness)</a>
+</li>
+      <li><a href="jiuwen/api/harness.html#jiuwen.harness.TaskExecutor">TaskExecutor (class in jiuwen.harness)</a>
+</li>
       <li><a href="jiuwen/api/teams.html#jiuwen.core.agent_teams.Team">Team (class in jiuwen.core.agent_teams)</a>
 </li>
       <li><a href="jiuwen/api/common.html#jiuwen.core.common.BaseCard.to_str">to_str() (jiuwen.core.common.BaseCard method)</a>

@@ -155,10 +155,12 @@
 <li class="toctree-l2"><a class="reference internal" href="../notes/react-agent-philosophy.html">ReAct Agent: Reasoning + Acting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notes/session-philosophy.html">Session: Multi-Turn Memory</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notes/condition-philosophy.html">Condition &amp; Branch: Control Flow in Workflows</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notes/rails-philosophy.html">Rails: Composable Agent Middleware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/rails-philosophy.html">Rails: Agent 中间件系统</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notes/teams-philosophy.html">Agent Teams: Multi-Agent Collaboration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notes/evolving-philosophy.html">Agent Evolving: Automatic Prompt Optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notes/harness-philosophy.html">Harness: Coding Agent Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/task-loop-philosophy.html">Task Loop: 事件驱动的 Agent 执行</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/workspace-philosophy.html">Workspace: Agent 的安全工位</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../examples/index.html">Examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -173,10 +175,12 @@
 <li class="toctree-l2"><a class="reference internal" href="../examples/react-agent-example.html">ReAct Agent Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/session-example.html">Session Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/condition-example.html">Condition Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/rails-example.html">Rails Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/rails-example.html">Rails 示例</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/teams-example.html">Agent Teams Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/evolving-example.html">Agent Evolving Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/harness-example.html">Harness Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/task-loop-example.html">Task Loop Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/workspace-example.html">Workspace 示例</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">API Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -384,6 +388,14 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.harness.WorkspaceSection"><code class="docutils literal notranslate"><span class="pre">WorkspaceSection</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#task-loop">Task Loop</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.harness.TaskEvent"><code class="docutils literal notranslate"><span class="pre">TaskEvent</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.harness.EventHandler"><code class="docutils literal notranslate"><span class="pre">EventHandler</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.harness.LoggingHandler"><code class="docutils literal notranslate"><span class="pre">LoggingHandler</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.harness.TaskExecutor"><code class="docutils literal notranslate"><span class="pre">TaskExecutor</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.harness.LoopCoordinator"><code class="docutils literal notranslate"><span class="pre">LoopCoordinator</span></code></a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -532,6 +544,55 @@
 <dd></dd></dl>
 
 </section>
+<section id="task-loop">
+<h2>Task Loop<a class="headerlink" href="#task-loop" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.harness.TaskEvent">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.harness.</span></span><span class="sig-name descname"><span class="pre">TaskEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestamp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">...</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jiuwen.harness.TaskEvent" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.harness.EventHandler">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.harness.</span></span><span class="sig-name descname"><span class="pre">EventHandler</span></span><a class="headerlink" href="#jiuwen.harness.EventHandler" title="Link to this definition">#</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">async</span> <span class="pre">on_event(event:</span> <span class="pre">TaskEvent)</span> <span class="pre">-&gt;</span> <span class="pre">None</span></span></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.harness.LoggingHandler">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.harness.</span></span><span class="sig-name descname"><span class="pre">LoggingHandler</span></span><a class="headerlink" href="#jiuwen.harness.LoggingHandler" title="Link to this definition">#</a></dt>
+<dd><p>Logs events to stderr. Extends <a class="reference internal" href="#jiuwen.harness.EventHandler" title="jiuwen.harness.EventHandler"><code class="xref py py-class docutils literal notranslate"><span class="pre">EventHandler</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.harness.TaskExecutor">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.harness.</span></span><span class="sig-name descname"><span class="pre">TaskExecutor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handlers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#jiuwen.harness.EventHandler" title="jiuwen.harness.EventHandler"><span class="pre">EventHandler</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jiuwen.harness.TaskExecutor" title="Link to this definition">#</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">async</span> <span class="pre">execute(task:</span> <span class="pre">str,</span> <span class="pre">session=None)</span> <span class="pre">-&gt;</span> <span class="pre">dict</span></span></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.harness.LoopCoordinator">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.harness.</span></span><span class="sig-name descname"><span class="pre">LoopCoordinator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">executor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#jiuwen.harness.TaskExecutor" title="jiuwen.harness.TaskExecutor"><span class="pre">TaskExecutor</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jiuwen.harness.LoopCoordinator" title="Link to this definition">#</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">async</span> <span class="pre">submit(task:</span> <span class="pre">str,</span> <span class="pre">session=None)</span> <span class="pre">-&gt;</span> <span class="pre">None</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">async</span> <span class="pre">run()</span> <span class="pre">-&gt;</span> <span class="pre">None</span></span></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
 </section>
 
 
@@ -614,6 +675,14 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.harness.ToolsSection"><code class="docutils literal notranslate"><span class="pre">ToolsSection</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.harness.SafetySection"><code class="docutils literal notranslate"><span class="pre">SafetySection</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.harness.WorkspaceSection"><code class="docutils literal notranslate"><span class="pre">WorkspaceSection</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#task-loop">Task Loop</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.harness.TaskEvent"><code class="docutils literal notranslate"><span class="pre">TaskEvent</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.harness.EventHandler"><code class="docutils literal notranslate"><span class="pre">EventHandler</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.harness.LoggingHandler"><code class="docutils literal notranslate"><span class="pre">LoggingHandler</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.harness.TaskExecutor"><code class="docutils literal notranslate"><span class="pre">TaskExecutor</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.harness.LoopCoordinator"><code class="docutils literal notranslate"><span class="pre">LoopCoordinator</span></code></a></li>
 </ul>
 </li>
 </ul>

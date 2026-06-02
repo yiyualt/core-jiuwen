@@ -21,3 +21,5 @@ Runnable code examples for jiuwen features.
    teams-example
    evolving-example
    harness-example
+   task-loop-example
+   workspace-example

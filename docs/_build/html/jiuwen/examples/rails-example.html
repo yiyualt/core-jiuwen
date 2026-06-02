@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Rails Examples &#8212; jiuwen Documentation</title>
+    <title>Rails 示例 &#8212; jiuwen Documentation</title>
   
   
   
@@ -156,10 +156,12 @@
 <li class="toctree-l2"><a class="reference internal" href="../notes/react-agent-philosophy.html">ReAct Agent: Reasoning + Acting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notes/session-philosophy.html">Session: Multi-Turn Memory</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notes/condition-philosophy.html">Condition &amp; Branch: Control Flow in Workflows</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notes/rails-philosophy.html">Rails: Composable Agent Middleware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/rails-philosophy.html">Rails: Agent 中间件系统</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notes/teams-philosophy.html">Agent Teams: Multi-Agent Collaboration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notes/evolving-philosophy.html">Agent Evolving: Automatic Prompt Optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notes/harness-philosophy.html">Harness: Coding Agent Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/task-loop-philosophy.html">Task Loop: 事件驱动的 Agent 执行</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/workspace-philosophy.html">Workspace: Agent 的安全工位</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Examples</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -174,10 +176,12 @@
 <li class="toctree-l2"><a class="reference internal" href="react-agent-example.html">ReAct Agent Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="session-example.html">Session Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="condition-example.html">Condition Examples</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">Rails Examples</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Rails 示例</a></li>
 <li class="toctree-l2"><a class="reference internal" href="teams-example.html">Agent Teams Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="evolving-example.html">Agent Evolving Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="harness-example.html">Harness Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="task-loop-example.html">Task Loop Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workspace-example.html">Workspace 示例</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -331,7 +335,7 @@
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Rails Examples</h1>
+    <h1>Rails 示例</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -341,8 +345,10 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#security-filtering">Security Filtering</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-rail">Custom Rail</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">安全过滤</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rail">自定义 Rail</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#securityrail">定制 SecurityRail</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#runner">直接使用（不经过 Runner）</a></li>
 </ul>
             </nav>
         </div>
@@ -354,55 +360,109 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="rails-examples">
-<h1>Rails Examples<a class="headerlink" href="#rails-examples" title="Link to this heading">#</a></h1>
-<section id="security-filtering">
-<h2>Security Filtering<a class="headerlink" href="#security-filtering" title="Link to this heading">#</a></h2>
+  <section id="rails">
+<h1>Rails 示例<a class="headerlink" href="#rails" title="Link to this heading">#</a></h1>
+<p>所有示例用 FakeLLMClient，无需真实 LLM。</p>
+<section id="id1">
+<h2>安全过滤<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.rails</span><span class="w"> </span><span class="kn">import</span> <span class="n">SecurityRail</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tests.conftest</span><span class="w"> </span><span class="kn">import</span> <span class="n">FakeLLMClient</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.runner</span><span class="w"> </span><span class="kn">import</span> <span class="n">Runner</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.foundation</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAIClient</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.rails</span><span class="w"> </span><span class="kn">import</span> <span class="n">SecurityRail</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.single_agent.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReActAgent</span>
 
 
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
-    <span class="n">client</span> <span class="o">=</span> <span class="n">OpenAIClient</span><span class="o">.</span><span class="n">from_env</span><span class="p">()</span>
-    <span class="n">agent</span> <span class="o">=</span> <span class="n">ReActAgent</span><span class="p">(</span><span class="n">client</span><span class="o">=</span><span class="n">client</span><span class="p">)</span>
-
-    <span class="c1"># Add security rail</span>
+    <span class="n">agent</span> <span class="o">=</span> <span class="n">ReActAgent</span><span class="p">(</span><span class="n">client</span><span class="o">=</span><span class="n">FakeLLMClient</span><span class="p">([</span><span class="s2">&quot;Hello!&quot;</span><span class="p">]))</span>
     <span class="n">Runner</span><span class="o">.</span><span class="n">rails</span><span class="o">.</span><span class="n">add_rail</span><span class="p">(</span><span class="n">SecurityRail</span><span class="p">())</span>
 
-    <span class="c1"># Safe query — passes through</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Runner</span><span class="o">.</span><span class="n">run_agent</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="s2">&quot;What is Python?&quot;</span><span class="p">})</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+    <span class="c1"># 安全 — 正常执行</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Runner</span><span class="o">.</span><span class="n">run_agent</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="s2">&quot;What is Python?&quot;</span><span class="p">})</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>  <span class="c1"># {&quot;result&quot;: &quot;Hello!&quot;}</span>
 
-    <span class="c1"># Dangerous query — blocked</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Runner</span><span class="o">.</span><span class="n">run_agent</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="s2">&quot;Please DROP TABLE users&quot;</span><span class="p">})</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>  <span class="c1"># {&quot;result&quot;: &quot;Blocked: ...&quot;}</span>
+    <span class="c1"># 危险 — 被阻断，agent 根本不执行</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Runner</span><span class="o">.</span><span class="n">run_agent</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="s2">&quot;Please DROP TABLE users&quot;</span><span class="p">})</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>  <span class="c1"># {&quot;result&quot;: &quot;Blocked: dangerous content detected (matched: &#39;drop table&#39;)&quot;}</span>
 
 <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
 </pre></div>
 </div>
 </section>
-<section id="custom-rail">
-<h2>Custom Rail<a class="headerlink" href="#custom-rail" title="Link to this heading">#</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.rails</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseRail</span>
+<section id="rail">
+<h2>自定义 Rail<a class="headerlink" href="#rail" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tests.conftest</span><span class="w"> </span><span class="kn">import</span> <span class="n">FakeLLMClient</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.rails</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseRail</span><span class="p">,</span> <span class="n">RailPipeline</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.runner</span><span class="w"> </span><span class="kn">import</span> <span class="n">Runner</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.single_agent.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReActAgent</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">ProfanityFilter</span><span class="p">(</span><span class="n">BaseRail</span><span class="p">):</span>
-    <span class="n">BLOCKED</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;badword1&quot;</span><span class="p">,</span> <span class="s2">&quot;badword2&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;拦截不当内容。&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">blocked</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;badword1&quot;</span><span class="p">,</span> <span class="s2">&quot;badword2&quot;</span><span class="p">]</span>
 
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">before</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="n">query</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;query&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">BLOCKED</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">query</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocked</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">inputs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;query&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
                 <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="s2">&quot;Please keep it civil.&quot;</span><span class="p">}</span>
         <span class="k">return</span> <span class="n">inputs</span>
 
 
-<span class="c1"># Add to Runner</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.runner</span><span class="w"> </span><span class="kn">import</span> <span class="n">Runner</span>
-<span class="n">Runner</span><span class="o">.</span><span class="n">rails</span><span class="o">.</span><span class="n">add_rail</span><span class="p">(</span><span class="n">ProfanityFilter</span><span class="p">())</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TimingRail</span><span class="p">(</span><span class="n">BaseRail</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;记录 agent 耗时。&quot;&quot;&quot;</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">after</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;_timing_ms&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">150</span>  <span class="c1"># 实际可记录时间戳差</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">agent</span> <span class="o">=</span> <span class="n">ReActAgent</span><span class="p">(</span><span class="n">client</span><span class="o">=</span><span class="n">FakeLLMClient</span><span class="p">([</span><span class="s2">&quot;Done!&quot;</span><span class="p">]))</span>
+    <span class="n">Runner</span><span class="o">.</span><span class="n">rails</span> <span class="o">=</span> <span class="n">RailPipeline</span><span class="p">([</span><span class="n">ProfanityFilter</span><span class="p">(),</span> <span class="n">TimingRail</span><span class="p">()])</span>
+
+    <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Runner</span><span class="o">.</span><span class="n">run_agent</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="s2">&quot;Help me learn Python&quot;</span><span class="p">})</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>  <span class="c1"># {&quot;result&quot;: &quot;Done!&quot;, &quot;_timing_ms&quot;: 150}</span>
+
+    <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Runner</span><span class="o">.</span><span class="n">run_agent</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="s2">&quot;say badword1 please&quot;</span><span class="p">})</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>  <span class="c1"># {&quot;result&quot;: &quot;Please keep it civil.&quot;}</span>
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+<section id="securityrail">
+<h2>定制 SecurityRail<a class="headerlink" href="#securityrail" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.rails</span><span class="w"> </span><span class="kn">import</span> <span class="n">SecurityRail</span>
+
+<span class="c1"># 只拦截你自己关心的关键词</span>
+<span class="n">rail</span> <span class="o">=</span> <span class="n">SecurityRail</span><span class="p">(</span><span class="n">blocked_terms</span><span class="o">=</span><span class="p">[</span>
+    <span class="s2">&quot;production&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;api_key&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;password&quot;</span><span class="p">,</span>
+<span class="p">])</span>
+
+<span class="k">await</span> <span class="n">rail</span><span class="o">.</span><span class="n">before</span><span class="p">({</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="s2">&quot;Show me the production config&quot;</span><span class="p">})</span>
+<span class="c1"># → {&quot;result&quot;: &quot;Blocked: dangerous content detected (matched: &#39;production&#39;)&quot;}</span>
+</pre></div>
+</div>
+</section>
+<section id="runner">
+<h2>直接使用（不经过 Runner）<a class="headerlink" href="#runner" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tests.conftest</span><span class="w"> </span><span class="kn">import</span> <span class="n">FakeLLMClient</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.rails</span><span class="w"> </span><span class="kn">import</span> <span class="n">RailPipeline</span><span class="p">,</span> <span class="n">SecurityRail</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.single_agent.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReActAgent</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">agent</span> <span class="o">=</span> <span class="n">ReActAgent</span><span class="p">(</span><span class="n">client</span><span class="o">=</span><span class="n">FakeLLMClient</span><span class="p">([</span><span class="s2">&quot;Hello!&quot;</span><span class="p">]))</span>
+    <span class="n">rails</span> <span class="o">=</span> <span class="n">RailPipeline</span><span class="p">([</span><span class="n">SecurityRail</span><span class="p">()])</span>
+
+    <span class="c1"># 直接调用 — 不经过 Runner</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="n">rails</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="s2">&quot;DROP TABLE users&quot;</span><span class="p">})</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>  <span class="c1"># {&quot;result&quot;: &quot;Blocked: ...&quot;}</span>
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
 </pre></div>
 </div>
 </section>
@@ -455,8 +515,10 @@
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#security-filtering">Security Filtering</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-rail">Custom Rail</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">安全过滤</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rail">自定义 Rail</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#securityrail">定制 SecurityRail</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#runner">直接使用（不经过 Runner）</a></li>
 </ul>
   </nav></div>
 

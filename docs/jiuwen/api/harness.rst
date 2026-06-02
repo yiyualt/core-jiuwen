@@ -68,3 +68,25 @@ Built-in Sections
 .. class:: SafetySection
 
 .. class:: WorkspaceSection
+
+Task Loop
+---------
+
+.. class:: TaskEvent(type: str, data: dict = {}, timestamp: float = ...)
+
+.. class:: EventHandler
+
+   .. method:: async on_event(event: TaskEvent) -> None
+
+.. class:: LoggingHandler
+
+   Logs events to stderr. Extends :class:`EventHandler`.
+
+.. class:: TaskExecutor(agent, handlers: list[EventHandler] | None = None)
+
+   .. method:: async execute(task: str, session=None) -> dict
+
+.. class:: LoopCoordinator(executor: TaskExecutor)
+
+   .. method:: async submit(task: str, session=None) -> None
+   .. method:: async run() -> None

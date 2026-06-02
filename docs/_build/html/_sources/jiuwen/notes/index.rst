@@ -22,3 +22,5 @@ Design philosophy and rationale behind jiuwen's architecture.
    teams-philosophy
    evolving-philosophy
    harness-philosophy
+   task-loop-philosophy
+   workspace-philosophy
