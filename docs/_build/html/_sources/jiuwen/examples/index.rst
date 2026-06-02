@@ -18,3 +18,4 @@ Runnable code examples for jiuwen features.
    session-example
    condition-example
    rails-example
+   teams-example

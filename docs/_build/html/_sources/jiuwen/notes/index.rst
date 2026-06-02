@@ -19,3 +19,4 @@ Design philosophy and rationale behind jiuwen's architecture.
    session-philosophy
    condition-philosophy
    rails-philosophy
+   teams-philosophy

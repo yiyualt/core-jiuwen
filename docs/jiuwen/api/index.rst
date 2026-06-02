@@ -16,3 +16,4 @@ Reference documentation for jiuwen's public API.
    agent
    session
    rails
+   teams

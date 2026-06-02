@@ -156,6 +156,7 @@
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/session-philosophy.html">Session: Multi-Turn Memory</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/condition-philosophy.html">Condition &amp; Branch: Control Flow in Workflows</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/rails-philosophy.html">Rails: Composable Agent Middleware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/teams-philosophy.html">Agent Teams: Multi-Agent Collaboration</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="jiuwen/examples/index.html">Examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -171,6 +172,7 @@
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/session-example.html">Session Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/condition-example.html">Condition Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/rails-example.html">Rails Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/teams-example.html">Agent Teams Examples</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="jiuwen/api/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -184,6 +186,7 @@
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/api/agent.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.single_agent</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/api/session.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.session</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/api/rails.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.rails</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/api/teams.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.agent_teams</span></code></a></li>
 </ul>
 </details></li>
 </ul>
@@ -381,6 +384,8 @@
 </li>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.Channel.consume">consume() (jiuwen.core.graph.Channel method)</a>
 </li>
+      <li><a href="jiuwen/api/teams.html#jiuwen.core.agent_teams.CoordinatorAgent">CoordinatorAgent (class in jiuwen.core.agent_teams)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -446,6 +451,13 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li>
+    jiuwen.core.agent_teams
+
+      <ul>
+        <li><a href="jiuwen/api/teams.html#module-jiuwen.core.agent_teams">module</a>
+</li>
+      </ul></li>
+      <li>
     jiuwen.core.common
 
       <ul>
@@ -473,6 +485,8 @@
         <li><a href="jiuwen/api/rails.html#module-jiuwen.core.rails">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     jiuwen.core.runner
 
@@ -480,8 +494,6 @@
         <li><a href="jiuwen/api/runner.html#module-jiuwen.core.runner">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     jiuwen.core.session
 
@@ -538,6 +550,8 @@
     module
 
       <ul>
+        <li><a href="jiuwen/api/teams.html#module-jiuwen.core.agent_teams">jiuwen.core.agent_teams</a>
+</li>
         <li><a href="jiuwen/api/common.html#module-jiuwen.core.common">jiuwen.core.common</a>
 </li>
         <li><a href="jiuwen/api/foundation.html#module-jiuwen.core.foundation">jiuwen.core.foundation</a>
@@ -631,6 +645,8 @@
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jiuwen/api/teams.html#jiuwen.core.agent_teams.Team">Team (class in jiuwen.core.agent_teams)</a>
+</li>
       <li><a href="jiuwen/api/common.html#jiuwen.core.common.BaseCard.to_str">to_str() (jiuwen.core.common.BaseCard method)</a>
 </li>
       <li><a href="jiuwen/api/common.html#jiuwen.core.common.BaseCard.tool_info">tool_info() (jiuwen.core.common.BaseCard method)</a>
