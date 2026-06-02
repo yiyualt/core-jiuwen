@@ -1,71 +1,105 @@
 # coding: utf-8
-"""AutoHarnessOrchestrator — runs optimization pipelines."""
+"""AutoHarnessOrchestrator — session controller and pipeline dispatcher."""
 
-from typing import Any
+from typing import AsyncIterator
 
-from jiuwen.core.foundation.llm import LLMClient
-from jiuwen.core.single_agent.agents import ReActAgent
-from jiuwen.auto_harness.pipeline import PipelineSpec, default_pipeline
+from jiuwen.core.foundation.llm import LLMClient, OpenAIClient
+from jiuwen.auto_harness.contexts import SessionContext
 from jiuwen.auto_harness.experience import ExperienceStore
+from jiuwen.auto_harness.fix_loop import FixLoopController
+from jiuwen.auto_harness.pipeline import StandardPipeline, ExtendedPipeline
+from jiuwen.auto_harness.session_pipeline import MetaEvolvePipeline
+from jiuwen.auto_harness.registry import PipelineRegistry, StageRegistry
+from jiuwen.auto_harness.stages import StageResult
 
 
 class AutoHarnessOrchestrator:
-    """Runs multi-stage optimization pipelines using specialized agents.
-
-    Each stage uses a ReActAgent with a stage-specific system prompt
-    to perform its part of the optimization.
+    """Session controller that selects and runs optimization pipelines.
 
     Usage::
 
         client = OpenAIClient.from_env()
-        orchestrator = AutoHarnessOrchestrator(client)
-        result = await orchestrator.run("Optimize the database module")
+        orch = AutoHarnessOrchestrator(client)
+
+        # Sync: standard 4-stage pipeline
+        result = await orch.run("Optimize auth module")
+
+        # Session-level: full meta pipeline with fix loops + learnings
+        result = await orch.run("Optimize project", pipeline_name="meta_evolve")
+
+        # Streaming
+        async for r in orch.run_stream("Optimize auth module"):
+            print(f"[{r.stage_name}] {r.status}")
     """
 
     def __init__(
         self,
-        client: LLMClient,
-        pipeline: PipelineSpec | None = None,
+        client: LLMClient | None = None,
+        pipeline_registry: PipelineRegistry | None = None,
+        stage_registry: StageRegistry | None = None,
         experience: ExperienceStore | None = None,
+        fix_loop: FixLoopController | None = None,
     ):
-        self._client = client
-        self._pipeline = pipeline or default_pipeline()
+        self._client = client or OpenAIClient.from_env()
+        self._pipeline_registry = pipeline_registry or PipelineRegistry()
+        self._stage_registry = stage_registry or StageRegistry()
         self._experience = experience or ExperienceStore()
+        self._fix_loop = fix_loop or FixLoopController()
+
+        self._pipeline_registry.register("standard", StandardPipeline)
+        self._pipeline_registry.register("extended", ExtendedPipeline)
+        self._pipeline_registry.register("meta_evolve", MetaEvolvePipeline)
 
     @property
-    def pipeline(self) -> PipelineSpec:
-        return self._pipeline
+    def pipeline_registry(self) -> PipelineRegistry:
+        return self._pipeline_registry
+
+    @property
+    def stage_registry(self) -> StageRegistry:
+        return self._stage_registry
 
     @property
     def experience(self) -> ExperienceStore:
         return self._experience
 
-    async def run(self, task: str) -> dict[str, Any]:
-        """Execute all stages of the pipeline on a task.
+    def select_pipeline(self, name: str | None = None) -> str:
+        available = self._pipeline_registry.names()
+        if not available:
+            raise ValueError("No pipelines registered")
+        if name and name in available:
+            return name
+        if "standard" in available:
+            return "standard"
+        return available[0]
 
-        Args:
-            task: The optimization task description.
+    def _make_pipeline(self, pipeline_cls):
+        """Instantiate a pipeline with appropriate arguments."""
+        if pipeline_cls is MetaEvolvePipeline:
+            return pipeline_cls(self._client, self._experience, self._fix_loop)
+        return pipeline_cls(self._client, self._fix_loop)
 
-        Returns:
-            Dict with per-stage results and accumulated experience.
-        """
-        results: dict[str, Any] = {}
-        context = task
+    async def run(self, task: str, pipeline_name: str | None = None) -> dict:
+        selected = self.select_pipeline(pipeline_name)
+        pipeline_cls = self._pipeline_registry.require(selected)
+        pipeline = self._make_pipeline(pipeline_cls)
 
-        for stage in self._pipeline.stages:
-            agent = self._create_agent_for_stage(stage)
-            result = await agent.run({"query": context})
+        ctx = SessionContext(orchestrator=self)
+        ctx.put_artifact("task", task)
 
-            results[stage.name] = result
-            self._experience.record(stage.name, task, result)
+        results = {}
+        async for result in pipeline.stream(ctx):
+            results[result.stage_name] = {"status": result.status, "output": result.output}
 
-            # Pass result as context to next stage
-            context = f"Previous stage ({stage.name}) result:\n{result.get('result', '')}\n\nOriginal task: {task}"
+        return {"pipeline": selected, "results": results}
 
-        return {"pipeline": self._pipeline.name, "results": results}
+    async def run_stream(self, task: str, pipeline_name: str | None = None) -> AsyncIterator[StageResult]:
+        selected = self.select_pipeline(pipeline_name)
+        pipeline_cls = self._pipeline_registry.require(selected)
+        pipeline = self._make_pipeline(pipeline_cls)
 
-    def _create_agent_for_stage(self, stage) -> ReActAgent:
-        return ReActAgent(
-            client=self._client,
-            system_prompt=stage.system_prompt,
-        )
+        ctx = SessionContext(orchestrator=self)
+        ctx.put_artifact("task", task)
+
+        async for result in pipeline.stream(ctx):
+            self._experience.record(result.stage_name, task, {"result": result.output})
+            yield result

@@ -1,129 +1,65 @@
-Auto Harness: 自动优化框架的实现
-===================================
+Auto Harness: 三层反馈循环的自动优化
+========================================
 
-auto_harness 用 **DeepAgent 优化 DeepAgent 自身**。它是 jiuwen 的"元框架"。
+auto_harness 不是简单的工作流管道，它有三层**自动反馈循环**，让优化过程真正"自动"。
 
-核心思想
---------
-
-手工写 agent 提示词很难 — 太短不够精确，太长浪费 token。auto_harness
-把优化过程变成**标准化的多阶段管道**，每个阶段用专门的 agent 完成。
-
-.. code-block:: text
-
-    输入: "优化数据库查询性能"
-    │
-    ▼
-    ┌──────────────────────────────────────────────────────┐
-    │  Pipeline: assess → plan → implement → verify       │
-    │                                                      │
-    │  Stage 1 "assess":                                   │
-    │    Agent(system_prompt="你是代码审查员")               │
-    │    → 分析代码，找出性能瓶颈                            │
-    │                                                      │
-    │  Stage 2 "plan":                                     │
-    │    Agent(system_prompt="你是架构师")                   │
-    │    → 基于评估结果制定优化方案                           │
-    │                                                      │
-    │  Stage 3 "implement":                                │
-    │    Agent(system_prompt="你是开发者")                   │
-    │    → 执行优化方案，修改代码                             │
-    │                                                      │
-    │  Stage 4 "verify":                                   │
-    │    Agent(system_prompt="你是测试员")                   │
-    │    → 验证修改是否有效                                  │
-    └──────────────────────────────────────────────────────┘
-    │
-    ▼
-    输出: 每阶段的执行结果 + 经验记录
-
-实现细节
---------
-
-**PipelineSpec** 定义管道的结构：
-
-.. code-block:: python
-
-    @dataclass
-    class StageSpec:
-        name: str             # 阶段名称
-        description: str      # 阶段描述
-        system_prompt: str    # 该阶段 agent 的系统提示词
-
-    @dataclass
-    class PipelineSpec:
-        name: str
-        stages: list[StageSpec]
-
-默认管道包含四个阶段，每个阶段用不同的 system_prompt 创建专门的 ReActAgent。
-
-**Orchestrator** 是执行引擎：
-
-.. code-block:: python
-
-    class AutoHarnessOrchestrator:
-        async def run(self, task):
-            context = task
-            for stage in self._pipeline.stages:
-                agent = self._create_agent_for_stage(stage)
-                result = await agent.run({"query": context})
-                # 上一个阶段的结果作为下一个阶段的输入
-                context = f"Previous: {result}\n\nOriginal: {task}"
-            return results
-
-关键设计：每个阶段的输出成为下一阶段的输入。这样信息在管道中流动，
-后面的 agent 可以基于前面的分析做决策。
-
-**ExperienceStore** 跨运行学习：
-
-.. code-block:: python
-
-    class ExperienceStore:
-        def record(self, stage, task, result):
-            # 记录每次管道运行中每个阶段的输入输出
-            ...
-
-        def recent(self, stage=None, limit=10):
-            # 查询历史记录，用于改进未来的运行
-            ...
-
-为什么这样设计？
+为什么叫 Auto？
 ----------------
 
-1. **专业化**：每个阶段只做一件事。assess 不需要会写代码，verify 不需要会分析。分开的 agent 比一个"万能 agent"更精准。
+普通的 Workflow 是静态的：Start → A → B → End，跑完输出给用户，用户自己看结果。
 
-2. **可组合**：管道可以自定义。加一个 lint 阶段、去一个 verify 阶段、或者换成完全不同的顺序。
-
-3. **可追溯**：每个阶段的输入输出都被记录。出问题时可以定位是哪个阶段出了错。
-
-4. **可学习**：ExperienceStore 积累历史，未来可以用这些数据自动改进管道本身（这就是 auto_harness 的"auto"部分）。
-
-与其它模块的关系
------------------
+auto_harness 的"auto"在于三个反馈循环：
 
 .. code-block:: text
 
-    auto_harness/
-    ├── pipeline.py       ← 定义管道结构 (StageSpec, PipelineSpec)
-    ├── orchestrator.py   ← 执行管道 (AutoHarnessOrchestrator)
-    └── experience.py     ← 经验积累 (ExperienceStore)
+    ┌──────────────────────────────────────────────────────────────┐
+    │  Loop 1: CI Fix Loop (任务内)                                │
+    │  ┌─────────────────────────────────────────────────────┐    │
+    │  │ implement → verify → CI 失败 → agent 自动修 → 重试   │    │
+    │  │ 最多 19 次 (phase1 5次 + phase2 3次 + evaluator)     │    │
+    │  │ 全部失败 → git revert → 记录 FAILURE 经验            │    │
+    │  └─────────────────────────────────────────────────────┘    │
+    │                                                              │
+    │  Loop 2: 任务间经验注入 (会话内)                               │
+    │  ┌─────────────────────────────────────────────────────┐    │
+    │  │ 任务 A 成功/失败 → 记录经验                           │    │
+    │  │ 任务 B 自动搜索相关经验 → 注入 agent 上下文            │    │
+    │  │ 同样的错误不会犯两次                                   │    │
+    │  └─────────────────────────────────────────────────────┘    │
+    │                                                              │
+    │  Loop 3: 跨会话学习 (持久化)                                  │
+    │  ┌─────────────────────────────────────────────────────┐    │
+    │  │ 会话结束 → LearningsStage 反思 → 写入 JSONL           │    │
+    │  │ 下次会话 → 自动加载历史经验 → 注入 assess + plan       │    │
+    │  │ 越跑越聪明                                            │    │
+    │  └─────────────────────────────────────────────────────┘    │
+    └──────────────────────────────────────────────────────────────┘
 
-    依赖:
-    ├── core/foundation/  ← OpenAIClient (LLM 调用)
-    ├── core/single_agent ← ReActAgent (每个阶段的执行者)
-    └── harness/          ← DeepAgent (被优化的对象)
+会话级 Pipeline (MetaEvolvePipeline)
+--------------------------------------
 
-使用示例
+.. code-block:: text
+
+    assess (只读快照, 分析代码 + 加载历史经验)
+      │
+      ▼
+    plan (根据评估生成 N 个优化任务)
+      │
+      ▼
+    for each task:
+      ├── implement (DeepAgent 改代码, 注入相关经验)
+      ├── verify   (跑 CI, 失败→FixLoop 自动修→重试)
+      │             成功→commit / 失败→revert+记录 FAILURE
+      │
+      ▼
+    learnings (反思整个 session, 提取经验写入 JSONL)
+
+核心组件
 --------
 
-.. code-block:: python
+- **ExperienceStore**: 文件持久化 (JSONL), 关键词搜索, 时间衰减合成, 分类 (SUCCESS/FAILURE/INSIGHT)
+- **FixLoopController**: CI 驱动, phase1 agent 修复 + phase2 evaluator 审查
+- **MetaEvolvePipeline**: 会话级编排, 任务间经验注入
+- **LearningsStage**: 会话后反思, 提取结构化经验
 
-    client = OpenAIClient.from_env()
-    orchestrator = AutoHarnessOrchestrator(client)
-
-    result = await orchestrator.run("Improve error handling in auth.py")
-
-    for stage, output in result["results"].items():
-        print(f"[{stage}] {output['result'][:100]}")
-
-    print(f"Total experiences: {len(orchestrator.experience)}")
+这就是"auto"——不是跑一次就结束, 而是自动修、自动学、越跑越好。

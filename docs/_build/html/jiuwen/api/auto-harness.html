@@ -170,7 +170,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../notes/context-engine-philosophy.html">Context Engine: 上下文窗口管理</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notes/security-philosophy.html">Security: Guardrails 安全层</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notes/sys-operation-philosophy.html">Sys Operation: 安全的系统操作</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notes/auto-harness-philosophy.html">Auto Harness: 自动优化框架的实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/auto-harness-philosophy.html">Auto Harness: 三层反馈循环的自动优化</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../examples/index.html">Examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -196,6 +196,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../examples/context-engine-example.html">Context Engine 示例</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/security-example.html">Security 示例</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/sys-operation-example.html">Sys Operation 示例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/auto-harness-example.html">Auto Harness 示例</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">API Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -364,22 +365,71 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stagespec">StageSpec</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.StageSpec"><code class="docutils literal notranslate"><span class="pre">StageSpec</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#registry">Registry</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.StageRegistry"><code class="docutils literal notranslate"><span class="pre">StageRegistry</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.StageRegistry.register"><code class="docutils literal notranslate"><span class="pre">StageRegistry.register()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.StageRegistry.get"><code class="docutils literal notranslate"><span class="pre">StageRegistry.get()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.StageRegistry.names"><code class="docutils literal notranslate"><span class="pre">StageRegistry.names()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pipelinespec">PipelineSpec</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.PipelineSpec"><code class="docutils literal notranslate"><span class="pre">PipelineSpec</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.default_pipeline"><code class="docutils literal notranslate"><span class="pre">default_pipeline()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.PipelineRegistry"><code class="docutils literal notranslate"><span class="pre">PipelineRegistry</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.PipelineRegistry.register"><code class="docutils literal notranslate"><span class="pre">PipelineRegistry.register()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.PipelineRegistry.get"><code class="docutils literal notranslate"><span class="pre">PipelineRegistry.get()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.PipelineRegistry.names"><code class="docutils literal notranslate"><span class="pre">PipelineRegistry.names()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.PipelineRegistry.require"><code class="docutils literal notranslate"><span class="pre">PipelineRegistry.require()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#autoharnessorchestrator">AutoHarnessOrchestrator</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.AutoHarnessOrchestrator"><code class="docutils literal notranslate"><span class="pre">AutoHarnessOrchestrator</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#experiencestore">ExperienceStore</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sessioncontext">SessionContext</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.SessionContext"><code class="docutils literal notranslate"><span class="pre">SessionContext</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.SessionContext.put_artifact"><code class="docutils literal notranslate"><span class="pre">SessionContext.put_artifact()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.SessionContext.get_artifact"><code class="docutils literal notranslate"><span class="pre">SessionContext.get_artifact()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.SessionContext.clone"><code class="docutils literal notranslate"><span class="pre">SessionContext.clone()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stages">Stages</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.BaseStage"><code class="docutils literal notranslate"><span class="pre">BaseStage</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.StageResult"><code class="docutils literal notranslate"><span class="pre">StageResult</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.AssessStage"><code class="docutils literal notranslate"><span class="pre">AssessStage</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.PlanStage"><code class="docutils literal notranslate"><span class="pre">PlanStage</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.ImplementStage"><code class="docutils literal notranslate"><span class="pre">ImplementStage</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.VerifyStage"><code class="docutils literal notranslate"><span class="pre">VerifyStage</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pipelines">Pipelines</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.BasePipeline"><code class="docutils literal notranslate"><span class="pre">BasePipeline</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.StandardPipeline"><code class="docutils literal notranslate"><span class="pre">StandardPipeline</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.ExtendedPipeline"><code class="docutils literal notranslate"><span class="pre">ExtendedPipeline</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.MetaEvolvePipeline"><code class="docutils literal notranslate"><span class="pre">MetaEvolvePipeline</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.LearningsStage"><code class="docutils literal notranslate"><span class="pre">LearningsStage</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#orchestrator">Orchestrator</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.AutoHarnessOrchestrator"><code class="docutils literal notranslate"><span class="pre">AutoHarnessOrchestrator</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.AutoHarnessOrchestrator.select_pipeline"><code class="docutils literal notranslate"><span class="pre">AutoHarnessOrchestrator.select_pipeline()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fix-loop">Fix Loop</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.FixLoopResult"><code class="docutils literal notranslate"><span class="pre">FixLoopResult</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.FixLoopController"><code class="docutils literal notranslate"><span class="pre">FixLoopController</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.FixLoopController.should_retry"><code class="docutils literal notranslate"><span class="pre">FixLoopController.should_retry()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.FixLoopController.reset"><code class="docutils literal notranslate"><span class="pre">FixLoopController.reset()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#experience">Experience</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.ExperienceStore"><code class="docutils literal notranslate"><span class="pre">ExperienceStore</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.ExperienceStore.record"><code class="docutils literal notranslate"><span class="pre">ExperienceStore.record()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.ExperienceStore.record_failure"><code class="docutils literal notranslate"><span class="pre">ExperienceStore.record_failure()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.ExperienceStore.record_insight"><code class="docutils literal notranslate"><span class="pre">ExperienceStore.record_insight()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.ExperienceStore.search"><code class="docutils literal notranslate"><span class="pre">ExperienceStore.search()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.ExperienceStore.synthesize"><code class="docutils literal notranslate"><span class="pre">ExperienceStore.synthesize()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.ExperienceStore.recent"><code class="docutils literal notranslate"><span class="pre">ExperienceStore.recent()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.ExperienceStore.clear"><code class="docutils literal notranslate"><span class="pre">ExperienceStore.clear()</span></code></a></li>
 </ul>
@@ -399,53 +449,259 @@
                   
   <section id="module-jiuwen.auto_harness">
 <span id="jiuwen-auto-harness"></span><h1><code class="docutils literal notranslate"><span class="pre">jiuwen.auto_harness</span></code><a class="headerlink" href="#module-jiuwen.auto_harness" title="Link to this heading">#</a></h1>
-<section id="stagespec">
-<h2>StageSpec<a class="headerlink" href="#stagespec" title="Link to this heading">#</a></h2>
+<section id="registry">
+<h2>Registry<a class="headerlink" href="#registry" title="Link to this heading">#</a></h2>
 <dl class="py class">
-<dt class="sig sig-object py" id="jiuwen.auto_harness.StageSpec">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.auto_harness.</span></span><span class="sig-name descname"><span class="pre">StageSpec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">system_prompt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jiuwen.auto_harness.StageSpec" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-</section>
-<section id="pipelinespec">
-<h2>PipelineSpec<a class="headerlink" href="#pipelinespec" title="Link to this heading">#</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="jiuwen.auto_harness.PipelineSpec">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.auto_harness.</span></span><span class="sig-name descname"><span class="pre">PipelineSpec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">stages</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#jiuwen.auto_harness.StageSpec" title="jiuwen.auto_harness.StageSpec"><span class="pre">StageSpec</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jiuwen.auto_harness.PipelineSpec" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="jiuwen.auto_harness.default_pipeline">
-<span class="sig-prename descclassname"><span class="pre">jiuwen.auto_harness.</span></span><span class="sig-name descname"><span class="pre">default_pipeline</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#jiuwen.auto_harness.PipelineSpec" title="jiuwen.auto_harness.PipelineSpec"><span class="pre">PipelineSpec</span></a></span></span><a class="headerlink" href="#jiuwen.auto_harness.default_pipeline" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-</section>
-<section id="autoharnessorchestrator">
-<h2>AutoHarnessOrchestrator<a class="headerlink" href="#autoharnessorchestrator" title="Link to this heading">#</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="jiuwen.auto_harness.AutoHarnessOrchestrator">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.auto_harness.</span></span><span class="sig-name descname"><span class="pre">AutoHarnessOrchestrator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foundation.html#jiuwen.core.foundation.LLMClient" title="jiuwen.core.foundation.LLMClient"><span class="pre">LLMClient</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipeline</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#jiuwen.auto_harness.PipelineSpec" title="jiuwen.auto_harness.PipelineSpec"><span class="pre">PipelineSpec</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">experience</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#jiuwen.auto_harness.ExperienceStore" title="jiuwen.auto_harness.ExperienceStore"><span class="pre">ExperienceStore</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jiuwen.auto_harness.AutoHarnessOrchestrator" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="jiuwen.auto_harness.StageRegistry">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.auto_harness.</span></span><span class="sig-name descname"><span class="pre">StageRegistry</span></span><a class="headerlink" href="#jiuwen.auto_harness.StageRegistry" title="Link to this definition">#</a></dt>
 <dd><dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">async</span> <span class="pre">run(task:</span> <span class="pre">str)</span> <span class="pre">-&gt;</span> <span class="pre">dict</span></span></dt>
+<dt class="sig sig-object py" id="jiuwen.auto_harness.StageRegistry.register">
+<span class="sig-name descname"><span class="pre">register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">stage_cls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#jiuwen.auto_harness.StageRegistry.register" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jiuwen.auto_harness.StageRegistry.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Type</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#jiuwen.auto_harness.StageRegistry.get" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jiuwen.auto_harness.StageRegistry.names">
+<span class="sig-name descname"><span class="pre">names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#jiuwen.auto_harness.StageRegistry.names" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.auto_harness.PipelineRegistry">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.auto_harness.</span></span><span class="sig-name descname"><span class="pre">PipelineRegistry</span></span><a class="headerlink" href="#jiuwen.auto_harness.PipelineRegistry" title="Link to this definition">#</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="jiuwen.auto_harness.PipelineRegistry.register">
+<span class="sig-name descname"><span class="pre">register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipeline_cls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#jiuwen.auto_harness.PipelineRegistry.register" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jiuwen.auto_harness.PipelineRegistry.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Type</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#jiuwen.auto_harness.PipelineRegistry.get" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jiuwen.auto_harness.PipelineRegistry.names">
+<span class="sig-name descname"><span class="pre">names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#jiuwen.auto_harness.PipelineRegistry.names" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jiuwen.auto_harness.PipelineRegistry.require">
+<span class="sig-name descname"><span class="pre">require</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Type</span></span></span><a class="headerlink" href="#jiuwen.auto_harness.PipelineRegistry.require" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 </section>
-<section id="experiencestore">
-<h2>ExperienceStore<a class="headerlink" href="#experiencestore" title="Link to this heading">#</a></h2>
+<section id="sessioncontext">
+<h2>SessionContext<a class="headerlink" href="#sessioncontext" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.auto_harness.SessionContext">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.auto_harness.</span></span><span class="sig-name descname"><span class="pre">SessionContext</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">orchestrator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jiuwen.auto_harness.SessionContext" title="Link to this definition">#</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="jiuwen.auto_harness.SessionContext.put_artifact">
+<span class="sig-name descname"><span class="pre">put_artifact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#jiuwen.auto_harness.SessionContext.put_artifact" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jiuwen.auto_harness.SessionContext.get_artifact">
+<span class="sig-name descname"><span class="pre">get_artifact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#jiuwen.auto_harness.SessionContext.get_artifact" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jiuwen.auto_harness.SessionContext.clone">
+<span class="sig-name descname"><span class="pre">clone</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#jiuwen.auto_harness.SessionContext" title="jiuwen.auto_harness.SessionContext"><span class="pre">SessionContext</span></a></span></span><a class="headerlink" href="#jiuwen.auto_harness.SessionContext.clone" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="stages">
+<h2>Stages<a class="headerlink" href="#stages" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.auto_harness.BaseStage">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.auto_harness.</span></span><span class="sig-name descname"><span class="pre">BaseStage</span></span><a class="headerlink" href="#jiuwen.auto_harness.BaseStage" title="Link to this definition">#</a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">name:</span> <span class="pre">str</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">description:</span> <span class="pre">str</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">async</span> <span class="pre">execute(ctx:</span> <span class="pre">SessionContext)</span> <span class="pre">-&gt;</span> <span class="pre">StageResult</span></span></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.auto_harness.StageResult">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.auto_harness.</span></span><span class="sig-name descname"><span class="pre">StageResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stage_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'success'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">artifacts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">messages</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jiuwen.auto_harness.StageResult" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.auto_harness.AssessStage">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.auto_harness.</span></span><span class="sig-name descname"><span class="pre">AssessStage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foundation.html#jiuwen.core.foundation.LLMClient" title="jiuwen.core.foundation.LLMClient"><span class="pre">LLMClient</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jiuwen.auto_harness.AssessStage" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.auto_harness.PlanStage">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.auto_harness.</span></span><span class="sig-name descname"><span class="pre">PlanStage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foundation.html#jiuwen.core.foundation.LLMClient" title="jiuwen.core.foundation.LLMClient"><span class="pre">LLMClient</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jiuwen.auto_harness.PlanStage" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.auto_harness.ImplementStage">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.auto_harness.</span></span><span class="sig-name descname"><span class="pre">ImplementStage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foundation.html#jiuwen.core.foundation.LLMClient" title="jiuwen.core.foundation.LLMClient"><span class="pre">LLMClient</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jiuwen.auto_harness.ImplementStage" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.auto_harness.VerifyStage">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.auto_harness.</span></span><span class="sig-name descname"><span class="pre">VerifyStage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foundation.html#jiuwen.core.foundation.LLMClient" title="jiuwen.core.foundation.LLMClient"><span class="pre">LLMClient</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jiuwen.auto_harness.VerifyStage" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="pipelines">
+<h2>Pipelines<a class="headerlink" href="#pipelines" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.auto_harness.BasePipeline">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.auto_harness.</span></span><span class="sig-name descname"><span class="pre">BasePipeline</span></span><a class="headerlink" href="#jiuwen.auto_harness.BasePipeline" title="Link to this definition">#</a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">name:</span> <span class="pre">str</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">stages:</span> <span class="pre">list[BaseStage]</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">async</span> <span class="pre">stream(ctx:</span> <span class="pre">SessionContext)</span> <span class="pre">-&gt;</span> <span class="pre">AsyncIterator[StageResult]</span></span></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.auto_harness.StandardPipeline">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.auto_harness.</span></span><span class="sig-name descname"><span class="pre">StandardPipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foundation.html#jiuwen.core.foundation.LLMClient" title="jiuwen.core.foundation.LLMClient"><span class="pre">LLMClient</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">fix_loop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jiuwen.auto_harness.StandardPipeline" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.auto_harness.ExtendedPipeline">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.auto_harness.</span></span><span class="sig-name descname"><span class="pre">ExtendedPipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foundation.html#jiuwen.core.foundation.LLMClient" title="jiuwen.core.foundation.LLMClient"><span class="pre">LLMClient</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">fix_loop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jiuwen.auto_harness.ExtendedPipeline" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.auto_harness.MetaEvolvePipeline">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.auto_harness.</span></span><span class="sig-name descname"><span class="pre">MetaEvolvePipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foundation.html#jiuwen.core.foundation.LLMClient" title="jiuwen.core.foundation.LLMClient"><span class="pre">LLMClient</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">experience</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#jiuwen.auto_harness.ExperienceStore" title="jiuwen.auto_harness.ExperienceStore"><span class="pre">ExperienceStore</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">fix_loop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jiuwen.auto_harness.MetaEvolvePipeline" title="Link to this definition">#</a></dt>
+<dd><p>Session-level pipeline: assess → plan → per-task implement+verify (with fix loop) → learnings.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.auto_harness.LearningsStage">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.auto_harness.</span></span><span class="sig-name descname"><span class="pre">LearningsStage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foundation.html#jiuwen.core.foundation.LLMClient" title="jiuwen.core.foundation.LLMClient"><span class="pre">LLMClient</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">experience</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#jiuwen.auto_harness.ExperienceStore" title="jiuwen.auto_harness.ExperienceStore"><span class="pre">ExperienceStore</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jiuwen.auto_harness.LearningsStage" title="Link to this definition">#</a></dt>
+<dd><p>Post-session reflection stage. Extracts structured learnings from session results.</p>
+</dd></dl>
+
+</section>
+<section id="orchestrator">
+<h2>Orchestrator<a class="headerlink" href="#orchestrator" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.auto_harness.AutoHarnessOrchestrator">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.auto_harness.</span></span><span class="sig-name descname"><span class="pre">AutoHarnessOrchestrator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipeline_registry</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stage_registry</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">experience</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fix_loop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jiuwen.auto_harness.AutoHarnessOrchestrator" title="Link to this definition">#</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="jiuwen.auto_harness.AutoHarnessOrchestrator.select_pipeline">
+<span class="sig-name descname"><span class="pre">select_pipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#jiuwen.auto_harness.AutoHarnessOrchestrator.select_pipeline" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">async</span> <span class="pre">run(task:</span> <span class="pre">str,</span> <span class="pre">pipeline_name=None)</span> <span class="pre">-&gt;</span> <span class="pre">dict</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">async</span> <span class="pre">run_stream(task:</span> <span class="pre">str,</span> <span class="pre">pipeline_name=None)</span> <span class="pre">-&gt;</span> <span class="pre">AsyncIterator[StageResult]</span></span></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="fix-loop">
+<h2>Fix Loop<a class="headerlink" href="#fix-loop" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.auto_harness.FixLoopResult">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.auto_harness.</span></span><span class="sig-name descname"><span class="pre">FixLoopResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">success</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">attempts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_log</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jiuwen.auto_harness.FixLoopResult" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.auto_harness.FixLoopController">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.auto_harness.</span></span><span class="sig-name descname"><span class="pre">FixLoopController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase1_max_retries</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase2_max_retries</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jiuwen.auto_harness.FixLoopController" title="Link to this definition">#</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">async</span> <span class="pre">run(verify_fn,</span> <span class="pre">fix_fn=None,</span> <span class="pre">evaluator=None)</span> <span class="pre">-&gt;</span> <span class="pre">FixLoopResult</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jiuwen.auto_harness.FixLoopController.should_retry">
+<span class="sig-name descname"><span class="pre">should_retry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stage_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#jiuwen.auto_harness.FixLoopController.should_retry" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jiuwen.auto_harness.FixLoopController.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#jiuwen.auto_harness.FixLoopController.reset" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="experience">
+<h2>Experience<a class="headerlink" href="#experience" title="Link to this heading">#</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="jiuwen.auto_harness.ExperienceStore">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.auto_harness.</span></span><span class="sig-name descname"><span class="pre">ExperienceStore</span></span><a class="headerlink" href="#jiuwen.auto_harness.ExperienceStore" title="Link to this definition">#</a></dt>
-<dd><dl class="py method">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.auto_harness.</span></span><span class="sig-name descname"><span class="pre">ExperienceStore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jiuwen.auto_harness.ExperienceStore" title="Link to this definition">#</a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">SUCCESS:</span> <span class="pre">str,</span> <span class="pre">FAILURE:</span> <span class="pre">str,</span> <span class="pre">INSIGHT:</span> <span class="pre">str</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="jiuwen.auto_harness.ExperienceStore.record">
-<span class="sig-name descname"><span class="pre">record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#jiuwen.auto_harness.ExperienceStore.record" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exp_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">SUCCESS</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#jiuwen.auto_harness.ExperienceStore.record" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jiuwen.auto_harness.ExperienceStore.record_failure">
+<span class="sig-name descname"><span class="pre">record_failure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#jiuwen.auto_harness.ExperienceStore.record_failure" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jiuwen.auto_harness.ExperienceStore.record_insight">
+<span class="sig-name descname"><span class="pre">record_insight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">topic</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">insight</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#jiuwen.auto_harness.ExperienceStore.record_insight" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jiuwen.auto_harness.ExperienceStore.search">
+<span class="sig-name descname"><span class="pre">search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#jiuwen.auto_harness.ExperienceStore.search" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jiuwen.auto_harness.ExperienceStore.synthesize">
+<span class="sig-name descname"><span class="pre">synthesize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">experiences</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2000</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#jiuwen.auto_harness.ExperienceStore.synthesize" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="jiuwen.auto_harness.ExperienceStore.recent">
-<span class="sig-name descname"><span class="pre">recent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#jiuwen.auto_harness.ExperienceStore.recent" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">recent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#jiuwen.auto_harness.ExperienceStore.recent" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -496,22 +752,71 @@
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stagespec">StageSpec</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.StageSpec"><code class="docutils literal notranslate"><span class="pre">StageSpec</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#registry">Registry</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.StageRegistry"><code class="docutils literal notranslate"><span class="pre">StageRegistry</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.StageRegistry.register"><code class="docutils literal notranslate"><span class="pre">StageRegistry.register()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.StageRegistry.get"><code class="docutils literal notranslate"><span class="pre">StageRegistry.get()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.StageRegistry.names"><code class="docutils literal notranslate"><span class="pre">StageRegistry.names()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pipelinespec">PipelineSpec</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.PipelineSpec"><code class="docutils literal notranslate"><span class="pre">PipelineSpec</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.default_pipeline"><code class="docutils literal notranslate"><span class="pre">default_pipeline()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.PipelineRegistry"><code class="docutils literal notranslate"><span class="pre">PipelineRegistry</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.PipelineRegistry.register"><code class="docutils literal notranslate"><span class="pre">PipelineRegistry.register()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.PipelineRegistry.get"><code class="docutils literal notranslate"><span class="pre">PipelineRegistry.get()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.PipelineRegistry.names"><code class="docutils literal notranslate"><span class="pre">PipelineRegistry.names()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.PipelineRegistry.require"><code class="docutils literal notranslate"><span class="pre">PipelineRegistry.require()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#autoharnessorchestrator">AutoHarnessOrchestrator</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.AutoHarnessOrchestrator"><code class="docutils literal notranslate"><span class="pre">AutoHarnessOrchestrator</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#experiencestore">ExperienceStore</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sessioncontext">SessionContext</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.SessionContext"><code class="docutils literal notranslate"><span class="pre">SessionContext</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.SessionContext.put_artifact"><code class="docutils literal notranslate"><span class="pre">SessionContext.put_artifact()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.SessionContext.get_artifact"><code class="docutils literal notranslate"><span class="pre">SessionContext.get_artifact()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.SessionContext.clone"><code class="docutils literal notranslate"><span class="pre">SessionContext.clone()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stages">Stages</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.BaseStage"><code class="docutils literal notranslate"><span class="pre">BaseStage</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.StageResult"><code class="docutils literal notranslate"><span class="pre">StageResult</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.AssessStage"><code class="docutils literal notranslate"><span class="pre">AssessStage</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.PlanStage"><code class="docutils literal notranslate"><span class="pre">PlanStage</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.ImplementStage"><code class="docutils literal notranslate"><span class="pre">ImplementStage</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.VerifyStage"><code class="docutils literal notranslate"><span class="pre">VerifyStage</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pipelines">Pipelines</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.BasePipeline"><code class="docutils literal notranslate"><span class="pre">BasePipeline</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.StandardPipeline"><code class="docutils literal notranslate"><span class="pre">StandardPipeline</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.ExtendedPipeline"><code class="docutils literal notranslate"><span class="pre">ExtendedPipeline</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.MetaEvolvePipeline"><code class="docutils literal notranslate"><span class="pre">MetaEvolvePipeline</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.LearningsStage"><code class="docutils literal notranslate"><span class="pre">LearningsStage</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#orchestrator">Orchestrator</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.AutoHarnessOrchestrator"><code class="docutils literal notranslate"><span class="pre">AutoHarnessOrchestrator</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.AutoHarnessOrchestrator.select_pipeline"><code class="docutils literal notranslate"><span class="pre">AutoHarnessOrchestrator.select_pipeline()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fix-loop">Fix Loop</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.FixLoopResult"><code class="docutils literal notranslate"><span class="pre">FixLoopResult</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.FixLoopController"><code class="docutils literal notranslate"><span class="pre">FixLoopController</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.FixLoopController.should_retry"><code class="docutils literal notranslate"><span class="pre">FixLoopController.should_retry()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.FixLoopController.reset"><code class="docutils literal notranslate"><span class="pre">FixLoopController.reset()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#experience">Experience</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.ExperienceStore"><code class="docutils literal notranslate"><span class="pre">ExperienceStore</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.ExperienceStore.record"><code class="docutils literal notranslate"><span class="pre">ExperienceStore.record()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.ExperienceStore.record_failure"><code class="docutils literal notranslate"><span class="pre">ExperienceStore.record_failure()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.ExperienceStore.record_insight"><code class="docutils literal notranslate"><span class="pre">ExperienceStore.record_insight()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.ExperienceStore.search"><code class="docutils literal notranslate"><span class="pre">ExperienceStore.search()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.ExperienceStore.synthesize"><code class="docutils literal notranslate"><span class="pre">ExperienceStore.synthesize()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.ExperienceStore.recent"><code class="docutils literal notranslate"><span class="pre">ExperienceStore.recent()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.auto_harness.ExperienceStore.clear"><code class="docutils literal notranslate"><span class="pre">ExperienceStore.clear()</span></code></a></li>
 </ul>

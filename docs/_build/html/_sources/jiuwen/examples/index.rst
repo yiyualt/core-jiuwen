@@ -28,3 +28,4 @@ Runnable code examples for jiuwen features.
    context-engine-example
    security-example
    sys-operation-example
+   auto-harness-example

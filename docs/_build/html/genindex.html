@@ -170,7 +170,7 @@
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/context-engine-philosophy.html">Context Engine: 上下文窗口管理</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/security-philosophy.html">Security: Guardrails 安全层</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/sys-operation-philosophy.html">Sys Operation: 安全的系统操作</a></li>
-<li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/auto-harness-philosophy.html">Auto Harness: 自动优化框架的实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/auto-harness-philosophy.html">Auto Harness: 三层反馈循环的自动优化</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="jiuwen/examples/index.html">Examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -196,6 +196,7 @@
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/context-engine-example.html">Context Engine 示例</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/security-example.html">Security 示例</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/sys-operation-example.html">Sys Operation 示例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/auto-harness-example.html">Auto Harness 示例</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="jiuwen/api/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -335,6 +336,7 @@
  | <a href="#J"><strong>J</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
+ | <a href="#N"><strong>N</strong></a>
  | <a href="#O"><strong>O</strong></a>
  | <a href="#P"><strong>P</strong></a>
  | <a href="#Q"><strong>Q</strong></a>
@@ -342,6 +344,7 @@
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
  | <a href="#U"><strong>U</strong></a>
+ | <a href="#V"><strong>V</strong></a>
  | <a href="#W"><strong>W</strong></a>
  
 </div>
@@ -410,6 +413,8 @@
 </li>
       <li><a href="jiuwen/api/teams.html#jiuwen.core.agent_teams.AgentSpawner">AgentSpawner (class in jiuwen.core.agent_teams)</a>
 </li>
+      <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.AssessStage">AssessStage (class in jiuwen.auto_harness)</a>
+</li>
       <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.AutoHarnessOrchestrator">AutoHarnessOrchestrator (class in jiuwen.auto_harness)</a>
 </li>
   </ul></td>
@@ -422,11 +427,15 @@
 </li>
       <li><a href="jiuwen/api/common.html#jiuwen.core.common.BaseCard">BaseCard (class in jiuwen.core.common)</a>
 </li>
+      <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.BasePipeline">BasePipeline (class in jiuwen.auto_harness)</a>
+</li>
       <li><a href="jiuwen/api/rails.html#jiuwen.core.rails.BaseRail">BaseRail (class in jiuwen.core.rails)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="jiuwen/api/harness.html#jiuwen.harness.BaseSection">BaseSection (class in jiuwen.harness)</a>
+</li>
+      <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.BaseStage">BaseStage (class in jiuwen.auto_harness)</a>
 </li>
       <li><a href="jiuwen/api/harness.html#jiuwen.harness.BaseSection.build">build() (jiuwen.harness.BaseSection method)</a>
 
@@ -458,6 +467,8 @@
         <li><a href="jiuwen/api/session.html#jiuwen.core.session.Session.clear">(jiuwen.core.session.Session method)</a>
 </li>
       </ul></li>
+      <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.SessionContext.clone">clone() (jiuwen.auto_harness.SessionContext method)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="jiuwen/api/sys-operation.html#jiuwen.core.sys_operation.CodeOperator">CodeOperator (class in jiuwen.core.sys_operation)</a>
@@ -488,8 +499,6 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="jiuwen/api/harness.html#jiuwen.harness.DeepAgentConfig">DeepAgentConfig (class in jiuwen.harness)</a>
 </li>
-      <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.default_pipeline">default_pipeline() (in module jiuwen.auto_harness)</a>
-</li>
   </ul></td>
 </tr></table>
 
@@ -514,6 +523,8 @@
 </li>
       <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.ExperienceStore">ExperienceStore (class in jiuwen.auto_harness)</a>
 </li>
+      <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.ExtendedPipeline">ExtendedPipeline (class in jiuwen.auto_harness)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -522,8 +533,12 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="jiuwen/api/sys-operation.html#jiuwen.core.sys_operation.FileOperator">FileOperator (class in jiuwen.core.sys_operation)</a>
 </li>
+      <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.FixLoopController">FixLoopController (class in jiuwen.auto_harness)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.FixLoopResult">FixLoopResult (class in jiuwen.auto_harness)</a>
+</li>
       <li><a href="jiuwen/api/foundation.html#jiuwen.core.foundation.OpenAIClient.from_env">from_env() (jiuwen.core.foundation.OpenAIClient class method)</a>
 </li>
   </ul></td>
@@ -536,10 +551,20 @@
 </li>
       <li><a href="jiuwen/api/workflow.html#jiuwen.core.workflow.generate_workflow_key">generate_workflow_key() (in module jiuwen.core.workflow)</a>
 </li>
-      <li><a href="jiuwen/api/teams.html#jiuwen.core.agent_teams.AgentSpawner.get">get() (jiuwen.core.agent_teams.AgentSpawner method)</a>
+      <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.PipelineRegistry.get">get() (jiuwen.auto_harness.PipelineRegistry method)</a>
+
+      <ul>
+        <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.StageRegistry.get">(jiuwen.auto_harness.StageRegistry method)</a>
+</li>
+        <li><a href="jiuwen/api/teams.html#jiuwen.core.agent_teams.AgentSpawner.get">(jiuwen.core.agent_teams.AgentSpawner method)</a>
+</li>
+      </ul></li>
+      <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.SessionContext.get_artifact">get_artifact() (jiuwen.auto_harness.SessionContext method)</a>
 </li>
       <li><a href="jiuwen/api/workflow.html#jiuwen.core.workflow.Workflow.get_components">get_components() (jiuwen.core.workflow.Workflow method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="jiuwen/api/workflow.html#jiuwen.core.workflow.Workflow.get_graph">get_graph() (jiuwen.core.workflow.Workflow method)</a>
 </li>
       <li><a href="jiuwen/api/context-engine.html#jiuwen.core.context_engine.MessageBuffer.get_messages">get_messages() (jiuwen.core.context_engine.MessageBuffer method)</a>
@@ -550,8 +575,6 @@
         <li><a href="jiuwen/api/session.html#jiuwen.core.session.Session.get_messages">(jiuwen.core.session.Session method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.PregelGraph.get_nodes">get_nodes() (jiuwen.core.graph.PregelGraph method)</a>
 </li>
       <li><a href="jiuwen/api/session.html#jiuwen.core.session.Session.get_state">get_state() (jiuwen.core.session.Session method)</a>
@@ -576,12 +599,14 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="jiuwen/api/harness.html#jiuwen.harness.IdentitySection">IdentitySection (class in jiuwen.harness)</a>
 </li>
-      <li><a href="jiuwen/api/teams.html#jiuwen.core.agent_teams.InProcessMessager">InProcessMessager (class in jiuwen.core.agent_teams)</a>
+      <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.ImplementStage">ImplementStage (class in jiuwen.auto_harness)</a>
 </li>
-      <li><a href="jiuwen/api/security.html#jiuwen.core.security.InputGuard">InputGuard (class in jiuwen.core.security)</a>
+      <li><a href="jiuwen/api/teams.html#jiuwen.core.agent_teams.InProcessMessager">InProcessMessager (class in jiuwen.core.agent_teams)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jiuwen/api/security.html#jiuwen.core.security.InputGuard">InputGuard (class in jiuwen.core.security)</a>
+</li>
       <li><a href="jiuwen/api/components.html#jiuwen.core.workflow.components.IntentDetectionComponent">IntentDetectionComponent (class in jiuwen.core.workflow.components)</a>
 </li>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.Channel.is_ready">is_ready() (jiuwen.core.graph.Channel method)</a>
@@ -721,16 +746,18 @@
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.LearningsStage">LearningsStage (class in jiuwen.auto_harness)</a>
+</li>
       <li><a href="jiuwen/api/sys-operation.html#jiuwen.core.sys_operation.FileOperator.list">list() (jiuwen.core.sys_operation.FileOperator method)</a>
 </li>
       <li><a href="jiuwen/api/harness.html#jiuwen.harness.Workspace.list_files">list_files() (jiuwen.harness.Workspace method)</a>
 </li>
       <li><a href="jiuwen/api/foundation.html#jiuwen.core.foundation.LLMClient">LLMClient (class in jiuwen.core.foundation)</a>
 </li>
-      <li><a href="jiuwen/api/components.html#jiuwen.core.workflow.components.LLMCompConfig">LLMCompConfig (class in jiuwen.core.workflow.components)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jiuwen/api/components.html#jiuwen.core.workflow.components.LLMCompConfig">LLMCompConfig (class in jiuwen.core.workflow.components)</a>
+</li>
       <li><a href="jiuwen/api/components.html#jiuwen.core.workflow.components.LLMComponent">LLMComponent (class in jiuwen.core.workflow.components)</a>
 </li>
       <li><a href="jiuwen/api/harness.html#jiuwen.harness.LoggingHandler">LoggingHandler (class in jiuwen.harness)</a>
@@ -748,6 +775,8 @@
       <li><a href="jiuwen/api/context-engine.html#jiuwen.core.context_engine.MessageBuffer">MessageBuffer (class in jiuwen.core.context_engine)</a>
 </li>
       <li><a href="jiuwen/api/multi-agent.html#jiuwen.core.multi_agent.MessageBus">MessageBus (class in jiuwen.core.multi_agent)</a>
+</li>
+      <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.MetaEvolvePipeline">MetaEvolvePipeline (class in jiuwen.auto_harness)</a>
 </li>
       <li><a href="jiuwen/api/foundation.html#jiuwen.core.foundation.ModelClientConfig">ModelClientConfig (class in jiuwen.core.foundation)</a>
 </li>
@@ -797,6 +826,18 @@
   </ul></td>
 </tr></table>
 
+<h2 id="N">N</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.PipelineRegistry.names">names() (jiuwen.auto_harness.PipelineRegistry method)</a>
+
+      <ul>
+        <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.StageRegistry.names">(jiuwen.auto_harness.StageRegistry method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
 <h2 id="O">O</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -818,7 +859,9 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="jiuwen/api/security.html#jiuwen.core.security.PathSecurity">PathSecurity (class in jiuwen.core.security)</a>
 </li>
-      <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.PipelineSpec">PipelineSpec (class in jiuwen.auto_harness)</a>
+      <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.PipelineRegistry">PipelineRegistry (class in jiuwen.auto_harness)</a>
+</li>
+      <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.PlanStage">PlanStage (class in jiuwen.auto_harness)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -827,6 +870,8 @@
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.PregelGraph">PregelGraph (class in jiuwen.core.graph)</a>
 </li>
       <li><a href="jiuwen/api/harness.html#jiuwen.harness.PromptBuilder">PromptBuilder (class in jiuwen.harness)</a>
+</li>
+      <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.SessionContext.put_artifact">put_artifact() (jiuwen.auto_harness.SessionContext method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -854,14 +899,30 @@
 </li>
       <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.ExperienceStore.record">record() (jiuwen.auto_harness.ExperienceStore method)</a>
 </li>
-      <li><a href="jiuwen/api/multi-agent.html#jiuwen.core.multi_agent.TeamRuntime.register">register() (jiuwen.core.multi_agent.TeamRuntime method)</a>
+      <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.ExperienceStore.record_failure">record_failure() (jiuwen.auto_harness.ExperienceStore method)</a>
 </li>
+      <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.ExperienceStore.record_insight">record_insight() (jiuwen.auto_harness.ExperienceStore method)</a>
+</li>
+      <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.PipelineRegistry.register">register() (jiuwen.auto_harness.PipelineRegistry method)</a>
+
+      <ul>
+        <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.StageRegistry.register">(jiuwen.auto_harness.StageRegistry method)</a>
+</li>
+        <li><a href="jiuwen/api/multi-agent.html#jiuwen.core.multi_agent.TeamRuntime.register">(jiuwen.core.multi_agent.TeamRuntime method)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="jiuwen/api/teams.html#jiuwen.core.agent_teams.AgentSpawner.remove">remove() (jiuwen.core.agent_teams.AgentSpawner method)</a>
 </li>
-      <li><a href="jiuwen/api/components.html#jiuwen.core.workflow.components.LoopComponent.reset">reset() (jiuwen.core.workflow.components.LoopComponent method)</a>
+      <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.PipelineRegistry.require">require() (jiuwen.auto_harness.PipelineRegistry method)</a>
 </li>
+      <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.FixLoopController.reset">reset() (jiuwen.auto_harness.FixLoopController method)</a>
+
+      <ul>
+        <li><a href="jiuwen/api/components.html#jiuwen.core.workflow.components.LoopComponent.reset">(jiuwen.core.workflow.components.LoopComponent method)</a>
+</li>
+      </ul></li>
       <li><a href="jiuwen/api/runner.html#jiuwen.core.runner.ResourceManager">ResourceManager (class in jiuwen.core.runner)</a>
 </li>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.Channel.restore">restore() (jiuwen.core.graph.Channel method)</a>
@@ -882,9 +943,15 @@
 </li>
       <li><a href="jiuwen/api/security.html#jiuwen.core.security.PathSecurity.sanitize">sanitize() (jiuwen.core.security.PathSecurity static method)</a>
 </li>
+      <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.ExperienceStore.search">search() (jiuwen.auto_harness.ExperienceStore method)</a>
+</li>
       <li><a href="jiuwen/api/rails.html#jiuwen.core.rails.SecurityRail">SecurityRail (class in jiuwen.core.rails)</a>
 </li>
+      <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.AutoHarnessOrchestrator.select_pipeline">select_pipeline() (jiuwen.auto_harness.AutoHarnessOrchestrator method)</a>
+</li>
       <li><a href="jiuwen/api/session.html#jiuwen.core.session.Session">Session (class in jiuwen.core.session)</a>
+</li>
+      <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.SessionContext">SessionContext (class in jiuwen.auto_harness)</a>
 </li>
       <li><a href="jiuwen/api/workflow.html#jiuwen.core.workflow.Workflow.set_end_comp">set_end_comp() (jiuwen.core.workflow.Workflow method)</a>
 </li>
@@ -896,13 +963,19 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.FixLoopController.should_retry">should_retry() (jiuwen.auto_harness.FixLoopController method)</a>
+</li>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.Executable.skip_trace">skip_trace() (jiuwen.core.graph.Executable method)</a>
 </li>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.Channel.snapshot">snapshot() (jiuwen.core.graph.Channel method)</a>
 </li>
       <li><a href="jiuwen/api/teams.html#jiuwen.core.agent_teams.AgentSpawner.spawn">spawn() (jiuwen.core.agent_teams.AgentSpawner method)</a>
 </li>
-      <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.StageSpec">StageSpec (class in jiuwen.auto_harness)</a>
+      <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.StageRegistry">StageRegistry (class in jiuwen.auto_harness)</a>
+</li>
+      <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.StageResult">StageResult (class in jiuwen.auto_harness)</a>
+</li>
+      <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.StandardPipeline">StandardPipeline (class in jiuwen.auto_harness)</a>
 </li>
       <li><a href="jiuwen/api/components.html#jiuwen.core.workflow.components.Start">Start (class in jiuwen.core.workflow.components)</a>
 </li>
@@ -911,6 +984,8 @@
       <li><a href="jiuwen/api/session.html#jiuwen.core.session.StreamEmitter">StreamEmitter (class in jiuwen.core.session)</a>
 </li>
       <li><a href="jiuwen/api/multi-agent.html#jiuwen.core.multi_agent.MessageBus.subscribe">subscribe() (jiuwen.core.multi_agent.MessageBus method)</a>
+</li>
+      <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.ExperienceStore.synthesize">synthesize() (jiuwen.auto_harness.ExperienceStore method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -965,6 +1040,14 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="jiuwen/api/multi-agent.html#jiuwen.core.multi_agent.MessageBus.unsubscribe">unsubscribe() (jiuwen.core.multi_agent.MessageBus method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="V">V</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jiuwen/api/auto-harness.html#jiuwen.auto_harness.VerifyStage">VerifyStage (class in jiuwen.auto_harness)</a>
 </li>
   </ul></td>
 </tr></table>

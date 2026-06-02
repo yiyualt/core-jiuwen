@@ -171,7 +171,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../notes/context-engine-philosophy.html">Context Engine: 上下文窗口管理</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notes/security-philosophy.html">Security: Guardrails 安全层</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notes/sys-operation-philosophy.html">Sys Operation: 安全的系统操作</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notes/auto-harness-philosophy.html">Auto Harness: 自动优化框架的实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/auto-harness-philosophy.html">Auto Harness: 三层反馈循环的自动优化</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../examples/index.html">Examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -197,6 +197,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../examples/context-engine-example.html">Context Engine 示例</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/security-example.html">Security 示例</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/sys-operation-example.html">Sys Operation 示例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/auto-harness-example.html">Auto Harness 示例</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -365,9 +366,10 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pipeline">1. Pipeline — 管道</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#orchestrator">2. Orchestrator — 编排</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#experience">3. Experience — 经验</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#orchestrator">1. Orchestrator — 一行运行</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">2. 选择管道</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">3. 流式执行 — 实时看到每个阶段的结果</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#experience">4. Experience — 跨运行学习</a></li>
 </ul>
             </nav>
         </div>
@@ -381,58 +383,114 @@
                   
   <section id="auto-harness">
 <h1>Auto Harness 教程 — 自动优化框架<a class="headerlink" href="#auto-harness" title="Link to this heading">#</a></h1>
-<p>用 DeepAgent 自动优化 agent 的提示词和配置。标准化管道：评估 → 计划 → 实施 → 验证。</p>
-<section id="pipeline">
-<h2>1. Pipeline — 管道<a class="headerlink" href="#pipeline" title="Link to this heading">#</a></h2>
-<p>预定义的标准四阶段优化管道。</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.auto_harness</span><span class="w"> </span><span class="kn">import</span> <span class="n">PipelineSpec</span><span class="p">,</span> <span class="n">StageSpec</span><span class="p">,</span> <span class="n">default_pipeline</span>
+<p>用专门的 agent 管道自动优化代码。每个阶段由不同角色（审查员→架构师→开发者→测试员）的 agent 执行。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>以下代码均可直接运行。使用 FakeLLMClient 不需要真实 API。</p>
+</div>
+<section id="orchestrator">
+<h2>1. Orchestrator — 一行运行<a class="headerlink" href="#orchestrator" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tests.conftest</span><span class="w"> </span><span class="kn">import</span> <span class="n">FakeLLMClient</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.auto_harness</span><span class="w"> </span><span class="kn">import</span> <span class="n">AutoHarnessOrchestrator</span>
 
-<span class="n">pipe</span> <span class="o">=</span> <span class="n">default_pipeline</span><span class="p">()</span>
-<span class="c1"># assess → plan → implement → verify</span>
 
-<span class="k">for</span> <span class="n">stage</span> <span class="ow">in</span> <span class="n">pipe</span><span class="o">.</span><span class="n">stages</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stage</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">stage</span><span class="o">.</span><span class="n">description</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">FakeLLMClient</span><span class="p">([</span>
+        <span class="s2">&quot;Final Answer: 发现 3 个问题：性能瓶颈、缺少日志、异常未处理&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Final Answer: 方案：1.优化查询 2.添加日志 3.捕获异常&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Final Answer: 已修改 main.py 和 db.py，实现了上述方案&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Final Answer: 所有测试通过，性能提升 30%&quot;</span><span class="p">,</span>
+    <span class="p">])</span>
 
-<span class="c1"># 自定义管道</span>
-<span class="n">my_pipe</span> <span class="o">=</span> <span class="n">PipelineSpec</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;custom&quot;</span><span class="p">,</span> <span class="n">stages</span><span class="o">=</span><span class="p">[</span>
-    <span class="n">StageSpec</span><span class="p">(</span><span class="s2">&quot;analyze&quot;</span><span class="p">,</span> <span class="s2">&quot;Analyze code quality&quot;</span><span class="p">,</span> <span class="s2">&quot;You are a code reviewer.&quot;</span><span class="p">),</span>
-    <span class="n">StageSpec</span><span class="p">(</span><span class="s2">&quot;fix&quot;</span><span class="p">,</span> <span class="s2">&quot;Fix identified issues&quot;</span><span class="p">,</span> <span class="s2">&quot;You are a senior developer.&quot;</span><span class="p">),</span>
-<span class="p">])</span>
+    <span class="n">orch</span> <span class="o">=</span> <span class="n">AutoHarnessOrchestrator</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">orch</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;优化数据库查询性能&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">stage_name</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">stage_name</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;output&#39;</span><span class="p">][:</span><span class="mi">80</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;管道: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;pipeline&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">，共 </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;results&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2"> 个阶段&quot;</span><span class="p">)</span>
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>输出:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[assess] 发现 3 个问题：性能瓶颈、缺少日志、异常未处理...
+[plan] 方案：1.优化查询 2.添加日志 3.捕获异常...
+[implement] 已修改 main.py 和 db.py...
+[verify] 所有测试通过，性能提升 30%...
+管道: standard，共 4 个阶段
 </pre></div>
 </div>
 </section>
-<section id="orchestrator">
-<h2>2. Orchestrator — 编排<a class="headerlink" href="#orchestrator" title="Link to this heading">#</a></h2>
-<p>运行管道，每个 stage 使用专门的 agent。</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.foundation</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAIClient</span>
+<section id="id1">
+<h2>2. 选择管道<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>两种内置管道: <code class="docutils literal notranslate"><span class="pre">standard</span></code> (4 阶段) 和 <code class="docutils literal notranslate"><span class="pre">extended</span></code> (5 阶段, 多一轮评估)。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tests.conftest</span><span class="w"> </span><span class="kn">import</span> <span class="n">FakeLLMClient</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.auto_harness</span><span class="w"> </span><span class="kn">import</span> <span class="n">AutoHarnessOrchestrator</span>
 
-<span class="n">client</span> <span class="o">=</span> <span class="n">OpenAIClient</span><span class="o">.</span><span class="n">from_env</span><span class="p">()</span>
-<span class="n">orchestrator</span> <span class="o">=</span> <span class="n">AutoHarnessOrchestrator</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
 
-<span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">orchestrator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;Optimize the database query performance&quot;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">FakeLLMClient</span><span class="p">([</span>
+        <span class="s2">&quot;Final Answer: 第一轮评估&quot;</span><span class="p">,</span> <span class="s2">&quot;Final Answer: 第二轮评估&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Final Answer: 计划&quot;</span><span class="p">,</span> <span class="s2">&quot;Final Answer: 实施&quot;</span><span class="p">,</span> <span class="s2">&quot;Final Answer: 验证&quot;</span><span class="p">,</span>
+    <span class="p">])</span>
 
-<span class="k">for</span> <span class="n">stage_name</span><span class="p">,</span> <span class="n">stage_result</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stage_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">stage_result</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">][:</span><span class="mi">100</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+    <span class="n">orch</span> <span class="o">=</span> <span class="n">AutoHarnessOrchestrator</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
+
+    <span class="c1"># 使用 extended 管道</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">orch</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;重构代码&quot;</span><span class="p">,</span> <span class="n">pipeline_name</span><span class="o">=</span><span class="s2">&quot;extended&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;管道: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;pipeline&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">，阶段数: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;results&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="c1"># 管道: extended，阶段数: 5</span>
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+<section id="id2">
+<h2>3. 流式执行 — 实时看到每个阶段的结果<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tests.conftest</span><span class="w"> </span><span class="kn">import</span> <span class="n">FakeLLMClient</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.auto_harness</span><span class="w"> </span><span class="kn">import</span> <span class="n">AutoHarnessOrchestrator</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">FakeLLMClient</span><span class="p">([</span>
+        <span class="s2">&quot;Final Answer: 评估结果&quot;</span><span class="p">,</span> <span class="s2">&quot;Final Answer: 计划方案&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Final Answer: 实施完成&quot;</span><span class="p">,</span> <span class="s2">&quot;Final Answer: 验证通过&quot;</span><span class="p">,</span>
+    <span class="p">])</span>
+
+    <span class="n">orch</span> <span class="o">=</span> <span class="n">AutoHarnessOrchestrator</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
+
+    <span class="c1"># 流式 — 每完成一个阶段就立即输出</span>
+    <span class="k">async</span> <span class="k">for</span> <span class="n">stage_result</span> <span class="ow">in</span> <span class="n">orch</span><span class="o">.</span><span class="n">run_stream</span><span class="p">(</span><span class="s2">&quot;优化代码&quot;</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✓ </span><span class="si">{</span><span class="n">stage_result</span><span class="o">.</span><span class="n">stage_name</span><span class="si">}</span><span class="s2"> 完成: </span><span class="si">{</span><span class="n">stage_result</span><span class="o">.</span><span class="n">output</span><span class="p">[:</span><span class="mi">60</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>输出:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>✓ assess 完成: 评估结果...
+✓ plan 完成: 计划方案...
+✓ implement 完成: 实施完成...
+✓ verify 完成: 验证通过...
 </pre></div>
 </div>
 </section>
 <section id="experience">
-<h2>3. Experience — 经验<a class="headerlink" href="#experience" title="Link to this heading">#</a></h2>
-<p>积累优化经验，跨运行学习。</p>
+<h2>4. Experience — 跨运行学习<a class="headerlink" href="#experience" title="Link to this heading">#</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.auto_harness</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExperienceStore</span>
 
 <span class="n">store</span> <span class="o">=</span> <span class="n">ExperienceStore</span><span class="p">()</span>
 
-<span class="c1"># 记录每次运行</span>
-<span class="n">store</span><span class="o">.</span><span class="n">record</span><span class="p">(</span><span class="s2">&quot;assess&quot;</span><span class="p">,</span> <span class="s2">&quot;fix bug #42&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="s2">&quot;Found 3 issues&quot;</span><span class="p">})</span>
-<span class="n">store</span><span class="o">.</span><span class="n">record</span><span class="p">(</span><span class="s2">&quot;implement&quot;</span><span class="p">,</span> <span class="s2">&quot;fix bug #42&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="s2">&quot;All 3 fixed&quot;</span><span class="p">})</span>
+<span class="n">store</span><span class="o">.</span><span class="n">record</span><span class="p">(</span><span class="s2">&quot;assess&quot;</span><span class="p">,</span> <span class="s2">&quot;任务1&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="s2">&quot;发现 3 个问题&quot;</span><span class="p">})</span>
+<span class="n">store</span><span class="o">.</span><span class="n">record</span><span class="p">(</span><span class="s2">&quot;implement&quot;</span><span class="p">,</span> <span class="s2">&quot;任务1&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="s2">&quot;已全部修复&quot;</span><span class="p">})</span>
 
-<span class="c1"># 查询历史</span>
 <span class="n">recent</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">recent</span><span class="p">(</span><span class="n">stage</span><span class="o">=</span><span class="s2">&quot;assess&quot;</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="n">all_records</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">recent</span><span class="p">()</span>  <span class="c1"># 全部</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;最近评估记录: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">recent</span><span class="p">)</span><span class="si">}</span><span class="s2"> 条&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;总经验: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">store</span><span class="p">)</span><span class="si">}</span><span class="s2"> 条&quot;</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total experiences: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">store</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="n">store</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -486,9 +544,10 @@
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pipeline">1. Pipeline — 管道</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#orchestrator">2. Orchestrator — 编排</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#experience">3. Experience — 经验</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#orchestrator">1. Orchestrator — 一行运行</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">2. 选择管道</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">3. 流式执行 — 实时看到每个阶段的结果</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#experience">4. Experience — 跨运行学习</a></li>
 </ul>
   </nav></div>
 
