@@ -38,3 +38,33 @@ create_deep_agent
 .. function:: create_deep_agent(client=None, workspace_dir=".", system_prompt=None, max_iterations=50) -> DeepAgent
 
    Factory with sensible defaults.
+
+PromptBuilder
+-------------
+
+.. class:: PromptBuilder(sections: list[BaseSection] | None = None)
+
+   Composes prompt sections.
+
+   .. method:: add_section(section: BaseSection) -> None
+   .. method:: build(context: dict | None = None) -> str
+
+BaseSection
+-----------
+
+.. class:: BaseSection
+
+   Abstract base for prompt sections.
+
+   .. method:: build(context: dict) -> str
+
+Built-in Sections
+-----------------
+
+.. class:: IdentitySection(role: str | None = None)
+
+.. class:: ToolsSection
+
+.. class:: SafetySection
+
+.. class:: WorkspaceSection

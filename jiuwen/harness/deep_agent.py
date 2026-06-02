@@ -6,6 +6,7 @@ from pathlib import Path
 from jiuwen.core.foundation.llm import LLMClient
 from jiuwen.core.foundation.tool import ToolCard
 from jiuwen.core.single_agent.agents import ReActAgent
+from jiuwen.harness.prompts.builder import PromptBuilder, default_builder
 from jiuwen.harness.schema.config import DeepAgentConfig
 from jiuwen.harness.workspace import Workspace
 
@@ -27,10 +28,16 @@ class DeepAgent(ReActAgent):
         result = await agent.run({"query": "Fix the bug in main.py"})
     """
 
-    def __init__(self, client: LLMClient, config: DeepAgentConfig):
+    def __init__(
+        self,
+        client: LLMClient,
+        config: DeepAgentConfig,
+        prompt_builder: PromptBuilder | None = None,
+    ):
         self._config = config
         self._client = client
         self._workspace = Workspace(config.workspace_dir)
+        self._prompt_builder = prompt_builder or default_builder
 
         tools = [
             self._make_bash_tool(),
@@ -38,10 +45,14 @@ class DeepAgent(ReActAgent):
             self._make_write_tool(),
         ]
 
+        system_prompt = config.system_prompt or self._prompt_builder.build(
+            {"workspace": str(self._workspace.root)}
+        )
+
         super().__init__(
             client=self._client,
             tools=tools,
-            system_prompt=config.system_prompt,
+            system_prompt=system_prompt,
             max_iterations=config.max_iterations,
         )
 

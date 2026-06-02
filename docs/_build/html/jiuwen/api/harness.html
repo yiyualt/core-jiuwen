@@ -362,6 +362,28 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.harness.create_deep_agent"><code class="docutils literal notranslate"><span class="pre">create_deep_agent()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#promptbuilder">PromptBuilder</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.harness.PromptBuilder"><code class="docutils literal notranslate"><span class="pre">PromptBuilder</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.harness.PromptBuilder.add_section"><code class="docutils literal notranslate"><span class="pre">PromptBuilder.add_section()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.harness.PromptBuilder.build"><code class="docutils literal notranslate"><span class="pre">PromptBuilder.build()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basesection">BaseSection</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.harness.BaseSection"><code class="docutils literal notranslate"><span class="pre">BaseSection</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.harness.BaseSection.build"><code class="docutils literal notranslate"><span class="pre">BaseSection.build()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#built-in-sections">Built-in Sections</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.harness.IdentitySection"><code class="docutils literal notranslate"><span class="pre">IdentitySection</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.harness.ToolsSection"><code class="docutils literal notranslate"><span class="pre">ToolsSection</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.harness.SafetySection"><code class="docutils literal notranslate"><span class="pre">SafetySection</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.harness.WorkspaceSection"><code class="docutils literal notranslate"><span class="pre">WorkspaceSection</span></code></a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -454,6 +476,62 @@
 </dd></dl>
 
 </section>
+<section id="promptbuilder">
+<h2>PromptBuilder<a class="headerlink" href="#promptbuilder" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.harness.PromptBuilder">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.harness.</span></span><span class="sig-name descname"><span class="pre">PromptBuilder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#jiuwen.harness.BaseSection" title="jiuwen.harness.BaseSection"><span class="pre">BaseSection</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jiuwen.harness.PromptBuilder" title="Link to this definition">#</a></dt>
+<dd><p>Composes prompt sections.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="jiuwen.harness.PromptBuilder.add_section">
+<span class="sig-name descname"><span class="pre">add_section</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">section</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#jiuwen.harness.BaseSection" title="jiuwen.harness.BaseSection"><span class="pre">BaseSection</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#jiuwen.harness.PromptBuilder.add_section" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jiuwen.harness.PromptBuilder.build">
+<span class="sig-name descname"><span class="pre">build</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#jiuwen.harness.PromptBuilder.build" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="basesection">
+<h2>BaseSection<a class="headerlink" href="#basesection" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.harness.BaseSection">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.harness.</span></span><span class="sig-name descname"><span class="pre">BaseSection</span></span><a class="headerlink" href="#jiuwen.harness.BaseSection" title="Link to this definition">#</a></dt>
+<dd><p>Abstract base for prompt sections.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="jiuwen.harness.BaseSection.build">
+<span class="sig-name descname"><span class="pre">build</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#jiuwen.harness.BaseSection.build" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="built-in-sections">
+<h2>Built-in Sections<a class="headerlink" href="#built-in-sections" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.harness.IdentitySection">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.harness.</span></span><span class="sig-name descname"><span class="pre">IdentitySection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">role</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jiuwen.harness.IdentitySection" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.harness.ToolsSection">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.harness.</span></span><span class="sig-name descname"><span class="pre">ToolsSection</span></span><a class="headerlink" href="#jiuwen.harness.ToolsSection" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.harness.SafetySection">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.harness.</span></span><span class="sig-name descname"><span class="pre">SafetySection</span></span><a class="headerlink" href="#jiuwen.harness.SafetySection" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.harness.WorkspaceSection">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.harness.</span></span><span class="sig-name descname"><span class="pre">WorkspaceSection</span></span><a class="headerlink" href="#jiuwen.harness.WorkspaceSection" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</section>
 </section>
 
 
@@ -514,6 +592,28 @@
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#create-deep-agent">create_deep_agent</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.harness.create_deep_agent"><code class="docutils literal notranslate"><span class="pre">create_deep_agent()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#promptbuilder">PromptBuilder</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.harness.PromptBuilder"><code class="docutils literal notranslate"><span class="pre">PromptBuilder</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.harness.PromptBuilder.add_section"><code class="docutils literal notranslate"><span class="pre">PromptBuilder.add_section()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.harness.PromptBuilder.build"><code class="docutils literal notranslate"><span class="pre">PromptBuilder.build()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basesection">BaseSection</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.harness.BaseSection"><code class="docutils literal notranslate"><span class="pre">BaseSection</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.harness.BaseSection.build"><code class="docutils literal notranslate"><span class="pre">BaseSection.build()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#built-in-sections">Built-in Sections</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.harness.IdentitySection"><code class="docutils literal notranslate"><span class="pre">IdentitySection</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.harness.ToolsSection"><code class="docutils literal notranslate"><span class="pre">ToolsSection</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.harness.SafetySection"><code class="docutils literal notranslate"><span class="pre">SafetySection</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.harness.WorkspaceSection"><code class="docutils literal notranslate"><span class="pre">WorkspaceSection</span></code></a></li>
 </ul>
 </li>
 </ul>
