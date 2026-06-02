@@ -23,3 +23,5 @@ Runnable code examples for jiuwen features.
    harness-example
    task-loop-example
    workspace-example
+   extra-components-example
+   context-engine-example

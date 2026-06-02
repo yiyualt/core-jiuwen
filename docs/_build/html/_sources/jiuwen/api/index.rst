@@ -19,3 +19,4 @@ Reference documentation for jiuwen's public API.
    teams
    evolving
    harness
+   context-engine

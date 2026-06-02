@@ -24,3 +24,5 @@ Design philosophy and rationale behind jiuwen's architecture.
    harness-philosophy
    task-loop-philosophy
    workspace-philosophy
+   extra-components-philosophy
+   context-engine-philosophy

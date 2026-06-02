@@ -73,3 +73,40 @@ LLMCompConfig
    .. attribute:: model_config: ModelRequestConfig
    .. attribute:: template_content: list[dict]
    .. attribute:: output_config: dict | None
+
+QuestionerComponent
+-------------------
+
+.. class:: QuestionerComponent(question: str, field_name: str)
+
+   Asks for missing input fields.
+
+   .. method:: async invoke(inputs: dict, **kwargs) -> dict
+
+IntentDetectionComponent
+-------------------------
+
+.. class:: IntentDetectionComponent(intents: dict[str, list[str]])
+
+   Keyword-based intent classification.
+
+   .. method:: async invoke(inputs: dict, **kwargs) -> dict
+
+HTTPRequestComponent
+---------------------
+
+.. class:: HTTPRequestComponent(url_template: str, method: str = "GET", headers: dict | None = None)
+
+   Makes HTTP requests with template URLs.
+
+   .. method:: async invoke(inputs: dict, **kwargs) -> dict
+
+LoopComponent
+-------------
+
+.. class:: LoopComponent(max_iterations: int = 10)
+
+   Repeats execution, accumulating items.
+
+   .. method:: async invoke(inputs: dict, **kwargs) -> dict
+   .. method:: reset() -> None

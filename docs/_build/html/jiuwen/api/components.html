@@ -162,6 +162,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../notes/harness-philosophy.html">Harness: Coding Agent Framework</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notes/task-loop-philosophy.html">Task Loop: 事件驱动的 Agent 执行</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notes/workspace-philosophy.html">Workspace: Agent 的安全工位</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/extra-components-philosophy.html">扩展组件：Questioner / Intent / HTTP / Loop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/context-engine-philosophy.html">Context Engine: 上下文窗口管理</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../examples/index.html">Examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -182,6 +184,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../examples/harness-example.html">Harness Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/task-loop-example.html">Task Loop Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/workspace-example.html">Workspace 示例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/extra-components-example.html">扩展组件示例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/context-engine-example.html">Context Engine 示例</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">API Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -198,6 +202,7 @@
 <li class="toctree-l2"><a class="reference internal" href="teams.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.agent_teams</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="evolving.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.agent_evolving</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="harness.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.harness</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="context-engine.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.context_engine</span></code></a></li>
 </ul>
 </details></li>
 </ul>
@@ -373,6 +378,25 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.core.workflow.components.LLMCompConfig"><code class="docutils literal notranslate"><span class="pre">LLMCompConfig</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#questionercomponent">QuestionerComponent</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.core.workflow.components.QuestionerComponent"><code class="docutils literal notranslate"><span class="pre">QuestionerComponent</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#intentdetectioncomponent">IntentDetectionComponent</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.core.workflow.components.IntentDetectionComponent"><code class="docutils literal notranslate"><span class="pre">IntentDetectionComponent</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#httprequestcomponent">HTTPRequestComponent</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.core.workflow.components.HTTPRequestComponent"><code class="docutils literal notranslate"><span class="pre">HTTPRequestComponent</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loopcomponent">LoopComponent</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.core.workflow.components.LoopComponent"><code class="docutils literal notranslate"><span class="pre">LoopComponent</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.core.workflow.components.LoopComponent.reset"><code class="docutils literal notranslate"><span class="pre">LoopComponent.reset()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -525,6 +549,67 @@ and <code class="xref py py-class docutils literal notranslate"><span class="pre
 </dd></dl>
 
 </section>
+<section id="questionercomponent">
+<h2>QuestionerComponent<a class="headerlink" href="#questionercomponent" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.core.workflow.components.QuestionerComponent">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.core.workflow.components.</span></span><span class="sig-name descname"><span class="pre">QuestionerComponent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">question</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jiuwen.core.workflow.components.QuestionerComponent" title="Link to this definition">#</a></dt>
+<dd><p>Asks for missing input fields.</p>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">async</span> <span class="pre">invoke(inputs:</span> <span class="pre">dict,</span> <span class="pre">**kwargs)</span> <span class="pre">-&gt;</span> <span class="pre">dict</span></span></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="intentdetectioncomponent">
+<h2>IntentDetectionComponent<a class="headerlink" href="#intentdetectioncomponent" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.core.workflow.components.IntentDetectionComponent">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.core.workflow.components.</span></span><span class="sig-name descname"><span class="pre">IntentDetectionComponent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">intents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jiuwen.core.workflow.components.IntentDetectionComponent" title="Link to this definition">#</a></dt>
+<dd><p>Keyword-based intent classification.</p>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">async</span> <span class="pre">invoke(inputs:</span> <span class="pre">dict,</span> <span class="pre">**kwargs)</span> <span class="pre">-&gt;</span> <span class="pre">dict</span></span></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="httprequestcomponent">
+<h2>HTTPRequestComponent<a class="headerlink" href="#httprequestcomponent" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.core.workflow.components.HTTPRequestComponent">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.core.workflow.components.</span></span><span class="sig-name descname"><span class="pre">HTTPRequestComponent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url_template</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'GET'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">headers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jiuwen.core.workflow.components.HTTPRequestComponent" title="Link to this definition">#</a></dt>
+<dd><p>Makes HTTP requests with template URLs.</p>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">async</span> <span class="pre">invoke(inputs:</span> <span class="pre">dict,</span> <span class="pre">**kwargs)</span> <span class="pre">-&gt;</span> <span class="pre">dict</span></span></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="loopcomponent">
+<h2>LoopComponent<a class="headerlink" href="#loopcomponent" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.core.workflow.components.LoopComponent">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.core.workflow.components.</span></span><span class="sig-name descname"><span class="pre">LoopComponent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_iterations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jiuwen.core.workflow.components.LoopComponent" title="Link to this definition">#</a></dt>
+<dd><p>Repeats execution, accumulating items.</p>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">async</span> <span class="pre">invoke(inputs:</span> <span class="pre">dict,</span> <span class="pre">**kwargs)</span> <span class="pre">-&gt;</span> <span class="pre">dict</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jiuwen.core.workflow.components.LoopComponent.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#jiuwen.core.workflow.components.LoopComponent.reset" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
 </section>
 
 
@@ -600,6 +685,25 @@ and <code class="xref py py-class docutils literal notranslate"><span class="pre
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#llmcompconfig">LLMCompConfig</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.core.workflow.components.LLMCompConfig"><code class="docutils literal notranslate"><span class="pre">LLMCompConfig</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#questionercomponent">QuestionerComponent</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.core.workflow.components.QuestionerComponent"><code class="docutils literal notranslate"><span class="pre">QuestionerComponent</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#intentdetectioncomponent">IntentDetectionComponent</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.core.workflow.components.IntentDetectionComponent"><code class="docutils literal notranslate"><span class="pre">IntentDetectionComponent</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#httprequestcomponent">HTTPRequestComponent</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.core.workflow.components.HTTPRequestComponent"><code class="docutils literal notranslate"><span class="pre">HTTPRequestComponent</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loopcomponent">LoopComponent</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.core.workflow.components.LoopComponent"><code class="docutils literal notranslate"><span class="pre">LoopComponent</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.core.workflow.components.LoopComponent.reset"><code class="docutils literal notranslate"><span class="pre">LoopComponent.reset()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

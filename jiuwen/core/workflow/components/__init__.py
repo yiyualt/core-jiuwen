@@ -16,6 +16,10 @@ from jiuwen.core.workflow.components.flow.end_comp import End, EndConfig
 from jiuwen.core.workflow.components.llm.llm_comp import LLMComponent, LLMCompConfig
 from jiuwen.core.workflow.components.condition import Condition, ExpressionCondition
 from jiuwen.core.workflow.components.flow.branch_comp import BranchComponent
+from jiuwen.core.workflow.components.flow.loop_comp import LoopComponent
+from jiuwen.core.workflow.components.llm.questioner_comp import QuestionerComponent
+from jiuwen.core.workflow.components.llm.intent_detection_comp import IntentDetectionComponent
+from jiuwen.core.workflow.components.tool.http_comp import HTTPRequestComponent
 
 __all__ = [
     "ComponentAbility",
@@ -32,4 +36,8 @@ __all__ = [
     "Condition",
     "ExpressionCondition",
     "BranchComponent",
+    "LoopComponent",
+    "QuestionerComponent",
+    "IntentDetectionComponent",
+    "HTTPRequestComponent",
 ]

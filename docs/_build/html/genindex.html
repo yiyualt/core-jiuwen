@@ -161,6 +161,8 @@
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/harness-philosophy.html">Harness: Coding Agent Framework</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/task-loop-philosophy.html">Task Loop: 事件驱动的 Agent 执行</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/workspace-philosophy.html">Workspace: Agent 的安全工位</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/extra-components-philosophy.html">扩展组件：Questioner / Intent / HTTP / Loop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/context-engine-philosophy.html">Context Engine: 上下文窗口管理</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="jiuwen/examples/index.html">Examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -181,6 +183,8 @@
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/harness-example.html">Harness Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/task-loop-example.html">Task Loop Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/workspace-example.html">Workspace 示例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/extra-components-example.html">扩展组件示例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/context-engine-example.html">Context Engine 示例</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="jiuwen/api/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -197,6 +201,7 @@
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/api/teams.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.agent_teams</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/api/evolving.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.agent_evolving</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/api/harness.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.harness</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/api/context-engine.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.context_engine</span></code></a></li>
 </ul>
 </details></li>
 </ul>
@@ -310,12 +315,14 @@
  | <a href="#E"><strong>E</strong></a>
  | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
+ | <a href="#H"><strong>H</strong></a>
  | <a href="#I"><strong>I</strong></a>
  | <a href="#J"><strong>J</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#O"><strong>O</strong></a>
  | <a href="#P"><strong>P</strong></a>
+ | <a href="#Q"><strong>Q</strong></a>
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
@@ -335,6 +342,14 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.Channel.accept">accept() (jiuwen.core.graph.Channel method)</a>
 </li>
+      <li><a href="jiuwen/api/context-engine.html#jiuwen.core.context_engine.MessageBuffer.add">add() (jiuwen.core.context_engine.MessageBuffer method)</a>
+</li>
+      <li><a href="jiuwen/api/context-engine.html#jiuwen.core.context_engine.MessageBuffer.add_assistant">add_assistant() (jiuwen.core.context_engine.MessageBuffer method)</a>
+
+      <ul>
+        <li><a href="jiuwen/api/context-engine.html#jiuwen.core.context_engine.ModelContext.add_assistant">(jiuwen.core.context_engine.ModelContext method)</a>
+</li>
+      </ul></li>
       <li><a href="jiuwen/api/workflow.html#jiuwen.core.workflow.Workflow.add_conditional_connection">add_conditional_connection() (jiuwen.core.workflow.Workflow method)</a>
 </li>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.PregelGraph.add_conditional_edges">add_conditional_edges() (jiuwen.core.graph.PregelGraph method)</a>
@@ -345,6 +360,8 @@
 </li>
       <li><a href="jiuwen/api/session.html#jiuwen.core.session.Session.add_message">add_message() (jiuwen.core.session.Session method)</a>
 </li>
+      <li><a href="jiuwen/api/context-engine.html#jiuwen.core.context_engine.ModelContext.add_messages">add_messages() (jiuwen.core.context_engine.ModelContext method)</a>
+</li>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.PregelGraph.add_node">add_node() (jiuwen.core.graph.PregelGraph method)</a>
 </li>
   </ul></td>
@@ -353,8 +370,20 @@
 </li>
       <li><a href="jiuwen/api/harness.html#jiuwen.harness.PromptBuilder.add_section">add_section() (jiuwen.harness.PromptBuilder method)</a>
 </li>
+      <li><a href="jiuwen/api/context-engine.html#jiuwen.core.context_engine.MessageBuffer.add_system">add_system() (jiuwen.core.context_engine.MessageBuffer method)</a>
+
+      <ul>
+        <li><a href="jiuwen/api/context-engine.html#jiuwen.core.context_engine.ModelContext.add_system">(jiuwen.core.context_engine.ModelContext method)</a>
+</li>
+      </ul></li>
       <li><a href="jiuwen/api/runner.html#jiuwen.core.runner.ResourceManager.add_tool">add_tool() (jiuwen.core.runner.ResourceManager method)</a>
 </li>
+      <li><a href="jiuwen/api/context-engine.html#jiuwen.core.context_engine.MessageBuffer.add_user">add_user() (jiuwen.core.context_engine.MessageBuffer method)</a>
+
+      <ul>
+        <li><a href="jiuwen/api/context-engine.html#jiuwen.core.context_engine.ModelContext.add_user">(jiuwen.core.context_engine.ModelContext method)</a>
+</li>
+      </ul></li>
       <li><a href="jiuwen/api/runner.html#jiuwen.core.runner.ResourceManager.add_workflow">add_workflow() (jiuwen.core.runner.ResourceManager method)</a>
 </li>
       <li><a href="jiuwen/api/workflow.html#jiuwen.core.workflow.Workflow.add_workflow_comp">add_workflow_comp() (jiuwen.core.workflow.Workflow method)</a>
@@ -395,8 +424,12 @@
 </li>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.Channel">Channel (class in jiuwen.core.graph)</a>
 </li>
-      <li><a href="jiuwen/api/session.html#jiuwen.core.session.Session.clear">clear() (jiuwen.core.session.Session method)</a>
+      <li><a href="jiuwen/api/context-engine.html#jiuwen.core.context_engine.MessageBuffer.clear">clear() (jiuwen.core.context_engine.MessageBuffer method)</a>
+
+      <ul>
+        <li><a href="jiuwen/api/session.html#jiuwen.core.session.Session.clear">(jiuwen.core.session.Session method)</a>
 </li>
+      </ul></li>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.PregelGraph.compile">compile() (jiuwen.core.graph.PregelGraph method)</a>
 </li>
   </ul></td>
@@ -408,6 +441,8 @@
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.Channel.consume">consume() (jiuwen.core.graph.Channel method)</a>
 </li>
       <li><a href="jiuwen/api/teams.html#jiuwen.core.agent_teams.CoordinatorAgent">CoordinatorAgent (class in jiuwen.core.agent_teams)</a>
+</li>
+      <li><a href="jiuwen/api/context-engine.html#jiuwen.core.context_engine.TokenCounter.count">count() (jiuwen.core.context_engine.TokenCounter method)</a>
 </li>
       <li><a href="jiuwen/api/harness.html#jiuwen.harness.create_deep_agent">create_deep_agent() (in module jiuwen.harness)</a>
 </li>
@@ -467,10 +502,16 @@
 </li>
       <li><a href="jiuwen/api/workflow.html#jiuwen.core.workflow.Workflow.get_graph">get_graph() (jiuwen.core.workflow.Workflow method)</a>
 </li>
+      <li><a href="jiuwen/api/context-engine.html#jiuwen.core.context_engine.MessageBuffer.get_messages">get_messages() (jiuwen.core.context_engine.MessageBuffer method)</a>
+
+      <ul>
+        <li><a href="jiuwen/api/context-engine.html#jiuwen.core.context_engine.ModelContext.get_messages">(jiuwen.core.context_engine.ModelContext method)</a>
+</li>
+        <li><a href="jiuwen/api/session.html#jiuwen.core.session.Session.get_messages">(jiuwen.core.session.Session method)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="jiuwen/api/session.html#jiuwen.core.session.Session.get_messages">get_messages() (jiuwen.core.session.Session method)</a>
-</li>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.PregelGraph.get_nodes">get_nodes() (jiuwen.core.graph.PregelGraph method)</a>
 </li>
       <li><a href="jiuwen/api/session.html#jiuwen.core.session.Session.get_state">get_state() (jiuwen.core.session.Session method)</a>
@@ -482,6 +523,14 @@
   </ul></td>
 </tr></table>
 
+<h2 id="H">H</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jiuwen/api/components.html#jiuwen.core.workflow.components.HTTPRequestComponent">HTTPRequestComponent (class in jiuwen.core.workflow.components)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -489,6 +538,8 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jiuwen/api/components.html#jiuwen.core.workflow.components.IntentDetectionComponent">IntentDetectionComponent (class in jiuwen.core.workflow.components)</a>
+</li>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.Channel.is_ready">is_ready() (jiuwen.core.graph.Channel method)</a>
 </li>
   </ul></td>
@@ -516,6 +567,13 @@
 
       <ul>
         <li><a href="jiuwen/api/common.html#module-jiuwen.core.common">module</a>
+</li>
+      </ul></li>
+      <li>
+    jiuwen.core.context_engine
+
+      <ul>
+        <li><a href="jiuwen/api/context-engine.html#module-jiuwen.core.context_engine">module</a>
 </li>
       </ul></li>
       <li>
@@ -601,6 +659,8 @@
 </li>
       <li><a href="jiuwen/api/harness.html#jiuwen.harness.LoggingHandler">LoggingHandler (class in jiuwen.harness)</a>
 </li>
+      <li><a href="jiuwen/api/components.html#jiuwen.core.workflow.components.LoopComponent">LoopComponent (class in jiuwen.core.workflow.components)</a>
+</li>
       <li><a href="jiuwen/api/harness.html#jiuwen.harness.LoopCoordinator">LoopCoordinator (class in jiuwen.harness)</a>
 </li>
   </ul></td>
@@ -609,7 +669,11 @@
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jiuwen/api/context-engine.html#jiuwen.core.context_engine.MessageBuffer">MessageBuffer (class in jiuwen.core.context_engine)</a>
+</li>
       <li><a href="jiuwen/api/foundation.html#jiuwen.core.foundation.ModelClientConfig">ModelClientConfig (class in jiuwen.core.foundation)</a>
+</li>
+      <li><a href="jiuwen/api/context-engine.html#jiuwen.core.context_engine.ModelContext">ModelContext (class in jiuwen.core.context_engine)</a>
 </li>
       <li><a href="jiuwen/api/foundation.html#jiuwen.core.foundation.ModelRequestConfig">ModelRequestConfig (class in jiuwen.core.foundation)</a>
 </li>
@@ -622,6 +686,8 @@
         <li><a href="jiuwen/api/teams.html#module-jiuwen.core.agent_teams">jiuwen.core.agent_teams</a>
 </li>
         <li><a href="jiuwen/api/common.html#module-jiuwen.core.common">jiuwen.core.common</a>
+</li>
+        <li><a href="jiuwen/api/context-engine.html#module-jiuwen.core.context_engine">jiuwen.core.context_engine</a>
 </li>
         <li><a href="jiuwen/api/foundation.html#module-jiuwen.core.foundation">jiuwen.core.foundation</a>
 </li>
@@ -671,6 +737,14 @@
   </ul></td>
 </tr></table>
 
+<h2 id="Q">Q</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jiuwen/api/components.html#jiuwen.core.workflow.components.QuestionerComponent">QuestionerComponent (class in jiuwen.core.workflow.components)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -679,6 +753,8 @@
       <li><a href="jiuwen/api/agent.html#jiuwen.core.single_agent.ReActAgent">ReActAgent (class in jiuwen.core.single_agent)</a>
 </li>
       <li><a href="jiuwen/api/harness.html#jiuwen.harness.Workspace.read_file">read_file() (jiuwen.harness.Workspace method)</a>
+</li>
+      <li><a href="jiuwen/api/components.html#jiuwen.core.workflow.components.LoopComponent.reset">reset() (jiuwen.core.workflow.components.LoopComponent method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -733,6 +809,8 @@
       <li><a href="jiuwen/api/teams.html#jiuwen.core.agent_teams.Team">Team (class in jiuwen.core.agent_teams)</a>
 </li>
       <li><a href="jiuwen/api/common.html#jiuwen.core.common.BaseCard.to_str">to_str() (jiuwen.core.common.BaseCard method)</a>
+</li>
+      <li><a href="jiuwen/api/context-engine.html#jiuwen.core.context_engine.TokenCounter">TokenCounter (class in jiuwen.core.context_engine)</a>
 </li>
       <li><a href="jiuwen/api/common.html#jiuwen.core.common.BaseCard.tool_info">tool_info() (jiuwen.core.common.BaseCard method)</a>
 
