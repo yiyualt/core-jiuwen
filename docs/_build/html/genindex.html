@@ -157,6 +157,7 @@
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/condition-philosophy.html">Condition &amp; Branch: Control Flow in Workflows</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/rails-philosophy.html">Rails: Composable Agent Middleware</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/teams-philosophy.html">Agent Teams: Multi-Agent Collaboration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/evolving-philosophy.html">Agent Evolving: Automatic Prompt Optimization</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="jiuwen/examples/index.html">Examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -173,6 +174,7 @@
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/condition-example.html">Condition Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/rails-example.html">Rails Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/teams-example.html">Agent Teams Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/evolving-example.html">Agent Evolving Examples</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="jiuwen/api/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -187,6 +189,7 @@
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/api/session.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.session</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/api/rails.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.rails</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/api/teams.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.agent_teams</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/api/evolving.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.agent_evolving</span></code></a></li>
 </ul>
 </details></li>
 </ul>
@@ -370,6 +373,8 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jiuwen/api/evolving.html#jiuwen.core.agent_evolving.Case">Case (class in jiuwen.core.agent_evolving)</a>
+</li>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.Channel">Channel (class in jiuwen.core.graph)</a>
 </li>
       <li><a href="jiuwen/api/session.html#jiuwen.core.session.Session.clear">clear() (jiuwen.core.session.Session method)</a>
@@ -399,6 +404,8 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="jiuwen/api/components.html#jiuwen.core.workflow.components.EndConfig">EndConfig (class in jiuwen.core.workflow.components)</a>
+</li>
+      <li><a href="jiuwen/api/evolving.html#jiuwen.core.agent_evolving.Evaluator">Evaluator (class in jiuwen.core.agent_evolving)</a>
 </li>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.Executable">Executable (class in jiuwen.core.graph)</a>
 </li>
@@ -450,6 +457,13 @@
 <h2 id="J">J</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    jiuwen.core.agent_evolving
+
+      <ul>
+        <li><a href="jiuwen/api/evolving.html#module-jiuwen.core.agent_evolving">module</a>
+</li>
+      </ul></li>
       <li>
     jiuwen.core.agent_teams
 
@@ -550,6 +564,8 @@
     module
 
       <ul>
+        <li><a href="jiuwen/api/evolving.html#module-jiuwen.core.agent_evolving">jiuwen.core.agent_evolving</a>
+</li>
         <li><a href="jiuwen/api/teams.html#module-jiuwen.core.agent_teams">jiuwen.core.agent_teams</a>
 </li>
         <li><a href="jiuwen/api/common.html#module-jiuwen.core.common">jiuwen.core.common</a>
@@ -578,6 +594,10 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="jiuwen/api/foundation.html#jiuwen.core.foundation.OpenAIClient">OpenAIClient (class in jiuwen.core.foundation)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jiuwen/api/evolving.html#jiuwen.core.agent_evolving.Optimizer">Optimizer (class in jiuwen.core.agent_evolving)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -662,6 +682,8 @@
       <li><a href="jiuwen/api/tool.html#jiuwen.core.foundation.ToolCard">ToolCard (class in jiuwen.core.foundation)</a>
 </li>
       <li><a href="jiuwen/api/tool.html#jiuwen.core.foundation.ToolComponent">ToolComponent (class in jiuwen.core.foundation)</a>
+</li>
+      <li><a href="jiuwen/api/evolving.html#jiuwen.core.agent_evolving.Trainer">Trainer (class in jiuwen.core.agent_evolving)</a>
 </li>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.TriggerChannel">TriggerChannel (class in jiuwen.core.graph)</a>
 </li>

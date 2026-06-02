@@ -20,3 +20,4 @@ Design philosophy and rationale behind jiuwen's architecture.
    condition-philosophy
    rails-philosophy
    teams-philosophy
+   evolving-philosophy

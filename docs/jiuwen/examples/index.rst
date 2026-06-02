@@ -19,3 +19,4 @@ Runnable code examples for jiuwen features.
    condition-example
    rails-example
    teams-example
+   evolving-example
