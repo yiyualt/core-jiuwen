@@ -21,3 +21,4 @@ Design philosophy and rationale behind jiuwen's architecture.
    rails-philosophy
    teams-philosophy
    evolving-philosophy
+   harness-philosophy

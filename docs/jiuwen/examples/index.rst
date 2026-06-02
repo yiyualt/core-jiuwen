@@ -20,3 +20,4 @@ Runnable code examples for jiuwen features.
    rails-example
    teams-example
    evolving-example
+   harness-example
