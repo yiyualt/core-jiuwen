@@ -23,3 +23,4 @@ Reference documentation for jiuwen's public API.
    security
    sys-operation
    multi-agent
+   auto-harness
