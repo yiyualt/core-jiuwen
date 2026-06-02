@@ -165,9 +165,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../notes/extra-components-philosophy.html">扩展组件：Questioner / Intent / HTTP / Loop</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notes/context-engine-philosophy.html">Context Engine: 上下文窗口管理</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notes/security-philosophy.html">Security: Guardrails 安全层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/sys-operation-philosophy.html">Sys Operation: 安全的系统操作</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../examples/index.html">Examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/integration-example.html">完整集成示例</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/basecard-example.html">BaseCard Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/graph-example.html">Graph Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/workflow-example.html">Workflow Examples</a></li>
@@ -188,6 +190,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../examples/extra-components-example.html">扩展组件示例</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/context-engine-example.html">Context Engine 示例</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/security-example.html">Security 示例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sys-operation-example.html">Sys Operation 示例</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">API Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -206,6 +209,8 @@
 <li class="toctree-l2"><a class="reference internal" href="harness.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.harness</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="context-engine.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.context_engine</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="security.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.security</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="sys-operation.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.sys_operation</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="multi-agent.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.multi_agent</span></code></a></li>
 </ul>
 </details></li>
 </ul>
@@ -361,6 +366,27 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.core.agent_teams.CoordinatorAgent"><code class="docutils literal notranslate"><span class="pre">CoordinatorAgent</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inprocessmessager">InProcessMessager</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.core.agent_teams.InProcessMessager"><code class="docutils literal notranslate"><span class="pre">InProcessMessager</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#teamevent">TeamEvent</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.core.agent_teams.TeamEvent"><code class="docutils literal notranslate"><span class="pre">TeamEvent</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#taskblueprint">TaskBlueprint</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.core.agent_teams.TaskBlueprint"><code class="docutils literal notranslate"><span class="pre">TaskBlueprint</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#agentspawner">AgentSpawner</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.core.agent_teams.AgentSpawner"><code class="docutils literal notranslate"><span class="pre">AgentSpawner</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.core.agent_teams.AgentSpawner.spawn"><code class="docutils literal notranslate"><span class="pre">AgentSpawner.spawn()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.core.agent_teams.AgentSpawner.get"><code class="docutils literal notranslate"><span class="pre">AgentSpawner.get()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.core.agent_teams.AgentSpawner.remove"><code class="docutils literal notranslate"><span class="pre">AgentSpawner.remove()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -400,6 +426,77 @@
 <dt class="sig sig-object py" id="jiuwen.core.agent_teams.CoordinatorAgent">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.core.agent_teams.</span></span><span class="sig-name descname"><span class="pre">CoordinatorAgent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">members</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system_prompt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iterations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jiuwen.core.agent_teams.CoordinatorAgent" title="Link to this definition">#</a></dt>
 <dd><p>ReActAgent with built-in delegation. Inherits from <code class="xref py py-class docutils literal notranslate"><span class="pre">ReActAgent</span></code>.</p>
+</dd></dl>
+
+</section>
+<section id="inprocessmessager">
+<h2>InProcessMessager<a class="headerlink" href="#inprocessmessager" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.core.agent_teams.InProcessMessager">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.core.agent_teams.</span></span><span class="sig-name descname"><span class="pre">InProcessMessager</span></span><a class="headerlink" href="#jiuwen.core.agent_teams.InProcessMessager" title="Link to this definition">#</a></dt>
+<dd><p>Async message passing between agents in the same process.</p>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">async</span> <span class="pre">send(target:</span> <span class="pre">str,</span> <span class="pre">message:</span> <span class="pre">dict)</span> <span class="pre">-&gt;</span> <span class="pre">None</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">async</span> <span class="pre">receive(agent_name:</span> <span class="pre">str,</span> <span class="pre">timeout:</span> <span class="pre">float</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None)</span> <span class="pre">-&gt;</span> <span class="pre">dict</span></span></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="teamevent">
+<h2>TeamEvent<a class="headerlink" href="#teamevent" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.core.agent_teams.TeamEvent">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.core.agent_teams.</span></span><span class="sig-name descname"><span class="pre">TeamEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jiuwen.core.agent_teams.TeamEvent" title="Link to this definition">#</a></dt>
+<dd><p>Structured event for team coordination.</p>
+</dd></dl>
+
+</section>
+<section id="taskblueprint">
+<h2>TaskBlueprint<a class="headerlink" href="#taskblueprint" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.core.agent_teams.TaskBlueprint">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.core.agent_teams.</span></span><span class="sig-name descname"><span class="pre">TaskBlueprint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">assigned_to</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'pending'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jiuwen.core.agent_teams.TaskBlueprint" title="Link to this definition">#</a></dt>
+<dd><p>Task definition with lifecycle: mark_running(), mark_done(), mark_failed().</p>
+</dd></dl>
+
+</section>
+<section id="agentspawner">
+<h2>AgentSpawner<a class="headerlink" href="#agentspawner" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="jiuwen.core.agent_teams.AgentSpawner">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">jiuwen.core.agent_teams.</span></span><span class="sig-name descname"><span class="pre">AgentSpawner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">messager</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#jiuwen.core.agent_teams.InProcessMessager" title="jiuwen.core.agent_teams.InProcessMessager"><span class="pre">InProcessMessager</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jiuwen.core.agent_teams.AgentSpawner" title="Link to this definition">#</a></dt>
+<dd><p>Creates and manages child agents.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="jiuwen.core.agent_teams.AgentSpawner.spawn">
+<span class="sig-name descname"><span class="pre">spawn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">factory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#jiuwen.core.agent_teams.AgentSpawner.spawn" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jiuwen.core.agent_teams.AgentSpawner.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#jiuwen.core.agent_teams.AgentSpawner.get" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jiuwen.core.agent_teams.AgentSpawner.remove">
+<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#jiuwen.core.agent_teams.AgentSpawner.remove" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">messager:</span> <span class="pre">InProcessMessager</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">agents:</span> <span class="pre">dict</span></span></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </section>
@@ -458,6 +555,27 @@
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coordinatoragent">CoordinatorAgent</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.core.agent_teams.CoordinatorAgent"><code class="docutils literal notranslate"><span class="pre">CoordinatorAgent</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inprocessmessager">InProcessMessager</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.core.agent_teams.InProcessMessager"><code class="docutils literal notranslate"><span class="pre">InProcessMessager</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#teamevent">TeamEvent</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.core.agent_teams.TeamEvent"><code class="docutils literal notranslate"><span class="pre">TeamEvent</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#taskblueprint">TaskBlueprint</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.core.agent_teams.TaskBlueprint"><code class="docutils literal notranslate"><span class="pre">TaskBlueprint</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#agentspawner">AgentSpawner</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.core.agent_teams.AgentSpawner"><code class="docutils literal notranslate"><span class="pre">AgentSpawner</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.core.agent_teams.AgentSpawner.spawn"><code class="docutils literal notranslate"><span class="pre">AgentSpawner.spawn()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.core.agent_teams.AgentSpawner.get"><code class="docutils literal notranslate"><span class="pre">AgentSpawner.get()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jiuwen.core.agent_teams.AgentSpawner.remove"><code class="docutils literal notranslate"><span class="pre">AgentSpawner.remove()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

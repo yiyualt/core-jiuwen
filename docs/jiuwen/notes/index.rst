@@ -27,3 +27,4 @@ Design philosophy and rationale behind jiuwen's architecture.
    extra-components-philosophy
    context-engine-philosophy
    security-philosophy
+   sys-operation-philosophy

@@ -6,6 +6,7 @@ Runnable code examples for jiuwen features.
 .. toctree::
    :maxdepth: 1
 
+   integration-example
    basecard-example
    graph-example
    workflow-example
@@ -26,3 +27,4 @@ Runnable code examples for jiuwen features.
    extra-components-example
    context-engine-example
    security-example
+   sys-operation-example

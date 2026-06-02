@@ -1,0 +1,584 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>完整集成示例 &#8212; jiuwen Documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=e645c8fa"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'jiuwen/examples/integration-example';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="BaseCard Examples" href="basecard-example.html" />
+    <link rel="prev" title="Examples" href="index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">jiuwen Documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">jiuwen Core</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/index.html">Tutorials</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/getting-started.html">Getting Started</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../notes/index.html">Design Notes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notes/basecard-philosophy.html">BaseCard Philosophy: The Card/Config Split</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/graph-philosophy.html">Graph Philosophy: The Pregel Execution Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/workflow-philosophy.html">Workflow Philosophy: Composing Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/component-philosophy.html">Component Philosophy: Building Blocks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/llm-foundation-philosophy.html">LLM Foundation: OpenAI Client and Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/llm-component-philosophy.html">LLM Component: AI in the Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/tool-system-philosophy.html">Tool System: Functions as Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/runner-philosophy.html">Runner: The Entry Point</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/agent-philosophy.html">Agent: The Intelligent Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/react-agent-philosophy.html">ReAct Agent: Reasoning + Acting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/session-philosophy.html">Session: Multi-Turn Memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/condition-philosophy.html">Condition &amp; Branch: Control Flow in Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/rails-philosophy.html">Rails: Agent 中间件系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/teams-philosophy.html">Agent Teams: Multi-Agent Collaboration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/evolving-philosophy.html">Agent Evolving: Automatic Prompt Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/harness-philosophy.html">Harness: Coding Agent Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/task-loop-philosophy.html">Task Loop: 事件驱动的 Agent 执行</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/workspace-philosophy.html">Workspace: Agent 的安全工位</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/extra-components-philosophy.html">扩展组件：Questioner / Intent / HTTP / Loop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/context-engine-philosophy.html">Context Engine: 上下文窗口管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/security-philosophy.html">Security: Guardrails 安全层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/sys-operation-philosophy.html">Sys Operation: 安全的系统操作</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Examples</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">完整集成示例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basecard-example.html">BaseCard Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graph-example.html">Graph Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflow-example.html">Workflow Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="component-example.html">Component Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm-example.html">LLM Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm-component-example.html">LLM Component Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tool-example.html">Tool Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="runner-example.html">Runner + Agent Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="react-agent-example.html">ReAct Agent Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="session-example.html">Session Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="condition-example.html">Condition Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rails-example.html">Rails 示例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="teams-example.html">Agent Teams Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolving-example.html">Agent Evolving Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="harness-example.html">Harness Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="task-loop-example.html">Task Loop Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workspace-example.html">Workspace 示例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extra-components-example.html">扩展组件示例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="context-engine-example.html">Context Engine 示例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="security-example.html">Security 示例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sys-operation-example.html">Sys Operation 示例</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/common.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.common</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/graph.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.graph</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/workflow.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.workflow</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/components.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.workflow.components</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/foundation.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.foundation</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/tool.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.foundation</span></code> — Tool System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/runner.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.runner</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/agent.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.single_agent</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/session.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.session</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/rails.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.rails</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/teams.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.agent_teams</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/evolving.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.agent_evolving</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/harness.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.harness</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/context-engine.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.context_engine</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/security.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.security</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/sys-operation.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.sys_operation</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/multi-agent.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.multi_agent</span></code></a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/jiuwen/examples/integration-example.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>完整集成示例</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="id1">
+<h1>完整集成示例<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<p>这个示例把多个模块组合成一个**有安全防护、可观察、有记忆**的 coding agent。
+用 FakeLLMClient 完全可运行，不需要真实 API。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">tests.conftest</span><span class="w"> </span><span class="kn">import</span> <span class="n">FakeLLMClient</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.rails</span><span class="w"> </span><span class="kn">import</span> <span class="n">RailPipeline</span><span class="p">,</span> <span class="n">SecurityRail</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.runner</span><span class="w"> </span><span class="kn">import</span> <span class="n">Runner</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.session</span><span class="w"> </span><span class="kn">import</span> <span class="n">Session</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.context_engine</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelContext</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.harness</span><span class="w"> </span><span class="kn">import</span> <span class="n">DeepAgent</span><span class="p">,</span> <span class="n">DeepAgentConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.harness.task_loop</span><span class="w"> </span><span class="kn">import</span> <span class="n">TaskExecutor</span><span class="p">,</span> <span class="n">LoggingHandler</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="c1"># ═══════════════════════════════════════════════</span>
+    <span class="c1"># 1. 创建安全的工作环境</span>
+    <span class="c1"># ═══════════════════════════════════════════════</span>
+    <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">tmp</span><span class="p">:</span>
+        <span class="c1"># Workspace: agent 只能操作这个目录</span>
+        <span class="n">workspace_dir</span> <span class="o">=</span> <span class="n">tmp</span>
+
+        <span class="c1"># ═══════════════════════════════════════════════</span>
+        <span class="c1"># 2. 配置安全防护 (Rails + Security)</span>
+        <span class="c1"># ═══════════════════════════════════════════════</span>
+        <span class="n">Runner</span><span class="o">.</span><span class="n">rails</span> <span class="o">=</span> <span class="n">RailPipeline</span><span class="p">([</span>
+            <span class="n">SecurityRail</span><span class="p">(),</span>  <span class="c1"># 拦截危险命令</span>
+        <span class="p">])</span>
+
+        <span class="c1"># ═══════════════════════════════════════════════</span>
+        <span class="c1"># 3. 创建 Agent (Harness)</span>
+        <span class="c1"># ═══════════════════════════════════════════════</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">FakeLLMClient</span><span class="p">([</span>
+            <span class="c1"># Agent 会用工具创建文件</span>
+            <span class="s2">&quot;Action: write(path=&#39;hello.py&#39;, content=&#39;print(42)&#39;)&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Final Answer: I created hello.py for you.&quot;</span><span class="p">,</span>
+        <span class="p">])</span>
+        <span class="n">agent</span> <span class="o">=</span> <span class="n">DeepAgent</span><span class="p">(</span>
+            <span class="n">client</span><span class="p">,</span>
+            <span class="n">DeepAgentConfig</span><span class="p">(</span><span class="n">workspace_dir</span><span class="o">=</span><span class="n">workspace_dir</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="c1"># ═══════════════════════════════════════════════</span>
+        <span class="c1"># 4. 多轮对话 (Session + Context Engine)</span>
+        <span class="c1"># ═══════════════════════════════════════════════</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="n">Session</span><span class="p">()</span>
+        <span class="n">ctx</span> <span class="o">=</span> <span class="n">ModelContext</span><span class="p">(</span><span class="n">max_tokens</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
+
+        <span class="n">queries</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;Create hello.py that prints 42&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;What files do I have?&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Run hello.py and show the output&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">query</span> <span class="ow">in</span> <span class="n">queries</span><span class="p">:</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">add_message</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span>
+            <span class="n">ctx</span><span class="o">.</span><span class="n">add_user</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+
+            <span class="c1"># 检查上下文是否超限，自动裁剪</span>
+            <span class="n">msgs</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">get_messages</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[Context: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">msgs</span><span class="p">)</span><span class="si">}</span><span class="s2"> messages]&quot;</span><span class="p">)</span>
+
+            <span class="c1"># ═══════════════════════════════════════════════</span>
+            <span class="c1"># 5. 可观察执行 (Task Loop)</span>
+            <span class="c1"># ═══════════════════════════════════════════════</span>
+            <span class="n">executor</span> <span class="o">=</span> <span class="n">TaskExecutor</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">handlers</span><span class="o">=</span><span class="p">[</span><span class="n">LoggingHandler</span><span class="p">()])</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">executor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="n">session</span><span class="p">)</span>
+
+            <span class="n">ctx</span><span class="o">.</span><span class="n">add_assistant</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;result&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Agent: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">][:</span><span class="mi">100</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">()</span>
+
+    <span class="c1"># ═══════════════════════════════════════════════</span>
+    <span class="c1"># 6. 安全输入检查 (独立的 Security 工具)</span>
+    <span class="c1"># ═══════════════════════════════════════════════</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.security</span><span class="w"> </span><span class="kn">import</span> <span class="n">InputGuard</span>
+
+    <span class="n">dangerous</span> <span class="o">=</span> <span class="s2">&quot;Please rm -rf /tmp/cache&quot;</span>
+    <span class="n">ok</span><span class="p">,</span> <span class="n">reason</span> <span class="o">=</span> <span class="n">InputGuard</span><span class="o">.</span><span class="n">check</span><span class="p">(</span><span class="n">dangerous</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Safe: </span><span class="si">{</span><span class="n">ok</span><span class="si">}</span><span class="s2">, Reason: </span><span class="si">{</span><span class="n">reason</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="c1"># Safe: False, Reason: Blocked: &#39;rm -rf&#39;</span>
+
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>输出示例:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">Context</span><span class="p">:</span> <span class="mi">1</span> <span class="n">messages</span><span class="p">]</span>
+<span class="p">[</span><span class="n">task_start</span><span class="p">]</span> <span class="p">{</span><span class="s1">&#39;task&#39;</span><span class="p">:</span> <span class="s1">&#39;Create hello.py that prints 42&#39;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">task_complete</span><span class="p">]</span> <span class="p">{</span><span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="s1">&#39;I created hello.py for you.&#39;</span><span class="p">}</span>
+<span class="n">Agent</span><span class="p">:</span> <span class="n">I</span> <span class="n">created</span> <span class="n">hello</span><span class="o">.</span><span class="n">py</span> <span class="k">for</span> <span class="n">you</span><span class="o">....</span>
+
+<span class="p">[</span><span class="n">Context</span><span class="p">:</span> <span class="mi">2</span> <span class="n">messages</span><span class="p">]</span>
+<span class="p">[</span><span class="n">task_start</span><span class="p">]</span> <span class="p">{</span><span class="s1">&#39;task&#39;</span><span class="p">:</span> <span class="s1">&#39;What files do I have?&#39;</span><span class="p">}</span>
+<span class="o">...</span>
+
+<span class="n">Safe</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="n">Reason</span><span class="p">:</span> <span class="n">Blocked</span><span class="p">:</span> <span class="s1">&#39;rm -rf&#39;</span>
+</pre></div>
+</div>
+<p>这个示例同时用了 6 个模块：</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>模块</p></th>
+<th class="head"><p>作用</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Runner.rails (SecurityRail)</p></td>
+<td><p>所有 agent 调用自动检查输入</p></td>
+</tr>
+<tr class="row-odd"><td><p>DeepAgent (Harness)</p></td>
+<td><p>内置 bash/read/write 的 coding agent</p></td>
+</tr>
+<tr class="row-even"><td><p>Workspace</p></td>
+<td><p>限定 agent 只能操作临时目录</p></td>
+</tr>
+<tr class="row-odd"><td><p>Session</p></td>
+<td><p>保持多轮对话记忆</p></td>
+</tr>
+<tr class="row-even"><td><p>Context Engine</p></td>
+<td><p>自动裁剪过长上下文</p></td>
+</tr>
+<tr class="row-odd"><td><p>Task Loop</p></td>
+<td><p>实时打印执行事件</p></td>
+</tr>
+<tr class="row-even"><td><p>InputGuard (Security)</p></td>
+<td><p>独立的安全检查工具</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Examples</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="basecard-example.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">BaseCard Examples</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By jiuwen contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, jiuwen contributors.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
