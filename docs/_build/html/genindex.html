@@ -163,6 +163,7 @@
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/workspace-philosophy.html">Workspace: Agent 的安全工位</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/extra-components-philosophy.html">扩展组件：Questioner / Intent / HTTP / Loop</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/context-engine-philosophy.html">Context Engine: 上下文窗口管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/notes/security-philosophy.html">Security: Guardrails 安全层</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="jiuwen/examples/index.html">Examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -185,6 +186,7 @@
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/workspace-example.html">Workspace 示例</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/extra-components-example.html">扩展组件示例</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/context-engine-example.html">Context Engine 示例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/examples/security-example.html">Security 示例</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="jiuwen/api/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -202,6 +204,7 @@
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/api/evolving.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.agent_evolving</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/api/harness.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.harness</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="jiuwen/api/context-engine.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.context_engine</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="jiuwen/api/security.html"><code class="docutils literal notranslate"><span class="pre">jiuwen.core.security</span></code></a></li>
 </ul>
 </details></li>
 </ul>
@@ -424,16 +427,22 @@
 </li>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.Channel">Channel (class in jiuwen.core.graph)</a>
 </li>
+      <li><a href="jiuwen/api/security.html#jiuwen.core.security.InputGuard.check">check() (jiuwen.core.security.InputGuard class method)</a>
+
+      <ul>
+        <li><a href="jiuwen/api/security.html#jiuwen.core.security.OutputGuard.check">(jiuwen.core.security.OutputGuard class method)</a>
+</li>
+      </ul></li>
       <li><a href="jiuwen/api/context-engine.html#jiuwen.core.context_engine.MessageBuffer.clear">clear() (jiuwen.core.context_engine.MessageBuffer method)</a>
 
       <ul>
         <li><a href="jiuwen/api/session.html#jiuwen.core.session.Session.clear">(jiuwen.core.session.Session method)</a>
 </li>
       </ul></li>
-      <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.PregelGraph.compile">compile() (jiuwen.core.graph.PregelGraph method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.PregelGraph.compile">compile() (jiuwen.core.graph.PregelGraph method)</a>
+</li>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.Executable.component_type">component_type() (jiuwen.core.graph.Executable method)</a>
 </li>
       <li><a href="jiuwen/api/components.html#jiuwen.core.workflow.components.ComponentAbility">ComponentAbility (class in jiuwen.core.workflow.components)</a>
@@ -536,11 +545,15 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="jiuwen/api/harness.html#jiuwen.harness.IdentitySection">IdentitySection (class in jiuwen.harness)</a>
 </li>
+      <li><a href="jiuwen/api/security.html#jiuwen.core.security.InputGuard">InputGuard (class in jiuwen.core.security)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="jiuwen/api/components.html#jiuwen.core.workflow.components.IntentDetectionComponent">IntentDetectionComponent (class in jiuwen.core.workflow.components)</a>
 </li>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.Channel.is_ready">is_ready() (jiuwen.core.graph.Channel method)</a>
+</li>
+      <li><a href="jiuwen/api/security.html#jiuwen.core.security.PathSecurity.is_safe">is_safe() (jiuwen.core.security.PathSecurity static method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -604,6 +617,13 @@
 
       <ul>
         <li><a href="jiuwen/api/runner.html#module-jiuwen.core.runner">module</a>
+</li>
+      </ul></li>
+      <li>
+    jiuwen.core.security
+
+      <ul>
+        <li><a href="jiuwen/api/security.html#module-jiuwen.core.security">module</a>
 </li>
       </ul></li>
       <li>
@@ -697,6 +717,8 @@
 </li>
         <li><a href="jiuwen/api/runner.html#module-jiuwen.core.runner">jiuwen.core.runner</a>
 </li>
+        <li><a href="jiuwen/api/security.html#module-jiuwen.core.security">jiuwen.core.security</a>
+</li>
         <li><a href="jiuwen/api/session.html#module-jiuwen.core.session">jiuwen.core.session</a>
 </li>
         <li><a href="jiuwen/api/agent.html#module-jiuwen.core.single_agent">jiuwen.core.single_agent</a>
@@ -720,12 +742,16 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="jiuwen/api/evolving.html#jiuwen.core.agent_evolving.Optimizer">Optimizer (class in jiuwen.core.agent_evolving)</a>
 </li>
+      <li><a href="jiuwen/api/security.html#jiuwen.core.security.OutputGuard">OutputGuard (class in jiuwen.core.security)</a>
+</li>
   </ul></td>
 </tr></table>
 
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jiuwen/api/security.html#jiuwen.core.security.PathSecurity">PathSecurity (class in jiuwen.core.security)</a>
+</li>
       <li><a href="jiuwen/api/graph.html#jiuwen.core.graph.Executable.post_commit">post_commit() (jiuwen.core.graph.Executable method)</a>
 </li>
   </ul></td>
@@ -773,6 +799,8 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="jiuwen/api/harness.html#jiuwen.harness.SafetySection">SafetySection (class in jiuwen.harness)</a>
+</li>
+      <li><a href="jiuwen/api/security.html#jiuwen.core.security.PathSecurity.sanitize">sanitize() (jiuwen.core.security.PathSecurity static method)</a>
 </li>
       <li><a href="jiuwen/api/rails.html#jiuwen.core.rails.SecurityRail">SecurityRail (class in jiuwen.core.rails)</a>
 </li>

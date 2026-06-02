@@ -25,3 +25,4 @@ Runnable code examples for jiuwen features.
    workspace-example
    extra-components-example
    context-engine-example
+   security-example
