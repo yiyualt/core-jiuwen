@@ -46,7 +46,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'jiuwen/tutorials/getting-started';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Design Notes" href="../notes/index.html" />
+    <link rel="next" title="Core SDK 教程" href="core-tutorial.html" />
     <link rel="prev" title="Tutorials" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -141,6 +141,11 @@
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Tutorials</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core-tutorial.html">Core SDK 教程</a></li>
+<li class="toctree-l2"><a class="reference internal" href="harness-tutorial.html">Harness 教程 — Coding Agent 框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="agent-teams-tutorial.html">Agent Teams 教程 — 多 Agent 协作</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multi-agent-tutorial.html">Multi-Agent 教程 — 动态多 Agent 运行时</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auto-harness-tutorial.html">Auto Harness 教程 — 自动优化框架</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../notes/index.html">Design Notes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -166,6 +171,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../notes/context-engine-philosophy.html">Context Engine: 上下文窗口管理</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notes/security-philosophy.html">Security: Guardrails 安全层</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notes/sys-operation-philosophy.html">Sys Operation: 安全的系统操作</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/auto-harness-philosophy.html">Auto Harness: 自动优化框架的实现</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../examples/index.html">Examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -359,11 +365,9 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#your-first-basecard">Your First BaseCard</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#subclassing-basecard">Subclassing BaseCard</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#serialization">Serialization</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">安装</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">第一个例子</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">继续学习</a></li>
 </ul>
             </nav>
         </div>
@@ -377,72 +381,61 @@
                   
   <section id="getting-started">
 <h1>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading">#</a></h1>
-<p>This guide walks you through installing jiuwen and creating your first
-<code class="docutils literal notranslate"><span class="pre">BaseCard</span></code>.</p>
-<section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h2>
+<section id="id1">
+<h2>安装<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+<span class="c1"># 或</span>
+uv<span class="w"> </span>sync
 </pre></div>
 </div>
-<p>Or with uv:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>uv<span class="w"> </span>sync
+<p>配置 LLM（可选，测试不需要）：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cp<span class="w"> </span>.env.example<span class="w"> </span>.env
+<span class="c1"># 编辑 .env 填入你的 API key</span>
 </pre></div>
 </div>
-</section>
-<section id="your-first-basecard">
-<h2>Your First BaseCard<a class="headerlink" href="#your-first-basecard" title="Link to this heading">#</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">BaseCard</span></code> is the foundational building block of jiuwen. Every agent,
-tool, and workflow uses metadata cards that inherit from it.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseCard</span>
-
-<span class="c1"># Create a card with auto-generated ID</span>
-<span class="n">card</span> <span class="o">=</span> <span class="n">BaseCard</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;my_agent&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;My first agent&quot;</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">card</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>          <span class="c1"># e.g., &quot;a1b2c3d4...&quot;</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">card</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>        <span class="c1"># &quot;my_agent&quot;</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">card</span><span class="o">.</span><span class="n">to_str</span><span class="p">())</span>    <span class="c1"># &quot;id=a1b2c3d4...,name=my_agent&quot;</span>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>OPENAI_API_KEY=sk-your-key
+OPENAI_API_BASE=https://api.openai.com/v1
+OPENAI_MODEL=gpt-4o
 </pre></div>
 </div>
 </section>
-<section id="subclassing-basecard">
-<h2>Subclassing BaseCard<a class="headerlink" href="#subclassing-basecard" title="Link to this heading">#</a></h2>
-<p>Create your own card types by extending <code class="docutils literal notranslate"><span class="pre">BaseCard</span></code>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseCard</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Field</span>
+<section id="id2">
+<h2>第一个例子<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.foundation</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAIClient</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.workflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">Workflow</span><span class="p">,</span> <span class="n">Start</span><span class="p">,</span> <span class="n">End</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jiuwen.core.workflow.components</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLMComponent</span><span class="p">,</span> <span class="n">LLMCompConfig</span>
 
-<span class="k">class</span><span class="w"> </span><span class="nc">ToolCard</span><span class="p">(</span><span class="n">BaseCard</span><span class="p">):</span>
-    <span class="n">version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;0.1.0&quot;</span>
-    <span class="n">parameters</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">OpenAIClient</span><span class="o">.</span><span class="n">from_env</span><span class="p">()</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">LLMCompConfig</span><span class="p">(</span><span class="n">template_content</span><span class="o">=</span><span class="p">[</span>
+        <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;{{query}}&quot;</span><span class="p">},</span>
+    <span class="p">])</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">tool_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
-            <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="ow">or</span> <span class="p">{},</span>
-        <span class="p">}</span>
+    <span class="n">wf</span> <span class="o">=</span> <span class="n">Workflow</span><span class="p">()</span>
+    <span class="n">wf</span><span class="o">.</span><span class="n">set_start_comp</span><span class="p">(</span><span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="n">Start</span><span class="p">())</span>
+    <span class="n">wf</span><span class="o">.</span><span class="n">add_workflow_comp</span><span class="p">(</span><span class="s2">&quot;llm&quot;</span><span class="p">,</span> <span class="n">LLMComponent</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">client</span><span class="p">))</span>
+    <span class="n">wf</span><span class="o">.</span><span class="n">set_end_comp</span><span class="p">(</span><span class="s2">&quot;end&quot;</span><span class="p">,</span> <span class="n">End</span><span class="p">({</span><span class="s2">&quot;responseTemplate&quot;</span><span class="p">:</span> <span class="s2">&quot;{{output}}&quot;</span><span class="p">}))</span>
+
+    <span class="n">wf</span><span class="o">.</span><span class="n">add_connection</span><span class="p">(</span><span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="s2">&quot;llm&quot;</span><span class="p">)</span>
+    <span class="n">wf</span><span class="o">.</span><span class="n">add_connection</span><span class="p">(</span><span class="s2">&quot;llm&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">)</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">wf</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="s2">&quot;Hello, who are you?&quot;</span><span class="p">})</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
 </pre></div>
 </div>
 </section>
-<section id="serialization">
-<h2>Serialization<a class="headerlink" href="#serialization" title="Link to this heading">#</a></h2>
-<p>All cards are Pydantic models and can be serialized:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">card</span> <span class="o">=</span> <span class="n">BaseCard</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;A test card&quot;</span><span class="p">)</span>
-
-<span class="c1"># To dict</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">card</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span>
-<span class="c1"># {&quot;id&quot;: &quot;...&quot;, &quot;name&quot;: &quot;test&quot;, &quot;description&quot;: &quot;A test card&quot;}</span>
-
-<span class="c1"># To JSON</span>
-<span class="n">json_str</span> <span class="o">=</span> <span class="n">card</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">()</span>
-</pre></div>
-</div>
-</section>
-<section id="next-steps">
-<h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading">#</a></h2>
+<section id="id3">
+<h2>继续学习<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<p>按主题深入：</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="../notes/basecard-philosophy.html"><span class="doc">BaseCard Philosophy: The Card/Config Split</span></a> — understand the Card/Config split</p></li>
-<li><p><a class="reference internal" href="../examples/basecard-example.html"><span class="doc">BaseCard Examples</span></a> — more usage examples</p></li>
-<li><p><a class="reference internal" href="../api/common.html"><span class="doc">jiuwen.core.common</span></a> — API reference</p></li>
+<li><p><a class="reference internal" href="core-tutorial.html"><span class="doc">Core SDK 教程</span></a> — Core SDK 核心原语</p></li>
+<li><p><a class="reference internal" href="harness-tutorial.html"><span class="doc">Harness 教程 — Coding Agent 框架</span></a> — Harness Coding Agent 框架</p></li>
+<li><p><a class="reference internal" href="agent-teams-tutorial.html"><span class="doc">Agent Teams 教程 — 多 Agent 协作</span></a> — 多 Agent 协作</p></li>
+<li><p><a class="reference internal" href="multi-agent-tutorial.html"><span class="doc">Multi-Agent 教程 — 动态多 Agent 运行时</span></a> — 动态多 Agent 运行时</p></li>
+<li><p><a class="reference internal" href="auto-harness-tutorial.html"><span class="doc">Auto Harness 教程 — 自动优化框架</span></a> — 自动优化框架</p></li>
 </ul>
 </section>
 </section>
@@ -468,11 +461,11 @@ tool, and workflow uses metadata cards that inherit from it.</p>
       </div>
     </a>
     <a class="right-next"
-       href="../notes/index.html"
+       href="core-tutorial.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Design Notes</p>
+        <p class="prev-next-title">Core SDK 教程</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -494,11 +487,9 @@ tool, and workflow uses metadata cards that inherit from it.</p>
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#your-first-basecard">Your First BaseCard</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#subclassing-basecard">Subclassing BaseCard</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#serialization">Serialization</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">安装</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">第一个例子</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">继续学习</a></li>
 </ul>
   </nav></div>
 

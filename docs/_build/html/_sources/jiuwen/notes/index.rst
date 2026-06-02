@@ -28,3 +28,4 @@ Design philosophy and rationale behind jiuwen's architecture.
    context-engine-philosophy
    security-philosophy
    sys-operation-philosophy
+   auto-harness-philosophy

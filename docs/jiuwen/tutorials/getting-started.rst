@@ -1,79 +1,64 @@
 Getting Started
 ================
 
-This guide walks you through installing jiuwen and creating your first
-``BaseCard``.
-
-Installation
-------------
+安装
+----
 
 .. code-block:: bash
 
     pip install -e .
+    # 或
+    uv sync
 
-Or with uv:
+配置 LLM（可选，测试不需要）：
 
 .. code-block:: bash
 
-    uv sync
+    cp .env.example .env
+    # 编辑 .env 填入你的 API key
 
-Your First BaseCard
--------------------
+.. code-block:: text
 
-``BaseCard`` is the foundational building block of jiuwen. Every agent,
-tool, and workflow uses metadata cards that inherit from it.
+    OPENAI_API_KEY=sk-your-key
+    OPENAI_API_BASE=https://api.openai.com/v1
+    OPENAI_MODEL=gpt-4o
 
-.. code-block:: python
-
-    from jiuwen.core.common import BaseCard
-
-    # Create a card with auto-generated ID
-    card = BaseCard(name="my_agent", description="My first agent")
-
-    print(card.id)          # e.g., "a1b2c3d4..."
-    print(card.name)        # "my_agent"
-    print(card.to_str())    # "id=a1b2c3d4...,name=my_agent"
-
-Subclassing BaseCard
---------------------
-
-Create your own card types by extending ``BaseCard``:
-
-.. code-block:: python
-
-    from jiuwen.core.common import BaseCard
-    from pydantic import Field
-
-    class ToolCard(BaseCard):
-        version: str = "0.1.0"
-        parameters: dict | None = None
-
-        def tool_info(self):
-            return {
-                "name": self.name,
-                "description": self.description,
-                "parameters": self.parameters or {},
-            }
-
-Serialization
--------------
-
-All cards are Pydantic models and can be serialized:
-
-.. code-block:: python
-
-    card = BaseCard(name="test", description="A test card")
-
-    # To dict
-    data = card.model_dump()
-    # {"id": "...", "name": "test", "description": "A test card"}
-
-    # To JSON
-    json_str = card.model_dump_json()
-
-Next Steps
+第一个例子
 ----------
 
-- :doc:`/jiuwen/notes/basecard-philosophy` — understand the Card/Config split
-- :doc:`/jiuwen/examples/basecard-example` — more usage examples
-- :doc:`/jiuwen/api/common` — API reference
+.. code-block:: python
+
+    import asyncio
+    from jiuwen.core.foundation import OpenAIClient
+    from jiuwen.core.workflow import Workflow, Start, End
+    from jiuwen.core.workflow.components import LLMComponent, LLMCompConfig
+
+    async def main():
+        client = OpenAIClient.from_env()
+        config = LLMCompConfig(template_content=[
+            {"role": "user", "content": "{{query}}"},
+        ])
+
+        wf = Workflow()
+        wf.set_start_comp("start", Start())
+        wf.add_workflow_comp("llm", LLMComponent(config, client))
+        wf.set_end_comp("end", End({"responseTemplate": "{{output}}"}))
+
+        wf.add_connection("start", "llm")
+        wf.add_connection("llm", "end")
+
+        result = await wf.invoke({"query": "Hello, who are you?"})
+        print(result.result)
+
+    asyncio.run(main())
+
+继续学习
+--------
+
+按主题深入：
+
+- :doc:`/jiuwen/tutorials/core-tutorial` — Core SDK 核心原语
+- :doc:`/jiuwen/tutorials/harness-tutorial` — Harness Coding Agent 框架
+- :doc:`/jiuwen/tutorials/agent-teams-tutorial` — 多 Agent 协作
+- :doc:`/jiuwen/tutorials/multi-agent-tutorial` — 动态多 Agent 运行时
+- :doc:`/jiuwen/tutorials/auto-harness-tutorial` — 自动优化框架

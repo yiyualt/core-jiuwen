@@ -7,3 +7,8 @@ Step-by-step guides to get started with jiuwen.
    :maxdepth: 1
 
    getting-started
+   core-tutorial
+   harness-tutorial
+   agent-teams-tutorial
+   multi-agent-tutorial
+   auto-harness-tutorial

@@ -141,6 +141,11 @@
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/index.html">Tutorials</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/getting-started.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/core-tutorial.html">Core SDK 教程</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/harness-tutorial.html">Harness 教程 — Coding Agent 框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/agent-teams-tutorial.html">Agent Teams 教程 — 多 Agent 协作</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/multi-agent-tutorial.html">Multi-Agent 教程 — 动态多 Agent 运行时</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/auto-harness-tutorial.html">Auto Harness 教程 — 自动优化框架</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Design Notes</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -166,6 +171,7 @@
 <li class="toctree-l2"><a class="reference internal" href="context-engine-philosophy.html">Context Engine: 上下文窗口管理</a></li>
 <li class="toctree-l2"><a class="reference internal" href="security-philosophy.html">Security: Guardrails 安全层</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sys-operation-philosophy.html">Sys Operation: 安全的系统操作</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auto-harness-philosophy.html">Auto Harness: 自动优化框架的实现</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../examples/index.html">Examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -362,6 +368,7 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture">Architecture</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-it-works">How It Works</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#agent-teams-vs-multi-agent">agent_teams vs multi_agent</a></li>
 </ul>
             </nav>
         </div>
@@ -430,6 +437,55 @@ It automatically:
 3. Collects results
 4. Synthesizes a final answer</p>
 </section>
+<section id="agent-teams-vs-multi-agent">
+<h2>agent_teams vs multi_agent<a class="headerlink" href="#agent-teams-vs-multi-agent" title="Link to this heading">#</a></h2>
+<p>jiuwen 有两个多 agent 模块，职责不同：</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head"><p><strong>agent_teams</strong> (静态团队)</p></th>
+<th class="head"><p><strong>multi_agent</strong> (动态运行时)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>成员</p></td>
+<td><p>创建时固定，不可变</p></td>
+<td><p>运行时动态注册/注销</p></td>
+</tr>
+<tr class="row-odd"><td><p>任务分配</p></td>
+<td><p>Coordinator LLM 推理委派</p></td>
+<td><p>关键词匹配自动路由</p></td>
+</tr>
+<tr class="row-even"><td><p>通信</p></td>
+<td><p>InProcessMessager 点对点</p></td>
+<td><p>MessageBus 发布订阅</p></td>
+</tr>
+<tr class="row-odd"><td><p>任务状态</p></td>
+<td><p>TaskBlueprint 跟踪生命周期</p></td>
+<td><p>handoff 任务交接</p></td>
+</tr>
+<tr class="row-even"><td><p>适用场景</p></td>
+<td><p>已知团队分工（如：研究员+作家）</p></td>
+<td><p>动态 agent 池（如：插件市场）</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># agent_teams: 成员固定，LLM 分配</span>
+<span class="n">team</span> <span class="o">=</span> <span class="n">Team</span><span class="p">(</span><span class="n">members</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;coder&quot;</span><span class="p">:</span> <span class="n">coder</span><span class="p">,</span> <span class="s2">&quot;writer&quot;</span><span class="p">:</span> <span class="n">writer</span><span class="p">})</span>
+<span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">team</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;write a function and document it&quot;</span><span class="p">)</span>
+<span class="c1"># Coordinator 用 delegate(&quot;coder&quot;, ...) 和 delegate(&quot;writer&quot;, ...)</span>
+
+<span class="c1"># multi_agent: 动态注册，关键词路由</span>
+<span class="n">rt</span> <span class="o">=</span> <span class="n">TeamRuntime</span><span class="p">()</span>
+<span class="n">rt</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">&quot;coder&quot;</span><span class="p">,</span> <span class="n">agent</span><span class="p">,</span> <span class="n">capabilities</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;python&quot;</span><span class="p">,</span> <span class="s2">&quot;debug&quot;</span><span class="p">])</span>
+<span class="n">rt</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">&quot;analyst&quot;</span><span class="p">,</span> <span class="n">agent</span><span class="p">,</span> <span class="n">capabilities</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;sql&quot;</span><span class="p">,</span> <span class="s2">&quot;stats&quot;</span><span class="p">])</span>
+<span class="n">best</span> <span class="o">=</span> <span class="n">rt</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;fix python bug&quot;</span><span class="p">)</span>   <span class="c1"># → &quot;coder&quot;</span>
+<span class="n">rt</span><span class="o">.</span><span class="n">unregister</span><span class="p">(</span><span class="s2">&quot;coder&quot;</span><span class="p">)</span>              <span class="c1"># 随时移除</span>
+</pre></div>
+</div>
+<p>两者互补：用 multi_agent 做注册发现，用 agent_teams 做已知团队的协作委派。</p>
+</section>
 </section>
 
 
@@ -482,6 +538,7 @@ It automatically:
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture">Architecture</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-it-works">How It Works</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#agent-teams-vs-multi-agent">agent_teams vs multi_agent</a></li>
 </ul>
   </nav></div>
 

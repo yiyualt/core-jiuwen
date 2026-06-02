@@ -59,3 +59,46 @@ It automatically:
 2. Picks the right member for each subtask
 3. Collects results
 4. Synthesizes a final answer
+
+agent_teams vs multi_agent
+----------------------------
+
+jiuwen 有两个多 agent 模块，职责不同：
+
+.. list-table::
+   :header-rows: 1
+
+   * -
+     - **agent_teams** (静态团队)
+     - **multi_agent** (动态运行时)
+   * - 成员
+     - 创建时固定，不可变
+     - 运行时动态注册/注销
+   * - 任务分配
+     - Coordinator LLM 推理委派
+     - 关键词匹配自动路由
+   * - 通信
+     - InProcessMessager 点对点
+     - MessageBus 发布订阅
+   * - 任务状态
+     - TaskBlueprint 跟踪生命周期
+     - handoff 任务交接
+   * - 适用场景
+     - 已知团队分工（如：研究员+作家）
+     - 动态 agent 池（如：插件市场）
+
+.. code-block:: python
+
+    # agent_teams: 成员固定，LLM 分配
+    team = Team(members={"coder": coder, "writer": writer})
+    result = await team.run("write a function and document it")
+    # Coordinator 用 delegate("coder", ...) 和 delegate("writer", ...)
+
+    # multi_agent: 动态注册，关键词路由
+    rt = TeamRuntime()
+    rt.register("coder", agent, capabilities=["python", "debug"])
+    rt.register("analyst", agent, capabilities=["sql", "stats"])
+    best = rt.route("fix python bug")   # → "coder"
+    rt.unregister("coder")              # 随时移除
+
+两者互补：用 multi_agent 做注册发现，用 agent_teams 做已知团队的协作委派。
